@@ -30,6 +30,6 @@ jobs:
         uses: jonahsnider/firebase-action@1.0.7
         env:
           PROJECT_ID: "google-cloud-or-firebase-project-id"
-          FIREBASE_TOKEN: ${{ secrets.1//0fP3qi7tECPsxCgYIARAAGA8SNwF-L9IrhnbZmetJp8Z6ZKaEk5xS-kvbZ3KuQWtsVTCYkAPhQwwmiCKryLzhtfolkittwLcxEto }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         with:
           args: deploy --only hosting
