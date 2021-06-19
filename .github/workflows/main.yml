@@ -29,7 +29,7 @@ jobs:
         # uses: jonahsnider/firebase-action@ec888266077d6a87bd4297045706b32b1b802062
         uses: jonahsnider/firebase-action@1.0.7
         env:
-          PROJECT_ID: "google-cloud-or-firebase-project-id"
+          PROJECT_ID: "golf-event-platform"
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         with:
           args: deploy --only hosting
