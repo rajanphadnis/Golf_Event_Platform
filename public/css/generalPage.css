@@ -1,0 +1,90 @@
+:root {
+    --pageBackgroundColor: #f8f8f8;
+    --navBarBackgroundColor: #f8f8f8;
+    --navBarFontColor: #303030;
+    --navBarHoverBackgroundColor: rgba(206, 206, 206, 0.6);
+    --navBarLinkFadeDuration: 0.4s;
+    --navBarLinkPaddingTopBottom: 20px;
+    --navBarLinkPaddingLeftRight: 14px;
+    --navBarBottomBorder: 1px solid rgba(48,48,48,0.1);
+    --overallFontFamily: Neue Plak,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,Helvetica,Tahoma,Arial,sans-serif;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    background-color: var(--pageBackgroundColor);
+}
+
+
+/* Style the navbar */
+
+#navbar {
+    overflow: hidden;
+    background-color: var(--navBarBackgroundColor);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    border: none;
+    border-bottom: var(--navBarBottomBorder);
+}
+
+
+/* Navbar links */
+
+.navBarLink {
+    color: var(--navBarFontColor);
+    background-color: var(--navBarBackgroundColor);
+    text-align: center;
+    text-decoration: none;
+    font-family: var(--overallFontFamily);
+    -o-transition: var(--navBarLinkFadeDuration);
+    -ms-transition: var(--navBarLinkFadeDuration);
+    -moz-transition: var(--navBarLinkFadeDuration);
+    -webkit-transition: var(--navBarLinkFadeDuration);
+    transition: var(--navBarLinkFadeDuration);
+}
+
+.navBarLink:hover {
+    background-color: var(--navBarHoverBackgroundColor);
+}
+
+#leftNav a {
+    float: left;
+    display: block;
+    padding-left: var(--navBarLinkPaddingLeftRight);
+    padding-right: var(--navBarLinkPaddingLeftRight);
+    padding-top: var(--navBarLinkPaddingTopBottom);
+    padding-bottom: var(--navBarLinkPaddingTopBottom);
+    width: auto;
+}
+
+#rightNav a {
+    float: left;
+    padding-left: var(--navBarLinkPaddingLeftRight);
+    padding-right: var(--navBarLinkPaddingLeftRight);
+    padding-top: var(--navBarLinkPaddingTopBottom);
+    padding-bottom: var(--navBarLinkPaddingTopBottom);
+    width: auto;
+    display: block;
+}
+
+
+/* The sticky class is added to the navbar with JS when it reaches its scroll position */
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+
+/* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
+
+.sticky+.content {
+    padding-top: 60px;
+}
