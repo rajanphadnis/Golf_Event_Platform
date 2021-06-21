@@ -1,13 +1,15 @@
 :root {
-    --pageBackgroundColor: #f8f8f8;
-    --navBarBackgroundColor: #f8f8f8;
+    --pageBackgroundColor: #ffffff;
+    --navBarBackgroundColor: #ffffff;
     --navBarFontColor: #303030;
     --navBarHoverBackgroundColor: rgba(206, 206, 206, 0.6);
     --navBarLinkFadeDuration: 0.4s;
     --navBarLinkPaddingTopBottom: 20px;
     --navBarLinkPaddingLeftRight: 14px;
-    --navBarBottomBorder: 1px solid rgba(48,48,48,0.1);
-    --overallFontFamily: Neue Plak,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,Helvetica,Tahoma,Arial,sans-serif;
+    --navBarBottomBorder: 1px solid rgba(48, 48, 48, 0.1);
+    --overallFontFamily: Neue Plak, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, Helvetica, Tahoma, Arial, sans-serif;
+    --searchBarLinkPaddingTopBottom: 10px;
+    --searchBarLinkPaddingLeftRight: 10px;
 }
 
 body {
@@ -29,6 +31,7 @@ body {
     align-items: center;
     width: 100%;
     margin: 0;
+    padding: 0;
     border: none;
     border-bottom: var(--navBarBottomBorder);
 }
@@ -41,6 +44,8 @@ body {
     background-color: var(--navBarBackgroundColor);
     text-align: center;
     text-decoration: none;
+    font-size: small;
+    font-weight: 600;
     font-family: var(--overallFontFamily);
     -o-transition: var(--navBarLinkFadeDuration);
     -ms-transition: var(--navBarLinkFadeDuration);
@@ -53,15 +58,21 @@ body {
     background-color: var(--navBarHoverBackgroundColor);
 }
 
-#leftNav a {
-    float: left;
-    display: block;
+#leftNav {
+    /* float: left; */
+    /* display: block; */
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    align-content: center;
     padding-left: var(--navBarLinkPaddingLeftRight);
     padding-right: var(--navBarLinkPaddingLeftRight);
-    padding-top: var(--navBarLinkPaddingTopBottom);
-    padding-bottom: var(--navBarLinkPaddingTopBottom);
+    padding-top: 0;
+    padding-bottom: 0;
     width: auto;
 }
+
 
 #rightNav a {
     float: left;
@@ -73,6 +84,48 @@ body {
     display: block;
 }
 
+#navBarLogoA {
+    padding-left: var(--navBarLinkPaddingLeftRight);
+    padding-right: var(--navBarLinkPaddingLeftRight);
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+
+/*Search Box*/
+
+#search-container {
+    padding-left: var(--navBarLinkPaddingLeftRight);
+    padding-right: var(--navBarLinkPaddingLeftRight);
+    height: max-content;
+}
+
+#navBarSearchBox {
+    border: none;
+    height: 100%;
+    padding-top: var(--searchBarLinkPaddingTopBottom);
+    padding-bottom: var(--searchBarLinkPaddingTopBottom);
+    padding-left: var(--searchBarLinkPaddingLeftRight);
+    padding-right: var(--searchBarLinkPaddingLeftRight);
+    background-color: #eeeeee;
+    -o-transition: var(--navBarLinkFadeDuration);
+    -ms-transition: var(--navBarLinkFadeDuration);
+    -moz-transition: var(--navBarLinkFadeDuration);
+    -webkit-transition: var(--navBarLinkFadeDuration);
+    transition: var(--navBarLinkFadeDuration);
+    transition-property: border;
+    /* size: 100; */
+}
+
+#navBarSearchBox:focus {
+    outline-width: 5px;
+    outline-color: blue;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: rgba(48,48,48, 0.5);
+    font-family: var(--overallFontFamily);
+  }
 
 /* The sticky class is added to the navbar with JS when it reaches its scroll position */
 

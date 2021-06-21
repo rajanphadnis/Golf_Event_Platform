@@ -15,16 +15,22 @@
     <script defer src="/__/firebase/8.6.8/firebase-performance.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <link rel="stylesheet" href="/css/generalPage.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
     <div id="navbar">
         <div id="leftNav">
-            <a>Golf_Event_Platform</a>
-            <a class="navBarLink" href="#">Search</a>
+            <a id="navBarLogoA">Golf_Event_Platform</a>
+            <div id="search-container">
+                <form>
+                    <input id="navBarSearchBox" autocomplete="off" type="text" placeholder="Search.." name="search"
+                        size="45" maxlength="45">
+                </form>
+            </div>
         </div>
         <div id="rightNav">
-            <a class="navBarLink" href="#/create">Create Event</a>
+            <a class="navBarLink" href="/create">Create Event</a>
             <a class="navBarLink" href="/signIn">Sign In</a>
         </div>
 
