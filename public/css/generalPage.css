@@ -23,6 +23,10 @@ body {
     font-size: small;
     font-weight: 600;
     display: none;
+    color: var(--navBarFontColor);
+}
+#mobileSearchButton:visited {
+    color: var(--navBarFontColor);
 }
 
 
