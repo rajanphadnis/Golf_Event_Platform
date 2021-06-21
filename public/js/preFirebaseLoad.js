@@ -1,3 +1,7 @@
+// CSS Vars in JS:
+var navBarLinkPaddingLeftRight = "14px";
+var navBarLinkPaddingTopBottom = "10px";
+
 // When the user scrolls the page, execute myFunction
 window.onscroll = function () { stickyScroll() };
 
@@ -22,9 +26,29 @@ var logo = document.getElementById("navBarLogoA");
 var signInButton = document.getElementById("signInButton");
 var createEventButton = document.getElementById("createButton")
 var searchbox = document.getElementById("search-container");
+var searchBoxNavBar = document.getElementById("leftNav");
+var backButton = document.getElementById("mobileExitSearchButton");
 searchbutton.addEventListener("click", function () {
   logo.style.display = "none";
   signInButton.style.display = "none";
   createEventButton.style.display = "none";
   searchbox.style.display = "block";
+  searchbox.style.width = "90%";
+  searchbox.style.paddingLeft = "0px";
+  searchbutton.style.display = "none";
+  searchBoxNavBar.style.width = "100%";
+  searchBoxNavBar.style.paddingTop = navBarLinkPaddingTopBottom;
+  searchBoxNavBar.style.paddingBottom = navBarLinkPaddingTopBottom;
+  backButton.style.display = "block";
+});
+backButton.addEventListener("click", function() {
+  logo.style.display = "block";
+  signInButton.style.display = "block";
+  createEventButton.style.display = "block";
+  searchbox.style.display = "none";
+  searchbox.style.width = "auto";
+  searchbox.style.paddingLeft = navBarLinkPaddingLeftRight;
+  searchbutton.style.display = "block";
+  searchBoxNavBar.style.width = "auto";
+  backButton.style.display = "none";
 });
