@@ -18,7 +18,11 @@ body {
     width: 100%;
     background-color: var(--pageBackgroundColor);
 }
-
+#mobileSearchButton {
+    font-size: small;
+    font-weight: 600;
+    display: none;
+}
 
 /* Style the navbar */
 
@@ -73,15 +77,22 @@ body {
     width: auto;
 }
 
+#rightNav {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: start;
+    align-items: center;
+    align-content: center;
+}
 
 #rightNav a {
-    float: left;
+    /* float: left; */
     padding-left: var(--navBarLinkPaddingLeftRight);
     padding-right: var(--navBarLinkPaddingLeftRight);
     padding-top: var(--navBarLinkPaddingTopBottom);
     padding-bottom: var(--navBarLinkPaddingTopBottom);
     width: auto;
-    display: block;
+    /* display: block; */
 }
 
 #navBarLogoA {
@@ -140,4 +151,13 @@ body {
 
 .sticky+.content {
     padding-top: 60px;
+}
+
+@media only screen and (max-width: 800px) {
+    #mobileSearchButton {
+        display: block;
+    }
+    #search-container {
+        display: none;
+    }
 }

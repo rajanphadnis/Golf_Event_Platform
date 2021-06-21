@@ -1,5 +1,5 @@
 // When the user scrolls the page, execute myFunction
-window.onscroll = function() {stickyScroll()};
+window.onscroll = function () { stickyScroll() };
 
 // Get the navbar
 var navbar = document.getElementById("navbar");
@@ -15,3 +15,16 @@ function stickyScroll() {
     navbar.classList.remove("sticky");
   }
 }
+
+//Mobile Search Button handler
+var searchbutton = document.getElementById("mobileSearchButton");
+var logo = document.getElementById("navBarLogoA");
+var signInButton = document.getElementById("signInButton");
+var createEventButton = document.getElementById("createButton")
+var searchbox = document.getElementById("search-container");
+searchbutton.addEventListener("click", function () {
+  logo.style.display = "none";
+  signInButton.style.display = "none";
+  createEventButton.style.display = "none";
+  searchbox.style.display = "block";
+});
