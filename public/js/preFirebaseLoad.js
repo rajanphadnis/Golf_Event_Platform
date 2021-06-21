@@ -42,13 +42,15 @@ searchbutton.addEventListener("click", function () {
   backButton.style.display = "block";
 });
 backButton.addEventListener("click", function() {
-  logo.style.display = "block";
-  signInButton.style.display = "block";
-  createEventButton.style.display = "block";
-  searchbox.style.display = "none";
-  searchbox.style.width = "auto";
-  searchbox.style.paddingLeft = navBarLinkPaddingLeftRight;
-  searchbutton.style.display = "block";
-  searchBoxNavBar.style.width = "auto";
-  backButton.style.display = "none";
+  logo.style.display = null;
+  signInButton.style.display = null;
+  createEventButton.style.display = null;
+  searchbox.style.display = null;
+  searchbox.style.width = null;
+  searchbox.style.paddingLeft = null;
+  searchbutton.style.display = null;
+  searchBoxNavBar.style.width = null;
+  searchBoxNavBar.style.paddingTop = null;
+  searchBoxNavBar.style.paddingBottom = null;
+  backButton.style.display = null;
 });
