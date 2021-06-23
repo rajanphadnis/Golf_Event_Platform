@@ -21,7 +21,7 @@
 <body>
     <div id="navbar">
         <div id="leftNav">
-            <a id="navBarLogoA">Golf_Event_Platform</a>
+            <a id="navBarLogoA" href="/">Golf_Event_Platform</a>
             <a id="mobileExitSearchButton" href="#">
                 <i class="fa fa-arrow-left" aria-hidden="false"></i>
             </a>
@@ -33,8 +33,17 @@
             </div>
         </div>
         <div id="rightNav">
+            <div id="signedInDropdown" class="dropdown">
+                <a id="accountButton" class="navBarLink" href="/account">{email}</a>
+                <div class="dropdown-content">
+                    <a href="/my-events">My Events</a>
+                    <a href="/account">Account</a>
+                    <a href="/sign-out">Sign Out</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
             <a id="signInButton" class="navBarLink" href="/account">Sign In</a>
-            <a id="createButton" class="navBarLink" href="/create">Create Event</a>
+            <!-- <a id="createButton" class="navBarLink" href="/create">Create Event</a> -->
             <a id="mobileSearchButton" href="#">
                 <i class="fa fa-search" aria-hidden="false"></i>
             </a>
@@ -48,4 +57,5 @@
 </body>
 <script src="/js/preFirebaseLoad.js"></script>
 <script src="/js/main.js"></script>
+
 </html>

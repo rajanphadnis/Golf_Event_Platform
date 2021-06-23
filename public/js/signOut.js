@@ -4,17 +4,21 @@ var signedInDropdown = document.getElementById("signedInDropdown");
 initApp = function () {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
-            // User is signed in.
-            var displayName = user.displayName;
             var email = user.email;
             signInButton.style.display = "none";
             signedInDropdown.style.display = "flex";
             document.getElementById('accountButton').textContent = email;
+            // User is signed in.
+            firebase.auth().signOut().then(function() {
+                window.location = "/";
+              }).catch(function(error) {
+                alert("Something happened. Try again in a few minutes");
+              });
         } else {
             // User is signed out.
             signInButton.style.display = "block";
             signedInDropdown.style.display = "none";
-            // document.getElementById('sign-in-status').textContent = 'Signed out';
+            window.location = "/";
         }
     }, function (error) {
         console.log(error);
