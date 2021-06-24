@@ -11,7 +11,10 @@
     <script defer src="/__/firebase/8.6.8/firebase-firestore.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <link rel="stylesheet" href="/css/generalPage.css" />
+    <link rel="stylesheet" href="/css/event.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="/js/blurhash_min.js"></script>
 </head>
 
 <body>
@@ -47,8 +50,16 @@
     </div>
     <div id="mainContent">
         <div id="eventDetails">
-            <h1 id="eventTitle"></h1>
-            <div></div>
+            <div id="eventImage"></div>
+            <div>
+                <h1 id="eventTitle"></h1>
+                <h3 id="eventLocation"></h3>
+                <h3 id="eventDateTime"></h3>
+                <h2 id="eventOrganizer"></h2>
+                <p id="eventBlurb"></p>
+                <button id="register">Register For Event</button>
+            </div>
+
         </div>
     </div>
 </body>

@@ -4,13 +4,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Sign Out | Golf_Event_Platform</title>
+    <title>Platform</title>
 
     <script defer src="/__/firebase/8.6.8/firebase-app.js"></script>
     <script defer src="/__/firebase/8.6.8/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-firestore.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <link rel="stylesheet" href="/css/generalPage.css" />
+    <link rel="stylesheet" href="/css/event.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="/js/blurhash_min.js"></script>
 </head>
 
@@ -38,7 +41,7 @@
                     <a href="#">Support</a>
                 </div>
             </div>
-            <a id="signInButton" class="navBarLink" href="/account">Sign In</a>
+            <a id="signInButton" class="navBarLink" href="/sign-in">Sign In</a>
             <!-- <a id="createButton" class="navBarLink" href="/create">Create Event</a> -->
             <a id="mobileSearchButton" href="#">
                 <i class="fa fa-search" aria-hidden="false"></i>
@@ -46,11 +49,17 @@
         </div>
     </div>
     <div id="mainContent">
-        <p>Signing Out...</p>>
+        <div id="eventDetails">
+            <div id="eventImage"></div>
+            <div>
+                <h1>Register for event</h1>
+                <h1 id="eventTitle"></h1>
+            </div>
+
+        </div>
     </div>
 </body>
 <script src="/js/preFirebaseLoad.js"></script>
-<!-- <script src="/js/navBarAuth.js"></script> -->
-<script src="/js/sign-out.js"></script>
+<script src="/js/register.js"></script>
 
 </html>

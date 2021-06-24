@@ -16,13 +16,20 @@ initApp = function () {
                 querySnapshot.forEach((doc) => {
                     // doc.data() is never undefined for query doc snapshots
                     console.log(doc.id, " => ", doc.data());
-                    parentList.innerHTML = parentList.innerHTML + addEventCard(doc.data().Name, doc.data().Location, doc.data().Cost, doc.data().DateTime, doc.data().ImageURL, doc.data().OrganizerName, doc.id);
+                    parentList.innerHTML = parentList.innerHTML + addEventCard(doc.data().Name, doc.data().Location, doc.data().Cost, doc.data().DateTime, doc.data().ImageURL, doc.data().OrganizerName, doc.id, doc.data().MainHash);
                 });
             });
         } else {
             // User is signed out.
             signInButton.style.display = "block";
             signedInDropdown.style.display = "none";
+            db.collection("upcomingEvents").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    console.log(doc.id, " => ", doc.data());
+                    parentList.innerHTML = parentList.innerHTML + addEventCard(doc.data().Name, doc.data().Location, doc.data().Cost, doc.data().DateTime, doc.data().ImageURL, doc.data().OrganizerName, doc.id, doc.data().MainHash);
+                });
+            });
         }
     }, function (error) {
         console.log(error);
@@ -32,7 +39,7 @@ window.addEventListener('load', function () {
     initApp()
 });
 
-addEventCard = function (dbtitle, dblocation, dbcost, dbdatetime, dbimageURL, dborganizer, dbid) {
+addEventCard = function (dbtitle, dblocation, dbcost, dbdatetime, dbimageURL, dborganizer, dbid, dbhash) {
     var id = dbid.toString();
     var imageURL = dbimageURL.toString();
     var title = convertFirstCharacterToUppercase(dbtitle);
@@ -40,12 +47,13 @@ addEventCard = function (dbtitle, dblocation, dbcost, dbdatetime, dbimageURL, db
     var location = dblocation.toString();
     var organizer = dborganizer.toString();
     var cost = (dbcost / 100).toFixed(2).toString();
+    var blurHash = encodeURI(dbhash);
 
     var imgElement = new String(`<img src="${imageURL}" alt="Event Brochure" width="100">`);
     var titleElement = new String(`<h2>${title}</h2>`);
     var subtextElement = new String(`<h3>${dateTime}, ${location}<h3>`);
     var otherSubtextElement = new String(`<p>By ${organizer}. $${cost}/person</p>`);
-    var element = new String(`<a href="/event/?e=${id}"><div id="${id}">${imgElement}${titleElement}${subtextElement}${otherSubtextElement}</div></a>`);
+    var element = new String(`<a href="/event/?e=${id}&i=${blurHash}"><div id="${id}">${imgElement}${titleElement}${subtextElement}${otherSubtextElement}</div></a>`);
     return element;
 }
 const convertFirstCharacterToUppercase = (stringToConvert) => {

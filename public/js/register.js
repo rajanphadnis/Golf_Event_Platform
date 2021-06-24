@@ -53,19 +53,10 @@ initApp = function () {
             signInButton.style.display = "none";
             signedInDropdown.style.display = "flex";
             document.getElementById('accountButton').textContent = email;
-            document.getElementById("register").addEventListener("click", function() {
-                window.location = `/event/register?e=${encodeURIComponent(eventID)}&i=${encodeURIComponent(hash)}`;
-            });
         } else {
             // User is signed out.
             signInButton.style.display = "block";
             signedInDropdown.style.display = "none";
-            document.getElementById("register").addEventListener("click", function() {
-                var toEncode = `event/register?e=${eventID}&i=${hash}`;
-                var laterLocation = encodeURIComponent(toEncode);
-                console.log(laterLocation);
-                window.location = `/sign-in/?l=${laterLocation}`;
-            });
         }
     }, function (error) {
         console.log(error);
@@ -76,12 +67,7 @@ initApp = function () {
         if (doc.exists) {
             // console.log("Document data:", doc.data());
             document.getElementById("eventTitle").innerText = doc.data().Name;
-            document.getElementById("eventLocation").innerHTML = '<span class="material-icons">place</span>' + doc.data().Location;
-            document.getElementById("eventDateTime").innerText = new Date(doc.data().DateTime.seconds * 1000).toString();
-            document.getElementById("eventOrganizer").innerText = doc.data().OrganizerName;
-            document.getElementById("eventBlurb").innerHTML = doc.data().Blurb;
             document.getElementById("eventImageMain").src = doc.data().ImageURL;
-            document.getElementById("register").style.display = "block";
         } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");

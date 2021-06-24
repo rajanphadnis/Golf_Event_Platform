@@ -9,6 +9,7 @@ try {
 var searchParams = new URLSearchParams(queryString);
 var returnTo;
 if (searchParams.has("l")) {
+    console.log(searchParams.get("l").toString());
     returnTo = "/" + searchParams.get("l").toString();
 }
 else {

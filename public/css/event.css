@@ -1,0 +1,19 @@
+#eventDetails {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    height: 100%;
+}
+
+#eventDetails div {
+    width: 50%;
+    height: 100%;
+    display: block;
+    
+    /* justify-content: center;
+    align-items: center;
+    align-content: center; */
+}
+#register {
+    display: none;
+}
