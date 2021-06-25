@@ -29,7 +29,8 @@ initApp = function () {
                   doc.data().ImageURL,
                   doc.data().OrganizerName,
                   doc.id,
-                  doc.data().MainHash
+                  doc.data().MainHash,
+                  doc.data().ImageDim
                 );
             });
           });
@@ -53,7 +54,8 @@ initApp = function () {
                   doc.data().ImageURL,
                   doc.data().OrganizerName,
                   doc.id,
-                  doc.data().MainHash
+                  doc.data().MainHash,
+                  doc.data().ImageDim
                 );
             });
           });
@@ -76,17 +78,18 @@ addEventCard = function (
   dbimageURL,
   dborganizer,
   dbid,
-  dbhash
+  dbhash,
+  dbDim
 ) {
   var imageURL;
   if (dbimageURL.toString() == "client") {
-    firebase
+    firebase.app()
       .storage("gs://golf-event-platform")
       .ref(dbid.toString() + ".jpg")
       .getDownloadURL()
       .then((url) => {
         imageURL = url;
-        return db.collection("upcomingEvents").doc(dbid.toString()).set(
+        return firebase.firestore().collection("upcomingEvents").doc(dbid.toString()).set(
           {
             ImageURL: url,
           },
@@ -113,7 +116,7 @@ addEventCard = function (
     `<p>By ${organizer}. $${cost}/person</p>`
   );
   var element = new String(
-    `<a href="/event/?e=${id}&i=${blurHash}"><div id="${id}">${imgElement}${titleElement}${subtextElement}${otherSubtextElement}</div></a>`
+    `<a href="/event/?e=${id}&i=${blurHash}&d=${dbDim}"><div id="${id}">${imgElement}${titleElement}${subtextElement}${otherSubtextElement}</div></a>`
   );
   return element;
 };

@@ -6,6 +6,7 @@ const admin = require("firebase-admin");
 const fs = require("fs");
 const inkjet = require("inkjet");
 const { promisify } = require("util");
+const { DocumentBuilder } = require("firebase-functions/lib/providers/firestore");
 const sizeOf = promisify(require("image-size"));
 admin.initializeApp();
 const blurhash = (function (t) {
@@ -375,6 +376,7 @@ exports.autoGenerateHashFromImage = functions.storage
             MainHash: hash.toString(),
             LastUpdated: new Date(Date.now()),
             ImageURL: "client",
+            ImageDim: parseFloat(imgHeight / imgWidth),
           }, {merge: true})
           .then(() => {
             console.log("Document successfully updated!");
