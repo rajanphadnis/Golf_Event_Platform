@@ -1,4 +1,4 @@
-name: Beta Hosting Deploy. Prod Fxn Deploy
+name: Beta Hosting Deploy
 
 on:
   push:
@@ -16,12 +16,3 @@ jobs:
           expires: 30d
           projectId: golf-event-platform
           channelId: dev
-  function_deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@master
-      - name: Deploy Functions
-        uses: BIGG-Kaymo/deploy-firebase-functions@v1.0.1
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
