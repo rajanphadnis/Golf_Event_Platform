@@ -74,13 +74,30 @@ initApp = function () {
 
     docRef.get().then((doc) => {
         if (doc.exists) {
+            if (doc.data().ImageURL.toString() == "client") {
+                firebase
+                  .storage()
+                  .ref(doc.id.toString() + ".jpg")
+                  .getDownloadURL()
+                  .then((url) => {
+                    document.getElementById("eventImageMain").src = url;
+                    return db.collection("upcomingEvents").doc(doc.id.toString()).set(
+                      {
+                        ImageURL: url,
+                      },
+                      { merge: true }
+                    );
+                  });
+              } else {
+                document.getElementById("eventImageMain").src = doc.data().ImageURL;
+              }
             // console.log("Document data:", doc.data());
             document.getElementById("eventTitle").innerText = doc.data().Name;
             document.getElementById("eventLocation").innerHTML = '<span class="material-icons">place</span>' + doc.data().Location;
             document.getElementById("eventDateTime").innerText = new Date(doc.data().DateTime.seconds * 1000).toString();
             document.getElementById("eventOrganizer").innerText = doc.data().OrganizerName;
             document.getElementById("eventBlurb").innerHTML = doc.data().Blurb;
-            document.getElementById("eventImageMain").src = doc.data().ImageURL;
+            // document.getElementById("eventImageMain").src = doc.data().ImageURL;
             document.getElementById("register").style.display = "block";
         } else {
             // doc.data() will be undefined in this case

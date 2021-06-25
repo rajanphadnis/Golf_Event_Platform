@@ -65,9 +65,24 @@ initApp = function () {
 
     docRef.get().then((doc) => {
         if (doc.exists) {
-            // console.log("Document data:", doc.data());
             document.getElementById("eventTitle").innerText = doc.data().Name;
-            document.getElementById("eventImageMain").src = doc.data().ImageURL;
+            if (doc.data().ImageURL.toString() == "client") {
+                firebase
+                  .storage()
+                  .ref(doc.id.toString() + ".jpg")
+                  .getDownloadURL()
+                  .then((url) => {
+                    document.getElementById("eventImageMain").src = url;
+                    return db.collection("upcomingEvents").doc(doc.id.toString()).set(
+                      {
+                        ImageURL: url,
+                      },
+                      { merge: true }
+                    );
+                  });
+              } else {
+                document.getElementById("eventImageMain").src = doc.data().ImageURL;
+              }
         } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
