@@ -32,12 +32,12 @@ var width =
   (document.body.offsetWidth ? document.body.offsetWidth : document.width) *
   0.3;
   var height = width * hDim;
-blurhash.decodePromise(hash, height, width).then((blurhashImgData) => {
+blurhash.decodePromise(hash, width, height).then((blurhashImgData) => {
   // as image object with onload callback
   const imgObject = blurhash.getImageDataAsImage(
     blurhashImgData,
-    height,
     width,
+    height,
     (event, imgObject) => {
       imgObject.id = "eventImageMain";
       document.getElementById("eventImage").appendChild(imgObject);
