@@ -2,9 +2,10 @@ name: Prod Fxn Deploy
 
 on:
   push:
-    branches: [dev]
+    branches:
+      - 'dev'
     paths:
-      - '/functions/index.js'
+      - 'functions/index.js'
 
 jobs:
   function_deploy:
