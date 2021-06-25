@@ -40,10 +40,8 @@ blurhash.decodePromise(hash, width, height).then((blurhashImgData) => {
     width,
     height,
     (event, imgObject) => {
-      imgObject.id = "eventImageMain";
-      document.getElementById("eventImage").appendChild(imgObject);
-    }
-  );
+      document.getElementById("eventImageMain").src = imgObject.src;
+    });
 });
 var signInButton = document.getElementById("signInButton");
 var signedInDropdown = document.getElementById("signedInDropdown");
@@ -64,7 +62,7 @@ initApp = function () {
           .addEventListener("click", function () {
             window.location = `/event/register?e=${encodeURIComponent(
               eventID
-            )}&i=${encodeURIComponent(hash)}`;
+            )}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(hDim)}`;
           });
       } else {
         // User is signed out.
@@ -73,7 +71,7 @@ initApp = function () {
         document
           .getElementById("register")
           .addEventListener("click", function () {
-            var toEncode = `event/register?e=${eventID}&i=${hash}`;
+            var toEncode = `event/register?e=${eventID}&i=${hash}&d=${hDim}`;
             var laterLocation = encodeURIComponent(toEncode);
             console.log(laterLocation);
             window.location = `/sign-in/?l=${laterLocation}`;

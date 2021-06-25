@@ -39,8 +39,7 @@ blurhash.decodePromise(hash, width, height).then((blurhashImgData) => {
     width,
     height,
     (event, imgObject) => {
-      imgObject.id = "eventImageMain";
-      document.getElementById("eventImage").appendChild(imgObject);
+      document.getElementById("eventImageMain").src = imgObject.src;
     }
   );
 });
