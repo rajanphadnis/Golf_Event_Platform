@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Onboarding | Golf_Event_Platform</title>
+    <script src="/__/firebase/8.6.8/firebase-app.js"></script>
+    <script src="/__/firebase/8.6.8/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-firestore.js"></script>
+    <script src="/__/firebase/init.js?useEmulator=true"></script>
+    <link rel="stylesheet" href="/css/onboarding.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css" />
+    <script src="/js/blurhash_min.js"></script>
+</head>
+
+<body>
+    <div id="mainParent">
+        <h1 id="mainQuestion">Choose your account type</h1>
+        <div id="loading"></div>
+        <div id="options">
+            <button id="standard">Standard</button>
+            <button id="charity">Charity</button>
+        </div>
+        <div id="charityName">Charity Name:<input type="text" id="charityNameInput"><button id="submitCharityName">Submit</button></div>
+        <h3 id="hint">You cannot change you account type later</h3>
+        
+    </div>
+</body>
+<!-- <script src="/js/preFirebaseLoad.js"></script> -->
+<!-- <script src="/js/navBarAuth.js"></script> -->
+<script src="/js/onboarding.js"></script>
+
+</html>

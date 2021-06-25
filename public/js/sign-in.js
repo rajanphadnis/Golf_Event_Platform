@@ -22,13 +22,27 @@ initApp = function () {
             signInButton.style.display = "none";
             signedInDropdown.style.display = "flex";
             document.getElementById('accountButton').textContent = email;
-            window.location = returnTo;
+            db.collection("users").where("email", "==", user.email.toString()).get().then((snap) => {
+                return snap.docs.length != 0 ? true : false;
+            }).then((hasUser) => {
+                db.collection("charities").where("email", "==", user.email.toString()).get().then((snap) => {
+                    var hasCharity = snap.docs.length != 0 ? true : false;
+                    if(hasUser || hasCharity) {
+                        window.location = returnTo;
+                    }
+                    else {
+                        window.location = "/onboarding";
+                    }
+                })
+            });
+            // window.location = returnTo;
         } else {
             signInButton.style.display = "block";
             signedInDropdown.style.display = "none";
             // FirebaseUI config.
             var uiConfig = {
-                signInSuccessUrl: returnTo,
+                signInSuccessUrl: "/onboarding",
+                // signInSuccessUrl: returnTo,
                 signInOptions: [
                     // Leave the lines as is for the providers you want to offer your users.
                     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
