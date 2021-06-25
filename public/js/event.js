@@ -76,7 +76,7 @@ initApp = function () {
         if (doc.exists) {
             if (doc.data().ImageURL.toString() == "client") {
                 firebase
-                  .storage()
+                  .storage("gs://golf-event-platform")
                   .ref(doc.id.toString() + ".jpg")
                   .getDownloadURL()
                   .then((url) => {

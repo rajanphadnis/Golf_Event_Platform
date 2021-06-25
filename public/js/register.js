@@ -68,7 +68,7 @@ initApp = function () {
             document.getElementById("eventTitle").innerText = doc.data().Name;
             if (doc.data().ImageURL.toString() == "client") {
                 firebase
-                  .storage()
+                  .storage("gs://golf-event-platform")
                   .ref(doc.id.toString() + ".jpg")
                   .getDownloadURL()
                   .then((url) => {

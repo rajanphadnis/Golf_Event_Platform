@@ -81,7 +81,7 @@ addEventCard = function (
   var imageURL;
   if (dbimageURL.toString() == "client") {
     firebase
-      .storage()
+      .storage("gs://golf-event-platform")
       .ref(dbid.toString() + ".jpg")
       .getDownloadURL()
       .then((url) => {
