@@ -382,7 +382,6 @@ exports.autoGenerateHashFromImage = functions.storage
             return true;
           })
           .catch((error) => {
-            // The document probably doesn't exist.
             console.error("Error updating document: ", error);
           });
       });
