@@ -18,16 +18,9 @@ jobs:
           expires: 30d
           projectId: golf-event-platform
           channelId: dev
-          # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - run: cd functions
-      - run: npm install
-      - name: Firebase Deploy Action
-        # You may pin to the exact commit or the version.
-        # uses: jonahsnider/firebase-action@ec888266077d6a87bd4297045706b32b1b802062
-        uses: jonahsnider/firebase-action@1.0.7
+      - name: Check out code
+        uses: actions/checkout@master
+      - name: Deploy Functions
+        uses: BIGG-Kaymo/deploy-firebase-functions@v1.0.1
         env:
-          PROJECT_ID: "golf-event-platform"
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        with:
-          args: deploy --only functions

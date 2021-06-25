@@ -15,16 +15,20 @@ jobs:
   build_and_preview:
     runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: Firebase Deploy Action
-        # You may pin to the exact commit or the version.
-        # uses: jonahsnider/firebase-action@ec888266077d6a87bd4297045706b32b1b802062
-        uses: jonahsnider/firebase-action@1.0.7
-        env:
-          PROJECT_ID: "golf-event-platform"
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      # Add any build steps here. For example:
+      # - run: npm ci && npm run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          args: deploy
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_GOLF_EVENT_PLATFORM }}"
+          projectId: golf-event-platform
+          channelId: live
+      - name: Check out code
+        uses: actions/checkout@master
+      - name: Deploy Functions
+        uses: BIGG-Kaymo/deploy-firebase-functions@v1.0.1
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
   
