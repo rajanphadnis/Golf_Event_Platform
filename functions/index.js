@@ -374,6 +374,7 @@ exports.autoGenerateHashFromImage = functions.storage
           .set({
             MainHash: hash.toString(),
             LastUpdated: new Date(Date.now()),
+            // To trigger client
             ImageURL: "client",
             ImageDim: parseFloat(imgHeight / imgWidth),
           }, {merge: true})
