@@ -20,6 +20,8 @@ jobs:
           channelId: dev
           # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - run: cd functions
+      - run: npm install
       - name: Firebase Deploy Action
         # You may pin to the exact commit or the version.
         # uses: jonahsnider/firebase-action@ec888266077d6a87bd4297045706b32b1b802062
