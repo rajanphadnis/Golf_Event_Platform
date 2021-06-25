@@ -374,6 +374,7 @@ exports.autoGenerateHashFromImage = functions.storage
           .set({
             MainHash: hash.toString(),
             LastUpdated: new Date(Date.now()),
+            ImageURL: "client",
           }, {merge: true})
           .then(() => {
             console.log("Document successfully updated!");
