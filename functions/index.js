@@ -334,7 +334,6 @@ const blurhash = (function (t) {
 // When a new image is uploaded to cloud storage,
 // it is converted a hash and the hash is written
 // to the event with id of the uploaded file's name.
-//
 exports.autoGenerateHashFromImage = functions.storage
   .bucket("golf-event-platform")
   .object()
