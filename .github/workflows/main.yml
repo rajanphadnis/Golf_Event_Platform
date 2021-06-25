@@ -24,6 +24,9 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_GOLF_EVENT_PLATFORM }}"
           projectId: golf-event-platform
           channelId: live
+  function_deploy:
+    runs-on: ubuntu-latest
+    steps:
       - name: Check out code
         uses: actions/checkout@master
       - name: Deploy Functions
