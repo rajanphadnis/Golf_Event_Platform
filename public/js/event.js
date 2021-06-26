@@ -57,6 +57,26 @@ initApp = function () {
         signInButton.style.display = "none";
         signedInDropdown.style.display = "flex";
         document.getElementById("accountButton").textContent = email;
+        db.collection("users")
+          .where("email", "==", user.email.toString())
+          .get()
+          .then((snap) => {
+            return snap.docs.length != 0 ? true : false;
+          })
+          .then((hasUser) => {
+            db.collection("charities")
+              .where("email", "==", user.email.toString())
+              .get()
+              .then((snap) => {
+                var hasCharity = snap.docs.length != 0 ? true : false;
+                if (hasUser || hasCharity) {
+                  // window.location = returnTo;
+                  console.log("logged in");
+                } else {
+                  window.location = "/onboarding";
+                }
+              });
+          });
         document
           .getElementById("register")
           .addEventListener("click", function () {

@@ -8,14 +8,18 @@ try {
 }
 var searchParams = new URLSearchParams(queryString);
 var returnTo;
+var param;
 if (searchParams.has("l")) {
     console.log(searchParams.get("l").toString());
     returnTo = "/" + searchParams.get("l").toString();
+    param = searchParams.get("l").toString();
 }
 else {
     returnTo = "/";
+    param = "";
 }
 initApp = function () {
+    var db = firebase.firestore();
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             var email = user.email;
@@ -41,7 +45,7 @@ initApp = function () {
             signedInDropdown.style.display = "none";
             // FirebaseUI config.
             var uiConfig = {
-                signInSuccessUrl: "/onboarding",
+                signInSuccessUrl: `/onboarding?l=${encodeURIComponent(param)}`,
                 // signInSuccessUrl: returnTo,
                 signInOptions: [
                     // Leave the lines as is for the providers you want to offer your users.

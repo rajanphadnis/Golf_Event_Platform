@@ -13,20 +13,26 @@ initApp = function () {
         signInButton.style.display = "none";
         signedInDropdown.style.display = "flex";
         document.getElementById("accountButton").textContent = email;
-        db.collection("users").where("email", "==", user.email.toString()).get().then((snap) => {
-          return snap.docs.length != 0 ? true : false;
-      }).then((hasUser) => {
-          db.collection("charities").where("email", "==", user.email.toString()).get().then((snap) => {
-              var hasCharity = snap.docs.length != 0 ? true : false;
-              if(hasUser || hasCharity) {
+        db.collection("users")
+          .where("email", "==", user.email.toString())
+          .get()
+          .then((snap) => {
+            return snap.docs.length != 0 ? true : false;
+          })
+          .then((hasUser) => {
+            db.collection("charities")
+              .where("email", "==", user.email.toString())
+              .get()
+              .then((snap) => {
+                var hasCharity = snap.docs.length != 0 ? true : false;
+                if (hasUser || hasCharity) {
                   // window.location = returnTo;
                   console.log("logged in");
-              }
-              else {
+                } else {
                   window.location = "/onboarding";
-              }
-          })
-      });
+                }
+              });
+          });
         db.collection("upcomingEvents")
           .get()
           .then((querySnapshot) => {
@@ -97,18 +103,23 @@ addEventCard = function (
 ) {
   var imageURL;
   if (dbimageURL.toString() == "client") {
-    firebase.app()
+    firebase
+      .app()
       .storage("gs://golf-event-platform")
       .ref(dbid.toString() + ".jpg")
       .getDownloadURL()
       .then((url) => {
         imageURL = url;
-        return firebase.firestore().collection("upcomingEvents").doc(dbid.toString()).set(
-          {
-            ImageURL: url,
-          },
-          { merge: true }
-        );
+        return firebase
+          .firestore()
+          .collection("upcomingEvents")
+          .doc(dbid.toString())
+          .set(
+            {
+              ImageURL: url,
+            },
+            { merge: true }
+          );
       });
   } else {
     imageURL = dbimageURL.toString();
