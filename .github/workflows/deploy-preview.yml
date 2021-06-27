@@ -3,7 +3,7 @@ name: Beta Hosting Deploy
 on:
   push:
     branches: [dev]
-
+  workflow_dispatch:
 jobs:
   hosting_deploy:
     runs-on: ubuntu-latest
