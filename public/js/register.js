@@ -73,7 +73,8 @@ initApp = function () {
                   // window.location = returnTo;
                   console.log("logged in");
                 } else {
-                  window.location = "/onboarding";
+                  var encodedURL = encodeURIComponent(`event/register/?e=${eventID}&i=${hash}&d=${hDim}`);
+                  window.location = `/onboarding?l=${encodedURL}`;
                 }
               });
           });
@@ -81,6 +82,8 @@ initApp = function () {
         // User is signed out.
         signInButton.style.display = "block";
         signedInDropdown.style.display = "none";
+        var encodedURL = encodeURIComponent(`event/register?e=${eventID}&i=${hash}&d=${hDim}`);
+        document.getElementById("signInButton").href = `/sign-in?l=${encodedURL}`;
       }
     },
     function (error) {
@@ -93,6 +96,7 @@ initApp = function () {
     .get()
     .then((doc) => {
       if (doc.exists) {
+        document.title = "Register - " + doc.data().Name.toString() + " | Golf_Event_Platform";
         document.getElementById("eventTitle").innerText = doc.data().Name;
         if (doc.data().ImageURL.toString() == "client") {
           firebase

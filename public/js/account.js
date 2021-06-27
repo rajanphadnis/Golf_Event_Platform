@@ -23,7 +23,7 @@ initApp = function () {
                   // window.location = returnTo;
                   console.log("logged in");
                 } else {
-                  window.location = "/onboarding";
+                  window.location = "/onboarding?l=account";
                 }
               });
           });

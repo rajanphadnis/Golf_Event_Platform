@@ -73,7 +73,8 @@ initApp = function () {
                   // window.location = returnTo;
                   console.log("logged in");
                 } else {
-                  window.location = "/onboarding";
+                  var encodedURL = encodeURIComponent(`event/?e=${eventID}&i=${hash}&d=${hDim}`);
+                  window.location = `/onboarding?l=${encodedURL}`;
                 }
               });
           });
@@ -88,12 +89,14 @@ initApp = function () {
         // User is signed out.
         signInButton.style.display = "block";
         signedInDropdown.style.display = "none";
+        var encodedURL = encodeURIComponent(`event?e=${eventID}&i=${hash}&d=${hDim}`);
+        document.getElementById("signInButton").href = `/sign-in?l=${encodedURL}`;
         document
           .getElementById("register")
           .addEventListener("click", function () {
             var toEncode = `event/register?e=${eventID}&i=${hash}&d=${hDim}`;
             var laterLocation = encodeURIComponent(toEncode);
-            console.log(laterLocation);
+            // console.log(laterLocation);
             window.location = `/sign-in/?l=${laterLocation}`;
           });
       }
@@ -132,6 +135,7 @@ initApp = function () {
         }
         // console.log("Document data:", doc.data());
         document.getElementById("eventTitle").innerText = doc.data().Name;
+        document.title = doc.data().Name.toString() + " | Golf_Event_Platform";
         document.getElementById("eventLocation").innerHTML =
           '<span class="material-icons">place</span>' + doc.data().Location;
         document.getElementById("eventDateTime").innerText = new Date(

@@ -35,7 +35,7 @@ initApp = function () {
                         window.location = returnTo;
                     }
                     else {
-                        window.location = "/onboarding";
+                        window.location = `/onboarding?l=${encodeURIComponent(param)}`;
                     }
                 })
             });
