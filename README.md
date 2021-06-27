@@ -4,10 +4,11 @@
 Site to help organize and advertise for golf charity tournaments. Starting off in Southern California with plans to expland nationwide later.
 
 ## Services
-- Payment Processor: Stripe
-- Backend: Firebase/GCP
-- Hosting: Firebase
+- Payment Processor: [Stripe](https://stripe.com/)
+- Backend: [Firebase/GCP](https://firebase.google.com/)
+- Hosting: [Firebase](https://firebase.google.com/products/hosting)
 - Communications Platform: TBD (SendGrid, MessageBird, MailChimp)
+- Search: [Algolia](https://www.algolia.com/)
 
 
 ## Critical Info
