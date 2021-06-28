@@ -111,28 +111,28 @@ initApp = function () {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        if (doc.data().ImageURL.toString() == "client") {
-          firebase
-            .app()
-            .storage("gs://golf-event-platform")
-            .ref(doc.id.toString() + ".jpg")
-            .getDownloadURL()
-            .then((url) => {
-              document.getElementById("eventImageMain").src = url;
-              return firebase
-                .firestore()
-                .collection("upcomingEvents")
-                .doc(doc.id.toString())
-                .set(
-                  {
-                    ImageURL: url,
-                  },
-                  { merge: true }
-                );
-            });
-        } else {
+        // if (doc.data().ImageURL.toString() == "client") {
+        //   firebase
+        //     .app()
+        //     .storage("gs://golf-event-platform")
+        //     .ref(doc.id.toString() + ".jpg")
+        //     .getDownloadURL()
+        //     .then((url) => {
+        //       document.getElementById("eventImageMain").src = url;
+        //       return firebase
+        //         .firestore()
+        //         .collection("upcomingEvents")
+        //         .doc(doc.id.toString())
+        //         .set(
+        //           {
+        //             ImageURL: url,
+        //           },
+        //           { merge: true }
+        //         );
+        //     });
+        // } else {
           document.getElementById("eventImageMain").src = doc.data().ImageURL;
-        }
+        // }
         // console.log("Document data:", doc.data());
         document.getElementById("eventTitle").innerText = doc.data().Name;
         document.title = doc.data().Name.toString() + " | Golf_Event_Platform";

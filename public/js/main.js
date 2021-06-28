@@ -102,28 +102,28 @@ addEventCard = function (
   dbDim
 ) {
   var imageURL;
-  if (dbimageURL.toString() == "client") {
-    firebase
-      .app()
-      .storage("gs://golf-event-platform")
-      .ref(dbid.toString() + ".jpg")
-      .getDownloadURL()
-      .then((url) => {
-        imageURL = url;
-        return firebase
-          .firestore()
-          .collection("upcomingEvents")
-          .doc(dbid.toString())
-          .set(
-            {
-              ImageURL: url,
-            },
-            { merge: true }
-          );
-      });
-  } else {
+  // if (dbimageURL.toString() == "client") {
+  //   firebase
+  //     .app()
+  //     .storage("gs://golf-event-platform")
+  //     .ref(dbid.toString() + ".jpg")
+  //     .getDownloadURL()
+  //     .then((url) => {
+  //       imageURL = url;
+  //       return firebase
+  //         .firestore()
+  //         .collection("upcomingEvents")
+  //         .doc(dbid.toString())
+  //         .set(
+  //           {
+  //             ImageURL: url,
+  //           },
+  //           { merge: true }
+  //         );
+  //     });
+  // } else {
     imageURL = dbimageURL.toString();
-  }
+  // }
   var id = dbid.toString();
   var title = convertFirstCharacterToUppercase(dbtitle);
   var dateTime = new Date(dbdatetime.seconds * 1000).toString();

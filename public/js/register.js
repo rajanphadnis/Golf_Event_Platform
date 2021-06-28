@@ -98,28 +98,28 @@ initApp = function () {
       if (doc.exists) {
         document.title = "Register - " + doc.data().Name.toString() + " | Golf_Event_Platform";
         document.getElementById("eventTitle").innerText = doc.data().Name;
-        if (doc.data().ImageURL.toString() == "client") {
-          firebase
-            .app()
-            .storage("gs://golf-event-platform")
-            .ref(doc.id.toString() + ".jpg")
-            .getDownloadURL()
-            .then((url) => {
-              document.getElementById("eventImageMain").src = url;
-              return firebase
-                .firestore()
-                .collection("upcomingEvents")
-                .doc(doc.id.toString())
-                .set(
-                  {
-                    ImageURL: url,
-                  },
-                  { merge: true }
-                );
-            });
-        } else {
+        // if (doc.data().ImageURL.toString() == "client") {
+        //   firebase
+        //     .app()
+        //     .storage("gs://golf-event-platform")
+        //     .ref(doc.id.toString() + ".jpg")
+        //     .getDownloadURL()
+        //     .then((url) => {
+        //       document.getElementById("eventImageMain").src = url;
+        //       return firebase
+        //         .firestore()
+        //         .collection("upcomingEvents")
+        //         .doc(doc.id.toString())
+        //         .set(
+        //           {
+        //             ImageURL: url,
+        //           },
+        //           { merge: true }
+        //         );
+        //     });
+        // } else {
           document.getElementById("eventImageMain").src = doc.data().ImageURL;
-        }
+        // }
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
