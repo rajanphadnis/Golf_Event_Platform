@@ -334,63 +334,63 @@ const blurhash = (function (t) {
 // When a new image is uploaded to cloud storage,
 // it is converted a hash and the hash is written
 // to the event with id of the uploaded file's name.
-exports.autoGenerateHashFromImage = functions.storage
-  .bucket("golf-event-platform")
-  .object()
-  .onFinalize(async (object) => {
-    const bucket = admin.storage().bucket("golf-event-platform");
-    const tempFilePath = path.join(os.tmpdir(), object.name);
-    var db = admin.firestore();
-    var dbRef = db
-      .collection("upcomingEvents")
-      .doc(
-        object.name.toString().substring(0, object.name.toString().length - 4)
-      );
-    var imgWidth;
-    var imgHeight;
-    var decodedDataV;
-    return bucket
-      .file(object.name)
-      .download({ destination: tempFilePath, validation: false })
-      .then(function (object) {
-        return sizeOf(tempFilePath);
-      })
-      .then((dimensions) => {
-        return new Promise(async (resolve, reject) => {
-          imgWidth = dimensions.width;
-          imgHeight = dimensions.height;
-          decodedDataV = decodedData(tempFilePath);
-          console.log(imgWidth);
-          console.log(imgHeight);
-          resolve(decodedDataV);
-        });
-      })
-      .then((b) => {
-        return blurhash.encodePromise(decodedDataV, imgWidth, imgHeight, 4, 3);
-      })
-      .then((hash) => {
-        console.log(hash);
-        return dbRef
-          .set({
-            MainHash: hash.toString(),
-            LastUpdated: new Date(Date.now()),
-            // To trigger client
-            ImageURL: "client",
-            ImageDim: parseFloat(imgHeight / imgWidth),
-          }, {merge: true})
-          .then(() => {
-            console.log("Document successfully updated!");
-            return true;
-          })
-          .catch((error) => {
-            console.error("Error updating document: ", error);
-          });
-      });
-    function decodedData(stempFilePath) {
-      var tR;
-      inkjet.decode(fs.readFileSync(stempFilePath), function (err, decoded) {
-        tR = decoded.data;
-      });
-      return tR;
-    }
-  });
+// exports.autoGenerateHashFromImage = functions.storage
+//   .bucket("golf-event-platform")
+//   .object()
+//   .onFinalize(async (object) => {
+//     const bucket = admin.storage().bucket("golf-event-platform");
+//     const tempFilePath = path.join(os.tmpdir(), object.name);
+//     var db = admin.firestore();
+//     var dbRef = db
+//       .collection("upcomingEvents")
+//       .doc(
+//         object.name.toString().substring(0, object.name.toString().length - 4)
+//       );
+//     var imgWidth;
+//     var imgHeight;
+//     var decodedDataV;
+//     return bucket
+//       .file(object.name)
+//       .download({ destination: tempFilePath, validation: false })
+//       .then(function (object) {
+//         return sizeOf(tempFilePath);
+//       })
+//       .then((dimensions) => {
+//         return new Promise(async (resolve, reject) => {
+//           imgWidth = dimensions.width;
+//           imgHeight = dimensions.height;
+//           decodedDataV = decodedData(tempFilePath);
+//           console.log(imgWidth);
+//           console.log(imgHeight);
+//           resolve(decodedDataV);
+//         });
+//       })
+//       .then((b) => {
+//         return blurhash.encodePromise(decodedDataV, imgWidth, imgHeight, 4, 3);
+//       })
+//       .then((hash) => {
+//         console.log(hash);
+//         return dbRef
+//           .set({
+//             MainHash: hash.toString(),
+//             LastUpdated: new Date(Date.now()),
+//             // To trigger client
+//             ImageURL: "client",
+//             ImageDim: parseFloat(imgHeight / imgWidth),
+//           }, {merge: true})
+//           .then(() => {
+//             console.log("Document successfully updated!");
+//             return true;
+//           })
+//           .catch((error) => {
+//             console.error("Error updating document: ", error);
+//           });
+//       });
+//     function decodedData(stempFilePath) {
+//       var tR;
+//       inkjet.decode(fs.readFileSync(stempFilePath), function (err, decoded) {
+//         tR = decoded.data;
+//       });
+//       return tR;
+//     }
+//   });
