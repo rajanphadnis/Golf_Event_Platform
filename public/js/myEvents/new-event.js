@@ -152,7 +152,7 @@ function addEvent(
     })
     .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
-      uploadFile(poster, docRef.id);      
+      uploadFile(poster, docRef.id);
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
@@ -160,7 +160,10 @@ function addEvent(
 }
 
 function uploadFile(file, name) {
-  var storage = firebase.app().storage("gs://golf-event-platform").ref(name + ".jpg");
+  var storage = firebase
+    .app()
+    .storage("gs://golf-event-platform")
+    .ref(name + ".jpg");
 
   //upload file
   var upload = storage.put(file);
@@ -206,7 +209,12 @@ function getDownloadURLOfImg(docID) {
           { merge: true }
         )
         .then((t) => {
-          document.getElementById("progress").value = 100;
+          return new Promise(async (resolve, reject) => {
+            document.getElementById("progress").value = 100;
+            resolve(true);
+          });
+        })
+        .then((t) => {
           alert("event added");
         });
     })
