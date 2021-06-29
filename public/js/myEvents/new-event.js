@@ -133,7 +133,7 @@ function addEvent(
   dim
   // hash
 ) {
-  console.log(hash);
+  // console.log(hash);
   firebase
     .firestore()
     .collection("upcomingEvents")
