@@ -6,7 +6,7 @@ var imageData;
 var loading = false;
 var imgDim;
 var initApp = function () {
-  var ihash;
+  // var ihash;
   var db = firebase.firestore();
   firebase.auth().onAuthStateChanged(
     function (user) {
@@ -50,14 +50,14 @@ var initApp = function () {
                     ).data;
                     console.log("image data:", imageData);
                     imgDim = img.height / img.width;
-                    ihash = blurhash.encode(
-                      imageData,
-                      img.width,
-                      img.height,
-                      4,
-                      3
-                    );
-                    console.log(ihash);
+                    // ihash = blurhash.encode(
+                    //   imageData,
+                    //   img.width,
+                    //   img.height,
+                    //   4,
+                    //   3
+                    // );
+                    // console.log(ihash);
                     document.getElementById("loadingFile").style.display =
                       "none";
                     loading = false;
@@ -77,7 +77,7 @@ var initApp = function () {
                   //   console.log(loc);
                   //   console.log(Date(dt));
                   //   console.log(cost);
-                  console.log(ihash);
+                  // console.log(ihash);
                   if (files.length != 0) {
                     if (loading == false) {
                       addEvent(
@@ -90,8 +90,8 @@ var initApp = function () {
                         files[0],
                         user.uid,
                         doc.data().name,
-                        imgDim,
-                        ihash
+                        imgDim
+                        // ihash
                       );
                     } else {
                       alert(
@@ -130,8 +130,8 @@ function addEvent(
   poster,
   uid,
   charityName,
-  dim,
-  hash
+  dim
+  // hash
 ) {
   console.log(hash);
   firebase
@@ -148,7 +148,7 @@ function addEvent(
       OrganizerID: uid.toString(),
       OrganizerName: charityName.toString(),
       ImageDim: parseFloat(dim),
-      MainHash: hash.toString(),
+      // MainHash: hash.toString(),
     })
     .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
