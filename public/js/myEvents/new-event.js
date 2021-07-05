@@ -216,6 +216,7 @@ function getDownloadURLOfImg(docID) {
         })
         .then((t) => {
           alert("event added");
+          window.location = "/my-events";
         });
     })
     .catch((error) => {
