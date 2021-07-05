@@ -1,0 +1,43 @@
+#charityMainFlex {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+
+#charityVerticalNav {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 10%;
+}
+
+#charityMainContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: 60%;
+}
+
+#charityRightLinksBar {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 10%;
+}
+
+.eventTile {
+    padding: 10px;
+    padding-top: 0px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 150px;
+    width: 150px;
+    border-style: solid;
+    border-color: #000000;
+    border-width: 1px;
+    text-align: center;
+}
