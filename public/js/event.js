@@ -3,6 +3,7 @@ var queryString;
 var hash;
 var hDim;
 try {
+  console.log(uri);
   queryString = decodeURI(uri);
 } catch (e) {
   // catches a malformed URI
@@ -33,15 +34,20 @@ var width =
   0.3;
 var height = width * hDim;
 
-blurhash.decodePromise(hash, width, height).then((blurhashImgData) => {
+console.log(hash);
+console.log(width);
+console.log(height);
+blurhash.decodePromise(hash, width, height, 1).then((blurhashImgData) => {
+  // console.log(blurhashImgData.length / 4);
   // as image object with onload callback
-  const imgObject = blurhash.getImageDataAsImage(
+  var imgObject = blurhash.getImageDataAsImage(
     blurhashImgData,
     width,
     height,
     (event, imgObject) => {
       document.getElementById("eventImageMain").src = imgObject.src;
-    });
+    }
+  );
 });
 var signInButton = document.getElementById("signInButton");
 var signedInDropdown = document.getElementById("signedInDropdown");
@@ -71,9 +77,11 @@ initApp = function () {
                 var hasCharity = snap.docs.length != 0 ? true : false;
                 if (hasUser || hasCharity) {
                   // window.location = returnTo;
-                  console.log("logged in");
+                  // console.log("logged in");
                 } else {
-                  var encodedURL = encodeURIComponent(`event/?e=${eventID}&i=${hash}&d=${hDim}`);
+                  var encodedURL = encodeURIComponent(
+                    `event/?e=${eventID}&i=${hash}&d=${hDim}`
+                  );
                   window.location = `/onboarding?l=${encodedURL}`;
                 }
               });
@@ -89,8 +97,12 @@ initApp = function () {
         // User is signed out.
         signInButton.style.display = "block";
         signedInDropdown.style.display = "none";
-        var encodedURL = encodeURIComponent(`event?e=${eventID}&i=${hash}&d=${hDim}`);
-        document.getElementById("signInButton").href = `/sign-in?l=${encodedURL}`;
+        var encodedURL = encodeURIComponent(
+          `event?e=${eventID}&i=${hash}&d=${hDim}`
+        );
+        document.getElementById(
+          "signInButton"
+        ).href = `/sign-in?l=${encodedURL}`;
         document
           .getElementById("register")
           .addEventListener("click", function () {
@@ -131,7 +143,7 @@ initApp = function () {
         //         );
         //     });
         // } else {
-          document.getElementById("eventImageMain").src = doc.data().ImageURL;
+        document.getElementById("eventImageMain").src = doc.data().ImageURL;
         // }
         // console.log("Document data:", doc.data());
         document.getElementById("eventTitle").innerText = doc.data().Name;

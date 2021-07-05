@@ -27,7 +27,7 @@ initApp = function () {
                 var hasCharity = snap.docs.length != 0 ? true : false;
                 if (hasUser || hasCharity) {
                   // window.location = returnTo;
-                  console.log("logged in");
+                  // console.log("logged in");
                 } else {
                   window.location = "/onboarding";
                 }
@@ -38,7 +38,7 @@ initApp = function () {
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               // doc.data() is never undefined for query doc snapshots
-              console.log(doc.id, " => ", doc.data());
+              // console.log(doc.id, " => ", doc.data());
               parentList.innerHTML =
                 parentList.innerHTML +
                 addEventCard(
@@ -63,7 +63,8 @@ initApp = function () {
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               // doc.data() is never undefined for query doc snapshots
-              console.log(doc.id, " => ", doc.data());
+              // console.log(doc.id, " => ", doc.data());
+
               parentList.innerHTML =
                 parentList.innerHTML +
                 addEventCard(
@@ -130,7 +131,7 @@ addEventCard = function (
   var location = dblocation.toString();
   var organizer = dborganizer.toString();
   var cost = (dbcost / 100).toFixed(2).toString();
-  var blurHash = encodeURI(dbhash);
+  var blurHash = encodeURIComponent(dbhash);
 
   var imgElement = new String(
     `<img src="${imageURL}" alt="Event Brochure" width="100">`
