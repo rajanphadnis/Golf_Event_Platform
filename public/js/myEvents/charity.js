@@ -24,9 +24,9 @@ function displayCharityEvents(uid) {
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         var docTile = document.createElement("div");
-        var eventTitle = `<div><p>${
+        var eventTitle = `<div><a href="/event?e=${doc.id}&i=${encodeURIComponent(doc.data().MainHash)}&d=${doc.data().ImageDim}">${
           doc.data().Name
-        }</p><div>`;
+        }</a><div>`;
         var editbutton = `<div><a href="/my-events/edit?d=${
           doc.id
         }">Edit Event</a></div>`;
