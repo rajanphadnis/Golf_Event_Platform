@@ -5,23 +5,23 @@ var parentList = document.getElementById("upcomingEvents");
 // var signedInDropdown = document.getElementById("signedInDropdown");
 initApp = function () {
   var db = firebase.firestore();
-  const searchClient = algoliasearch('WPWFG61OL2', 'b91d438c108bc8fbab3cc293f699855b');
-  const search = instantsearch({
-    indexName: "events_golf-event-platform",
-    searchClient,
-  });
+  // const searchClient = algoliasearch('WPWFG61OL2', 'b91d438c108bc8fbab3cc293f699855b');
+  // const search = instantsearch({
+  //   indexName: "events_golf-event-platform",
+  //   searchClient,
+  // });
 
-  search.addWidgets([
-    instantsearch.widgets.searchBox({
-      container: "#search-container",
-    }),
+  // search.addWidgets([
+  //   instantsearch.widgets.searchBox({
+  //     container: "#search-container",
+  //   }),
 
-    instantsearch.widgets.hits({
-      container: "#upcomingEvents",
-    }),
-  ]);
+  //   instantsearch.widgets.hits({
+  //     container: "#upcomingEvents",
+  //   }),
+  // ]);
 
-  search.start();
+  // search.start();
   firebase.auth().onAuthStateChanged(
     function (user) {
       if (user) {
