@@ -8,6 +8,7 @@ const inkjet = require("inkjet");
 const { promisify } = require("util");
 const { DocumentBuilder } = require("firebase-functions/lib/providers/firestore");
 const sizeOf = promisify(require("image-size"));
+const firebase_tools = require('firebase-tools');
 admin.initializeApp();
 const blurhash = (function (t) {
   const e = [
@@ -395,3 +396,52 @@ exports.autoGenerateHashFromImage = functions.storage
       return tR;
     }
   });
+
+
+exports.deleteEvent = functions.firestore
+.document('upcomingEvents/{eventID}')
+.onDelete(async (snap, context) => {
+  // Get an object representing the document prior to deletion
+  // e.g. {'name': 'Marie', 'age': 66}
+  const deletedValue = snap.data();
+  var eID = context.params.eventID;
+
+  console.log(eID);
+  console.log(deletedValue);
+  var db = admin.firestore();
+  const collectionRef = db.collection(`/upcomingEvents/${eID}/registeredUsers`);
+  const query = collectionRef.orderBy('__name__').limit(5);
+
+  console.log(`/upcomingEvents/${eID}/registeredUsers`);
+
+  return new Promise((resolve, reject) => {
+    return deleteQueryBatch(db, query, resolve).catch(reject);
+  });
+});
+
+async function deleteQueryBatch(db, query, resolve) {
+  const snapshot = await query.get();
+  console.log(snapshot.docs);
+
+  const batchSize = snapshot.size;
+  if (batchSize === 0) {
+    // When there are no documents left, we are done
+    console.log("NO DOCS LEFT TO DELETE");
+    resolve();
+    return;
+  }
+
+  // Delete documents in a batch
+  const batch = db.batch();
+  snapshot.docs.forEach((doc) => {
+    console.log(`DELETING DOC: ${doc.id}`);
+    batch.delete(doc.ref);
+  });
+  await batch.commit();
+
+  // Recurse on the next process tick, to avoid
+  // exploding the stack.
+  process.nextTick(() => {
+    deleteQueryBatch(db, query, resolve);
+  });
+}
