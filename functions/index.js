@@ -410,15 +410,11 @@ exports.deleteEvent = functions.firestore
     const deletedValue = snap.data();
     var eID = context.params.eventID;
 
-    console.log(eID);
-    console.log(deletedValue);
     var db = admin.firestore();
     const collectionRef = db.collection(
       `/upcomingEvents/${eID}/registeredUsers`
     );
     const query = collectionRef.orderBy("__name__").limit(5);
-
-    // console.log(`/upcomingEvents/${eID}/registeredUsers`);
 
     return new Promise((resolve, reject) => {
       deleteQueryBatch(db, query, resolve).catch(reject);
@@ -438,7 +434,6 @@ exports.deleteEvent = functions.firestore
 
 async function deleteQueryBatch(db, query, resolve) {
   const snapshot = await query.get();
-  // console.log(snapshot.docs);
 
   const batchSize = snapshot.size;
   if (batchSize === 0) {
