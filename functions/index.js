@@ -6,9 +6,11 @@ const admin = require("firebase-admin");
 const fs = require("fs");
 const inkjet = require("inkjet");
 const { promisify } = require("util");
-const { DocumentBuilder } = require("firebase-functions/lib/providers/firestore");
+const {
+  DocumentBuilder,
+} = require("firebase-functions/lib/providers/firestore");
 const sizeOf = promisify(require("image-size"));
-const firebase_tools = require('firebase-tools');
+const firebase_tools = require("firebase-tools");
 admin.initializeApp();
 const blurhash = (function (t) {
   const e = [
@@ -373,13 +375,16 @@ exports.autoGenerateHashFromImage = functions.storage
       .then((hash) => {
         console.log(hash);
         return dbRef
-          .set({
-            MainHash: hash.toString(),
-            LastUpdated: new Date(Date.now()),
-            // To trigger client
-            // ImageURL: "client",
-            // ImageDim: parseFloat(imgHeight / imgWidth),
-          }, {merge: true})
+          .set(
+            {
+              MainHash: hash.toString(),
+              LastUpdated: new Date(Date.now()),
+              // To trigger client
+              // ImageURL: "client",
+              // ImageDim: parseFloat(imgHeight / imgWidth),
+            },
+            { merge: true }
+          )
           .then(() => {
             console.log("Document successfully updated!");
             return true;
@@ -397,31 +402,43 @@ exports.autoGenerateHashFromImage = functions.storage
     }
   });
 
-
 exports.deleteEvent = functions.firestore
-.document('upcomingEvents/{eventID}')
-.onDelete(async (snap, context) => {
-  // Get an object representing the document prior to deletion
-  // e.g. {'name': 'Marie', 'age': 66}
-  const deletedValue = snap.data();
-  var eID = context.params.eventID;
+  .document("upcomingEvents/{eventID}")
+  .onDelete(async (snap, context) => {
+    // Get an object representing the document prior to deletion
+    // e.g. {'name': 'Marie', 'age': 66}
+    const deletedValue = snap.data();
+    var eID = context.params.eventID;
 
-  console.log(eID);
-  console.log(deletedValue);
-  var db = admin.firestore();
-  const collectionRef = db.collection(`/upcomingEvents/${eID}/registeredUsers`);
-  const query = collectionRef.orderBy('__name__').limit(5);
+    console.log(eID);
+    console.log(deletedValue);
+    var db = admin.firestore();
+    const collectionRef = db.collection(
+      `/upcomingEvents/${eID}/registeredUsers`
+    );
+    const query = collectionRef.orderBy("__name__").limit(5);
 
-  console.log(`/upcomingEvents/${eID}/registeredUsers`);
+    // console.log(`/upcomingEvents/${eID}/registeredUsers`);
 
-  return new Promise((resolve, reject) => {
-    return deleteQueryBatch(db, query, resolve).catch(reject);
+    return new Promise((resolve, reject) => {
+      deleteQueryBatch(db, query, resolve).catch(reject);
+    }).then((t) => {
+      const bucket = admin.storage().bucket("golf-event-platform");
+      return bucket
+        .file(`${eID}.jpg`)
+        .delete()
+        .then(() => {
+          return true;
+        })
+        .catch((error) => {
+          // Uh-oh, an error occurred!
+        });
+    });
   });
-});
 
 async function deleteQueryBatch(db, query, resolve) {
   const snapshot = await query.get();
-  console.log(snapshot.docs);
+  // console.log(snapshot.docs);
 
   const batchSize = snapshot.size;
   if (batchSize === 0) {
