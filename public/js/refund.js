@@ -1,8 +1,6 @@
 initApp = function () {
   const uri = window.location.search;
   var queryString;
-  var hash;
-  var hDim;
   try {
     queryString = decodeURI(uri);
   } catch (e) {
@@ -12,43 +10,20 @@ initApp = function () {
   }
   var searchParams = new URLSearchParams(queryString);
   var eventID;
-  if (searchParams.has("e") && searchParams.has("i") && searchParams.has("d")) {
+  if (searchParams.has("e")) {
     eventID = searchParams.get("e").toString();
     if (eventID == "") {
-      window.location = "/";
-    }
-    hash = searchParams.get("i").toString();
-    if (hash == "") {
-      window.location = "/";
-    }
-    hDim = searchParams.get("d").toString();
-    if (hDim == "") {
       window.location = "/";
     }
   } else {
     window.location = "/";
   }
-  // var img = new Image()
-  var width =
-    (document.body.offsetWidth ? document.body.offsetWidth : document.width) *
-    0.3;
-  var height = width * hDim;
-  blurhash.decodePromise(hash, width, height).then((blurhashImgData) => {
-    // as image object with onload callback
-    const imgObject = blurhash.getImageDataAsImage(
-      blurhashImgData,
-      width,
-      height,
-      (event, imgObject) => {
-        document.getElementById("eventImageMain").src = imgObject.src;
-      }
-    );
-  });
   var signInButton = document.getElementById("signInButton");
   var signedInDropdown = document.getElementById("signedInDropdown");
   var eventTitleBlock = document.getElementById("eventTitle");
   var db = firebase.firestore();
   var docRef = db.collection("upcomingEvents").doc(eventID);
+  var userDocRef;
   firebase.auth().onAuthStateChanged(
     function (user) {
       if (user) {
@@ -61,7 +36,8 @@ initApp = function () {
           .where("email", "==", user.email.toString())
           .get()
           .then((snap) => {
-            return snap.docs.length != 0 ? true : false;
+            var toReturn = snap.docs.length != 0 ? true : false;
+            return toReturn;
           })
           .then((hasUser) => {
             db.collection("charities")
@@ -71,41 +47,24 @@ initApp = function () {
                 var hasCharity = snap.docs.length != 0 ? true : false;
                 if (hasUser || hasCharity) {
                   // window.location = returnTo;
-                  docRef
+                  db.collection(`upcomingEvents/${eventID}/registeredUsers`)
+                    .where("uid", "==", user.uid)
                     .get()
-                    .then((doc) => {
-                      if (doc.exists) {
-                        document.title =
-                          "Register - " +
-                          doc.data().Name.toString() +
-                          " | Golf_Event_Platform";
-                        document.getElementById("eventTitle").innerText =
-                          doc.data().Name;
-                        document.getElementById("eventImageMain").src =
-                          doc.data().ImageURL;
+                    .then((docSnapshot) => {
+                      if (docSnapshot.docs.length != 0) {
                         var button = document.createElement("button");
                         button.id = "registerButton";
-                        button.innerText = "I Agree";
+                        button.innerText = "Refund Me";
                         button.addEventListener("click", () => {
-                          agree(eventID, user.uid, hash, hDim);
+                          agree(eventID, docSnapshot.docs[0].id);
                         });
                         document
                           .getElementById("eventContentMainFlex")
                           .appendChild(button);
                       } else {
-                        // doc.data() will be undefined in this case
-                        console.log("No such document!");
-                        alert(
-                          "hmm... Something went wrong. Try again in a few minutes"
-                        );
-                        window.location = "/404.html";
+                        window.location = "/";
                       }
-                    })
-                    .catch((error) => {
-                      console.log("Error getting document:", error);
-                      // window.location = "/404.html";
                     });
-                  console.log("logged in");
                 } else {
                   var encodedURL = encodeURIComponent(
                     `event/register/?e=${eventID}&i=${hash}&d=${hDim}`
@@ -135,27 +94,20 @@ window.addEventListener("load", function () {
   initApp();
 });
 
-function agree(dID, uID, hash, hDim) {
+function agree(dID, uDocRef) {
   console.log("agreed");
-  // console.log(`ID: ${dID}`);
+  console.log(`ID: ${dID}`);
+  console.log(`ID: ${uDocRef}`);
 
   // Future: redirect to stripe checkout url generated from server (generated on
   // page load). Success URL is in then() of current
   // Current: fullfill order with no payment.
   var db = firebase.firestore();
   db.collection(`upcomingEvents/${dID}/registeredUsers`)
-    .add({
-      uid: uID.toString(),
-      dt: new Date(Date.now()),
-    })
-    .then((t) => {
-      window.location =
-        "/event?e=" +
-        encodeURIComponent(`${dID}`) +
-        "&i=" +
-        encodeURIComponent(`${hash}`) +
-        "&d=" +
-        encodeURIComponent(`${hDim}`);
+    .doc(uDocRef)
+    .delete()
+    .then(() => {
+      window.location = "/";
     })
     .catch((er) => {
       alert(er);

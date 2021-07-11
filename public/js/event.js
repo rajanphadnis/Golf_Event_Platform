@@ -76,6 +76,35 @@ initApp = function () {
               .then((snap) => {
                 var hasCharity = snap.docs.length != 0 ? true : false;
                 if (hasUser || hasCharity) {
+                  db.collection(`upcomingEvents/${eventID}/registeredUsers`)
+                    .where("uid", "==", user.uid.toString())
+                    .get()
+                    .then((sn) => {
+                      if (sn.docs.length != 0) {
+                        document.getElementById("register").innerText =
+                          "Unregister From Event";
+                          document
+                          .getElementById("register")
+                          .addEventListener("click", function () {
+                            window.location = `/event/refund?e=${encodeURIComponent(
+                              eventID
+                            )}&i=${encodeURIComponent(
+                              hash
+                            )}&d=${encodeURIComponent(hDim)}`;
+                          });
+                        
+                      } else {
+                        document
+                          .getElementById("register")
+                          .addEventListener("click", function () {
+                            window.location = `/event/register?e=${encodeURIComponent(
+                              eventID
+                            )}&i=${encodeURIComponent(
+                              hash
+                            )}&d=${encodeURIComponent(hDim)}`;
+                          });
+                      }
+                    });
                   // window.location = returnTo;
                   // console.log("logged in");
                 } else {
@@ -85,13 +114,6 @@ initApp = function () {
                   window.location = `/onboarding?l=${encodedURL}`;
                 }
               });
-          });
-        document
-          .getElementById("register")
-          .addEventListener("click", function () {
-            window.location = `/event/register?e=${encodeURIComponent(
-              eventID
-            )}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(hDim)}`;
           });
       } else {
         // User is signed out.
