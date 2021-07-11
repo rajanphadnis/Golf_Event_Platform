@@ -33,8 +33,12 @@ function displayStandardEvents(uid) {
           }&i=${encodeURIComponent(doc.data().MainHash)}&d=${
             doc.data().ImageDim
           }">${doc.data().Name}</a><div>`;
-          var editbutton = `<div><a href="/my-events/edit?d=${doc.id}">Edit Event</a></div>`;
-          var deleteButton = `<div><a href="#" onclick="deleteEvent('${doc.id}')">Delete Event</a></div>`;
+          // var editbutton = `<div><a href="/my-events/edit?d=${doc.id}">Edit Event</a></div>`;
+          var deleteButton = `<div><a href="/event/refund?e=${encodeURIComponent(
+            doc.id
+          )}&i=${encodeURIComponent(doc.data().MainHash)}&d=${encodeURIComponent(
+            doc.data().ImageDim
+          )}">Unregister from Event</a></div>`;
           var longImage = `<div><img src="${
             doc.data().ImageURL
           }" width=150></div>`;
@@ -45,9 +49,9 @@ function displayStandardEvents(uid) {
 
           docTile.className = "eventTile";
           if (doc.data().ImageDim >= 1) {
-            docTile.innerHTML = tallImage + eventTitle;
+            docTile.innerHTML = tallImage + eventTitle + deleteButton;
           } else {
-            docTile.innerHTML = longImage + eventTitle;
+            docTile.innerHTML = longImage + eventTitle + deleteButton;
           }
           // docTile.innerHTML = `<p>${doc.id}</p>`;
           // doc.data() is never undefined for query doc snapshots
