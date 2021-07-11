@@ -432,6 +432,15 @@ exports.deleteEvent = functions.firestore
     });
   });
 
+exports.userCleanup = functions.auth.user().onDelete((user) => {
+  console.log(user.uid);
+  const uPromise = admin.firestore().collection("users").doc(user.uid).delete();
+  const cPromise = admin.firestore().collection("charities").doc(user.uid).delete();
+  return Promise.all([uPromise, cPromise]);
+});
+
+
+
 async function deleteQueryBatch(db, query, resolve) {
   const snapshot = await query.get();
 
