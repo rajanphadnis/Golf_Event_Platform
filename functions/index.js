@@ -480,6 +480,8 @@ async function deleteQueryBatch(db, query, resolve) {
 }
 
 exports.createTransaction = functions.https.onCall((data, context) => {
+  const eventDoc = data.eventDoc;
+  const userUID = context.auth.uid || data.uid;
   if (!context.auth) {
     // Throwing an HttpsError so that the client gets the error details.
     throw new functions.https.HttpsError(
@@ -487,7 +489,7 @@ exports.createTransaction = functions.https.onCall((data, context) => {
       "The function must be called " + "while authenticated."
     );
   }
-  const eventDoc = data.eventDoc;
+
   if (!(typeof eventDoc === "string") || eventDoc.length === 0) {
     // Throwing an HttpsError so that the client gets the error details.
     throw new functions.https.HttpsError(
@@ -496,7 +498,7 @@ exports.createTransaction = functions.https.onCall((data, context) => {
         'one arguments "text" containing the message text to add.'
     );
   }
-  const userUID = context.auth.uid || data.uid;
+
   console.log(`eventDoc: ${eventDoc}, uid: ${userUID}`);
   // Checking that the user is authenticated.
 

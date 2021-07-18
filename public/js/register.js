@@ -139,31 +139,33 @@ function agree(dID, uID, hash, hDim) {
   console.log("agreed");
   // console.log(`ID: ${dID}`);
   var newTransaction = firebase.functions().httpsCallable("createTransaction");
-  newTransaction({ eventDoc: dID, uid: uID }).then((result) => {
-    // Read result of the Cloud Function.
-    var sanitizedMessage = result.data.returnURL;
-    console.log(sanitizedMessage);
-  });
-
-  // Future: redirect to stripe checkout url generated from server (generated on
-  // page load). Success URL is in then() of current
-  // Current: fullfill order with no payment.
-  var db = firebase.firestore();
-  db.collection(`upcomingEvents/${dID}/registeredUsers`)
-    .add({
-      uid: uID.toString(),
-      dt: new Date(Date.now()),
+  newTransaction({ eventDoc: dID, uid: uID })
+    .then((result) => {
+      // Read result of the Cloud Function.
+      var sanitizedMessage = result.data.returnURL;
+      console.log(sanitizedMessage);
     })
-    .then((t) => {
-      window.location =
-        "/event?e=" +
-        encodeURIComponent(`${dID}`) +
-        "&i=" +
-        encodeURIComponent(`${hash}`) +
-        "&d=" +
-        encodeURIComponent(`${hDim}`);
-    })
-    .catch((er) => {
-      alert(er);
+    .then((f) => {
+      // Future: redirect to stripe checkout url generated from server (generated on
+      // page load). Success URL is in then() of current
+      // Current: fullfill order with no payment.
+      var db = firebase.firestore();
+      db.collection(`upcomingEvents/${dID}/registeredUsers`)
+        .add({
+          uid: uID.toString(),
+          dt: new Date(Date.now()),
+        })
+        .then((t) => {
+          window.location =
+            "/event?e=" +
+            encodeURIComponent(`${dID}`) +
+            "&i=" +
+            encodeURIComponent(`${hash}`) +
+            "&d=" +
+            encodeURIComponent(`${hDim}`);
+        })
+        .catch((er) => {
+          alert(er);
+        });
     });
 }
