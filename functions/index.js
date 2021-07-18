@@ -478,3 +478,54 @@ async function deleteQueryBatch(db, query, resolve) {
     deleteQueryBatch(db, query, resolve);
   });
 }
+
+exports.createTransaction = functions.https.onCall((data, context) => {
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError(
+      "failed-precondition",
+      "The function must be called " + "while authenticated."
+    );
+  }
+  const eventDoc = data.eventDoc;
+  if (!(typeof eventDoc === "string") || eventDoc.length === 0) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      "The function must be called with " +
+        'one arguments "text" containing the message text to add.'
+    );
+  }
+  const userUID = context.auth.uid || data.uid;
+  console.log(`eventDoc: ${eventDoc}, uid: ${userUID}`);
+  // Checking that the user is authenticated.
+
+  return {
+    returnURL: "https://www.google.com/",
+  };
+});
+
+// Set your secret key. Remember to switch to your live secret key in production.
+// See your keys here: https://dashboard.stripe.com/apikeys
+// const stripe = require('stripe')('sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn');
+
+// const session = await stripe.checkout.sessions.create({
+//   payment_method_types: ['card'],
+//   line_items: [{
+//     name: 'Kavholm rental',
+//     amount: 1000,
+//     currency: 'usd',
+//     quantity: 1,
+//   }],
+//   payment_intent_data: {
+//     application_fee_amount: 123,
+//     transfer_data: {
+//       destination: 'undefined',
+//     },
+//   },
+//   mode: 'payment',
+//   success_url: 'https://example.com/success',
+//   cancel_url: 'https://example.com/failure',
+// });
+
+// 303 redirect to session.url

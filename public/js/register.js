@@ -138,6 +138,12 @@ window.addEventListener("load", function () {
 function agree(dID, uID, hash, hDim) {
   console.log("agreed");
   // console.log(`ID: ${dID}`);
+  var newTransaction = firebase.functions().httpsCallable("createTransaction");
+  newTransaction({ eventDoc: dID, uid: uID }).then((result) => {
+    // Read result of the Cloud Function.
+    var sanitizedMessage = result.data.returnURL;
+    console.log(sanitizedMessage);
+  });
 
   // Future: redirect to stripe checkout url generated from server (generated on
   // page load). Success URL is in then() of current
