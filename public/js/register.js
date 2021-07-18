@@ -87,7 +87,7 @@ initApp = function () {
                         button.id = "registerButton";
                         button.innerText = "I Agree";
                         button.addEventListener("click", () => {
-                          agree(eventID, user.uid, hash, hDim);
+                          agree(eventID, user.uid, hash, hDim, doc.data().Name, doc.data().Cost);
                         });
                         document
                           .getElementById("eventContentMainFlex")
@@ -135,11 +135,11 @@ window.addEventListener("load", function () {
   initApp();
 });
 
-function agree(dID, uID, hash, hDim) {
+function agree(dID, uID, hash, hDim, cost, name) {
   console.log("agreed");
   // console.log(`ID: ${dID}`);
   var newTransaction = firebase.functions().httpsCallable("createTransaction");
-  newTransaction({ eventDoc: dID, uid: uID })
+  newTransaction({ eventDoc: dID, uid: uID , eventCost: cost, eventName: name})
     .then((result) => {
       // Read result of the Cloud Function.
       var sanitizedMessage = result.data.returnURL;
