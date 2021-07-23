@@ -139,6 +139,7 @@ function agree(dID, uID, hash, hDim, cost, name) {
   console.log("agreed");
   // console.log(`ID: ${dID}`);
   var newTransaction = firebase.functions().httpsCallable("createTransaction");
+  console.log(`Transmitting: ${dID}, ${uID}, ${cost}, ${name}`);
   newTransaction({ eventDoc: dID, uid: uID , eventCost: cost, eventName: name})
     .then((result) => {
       // Read result of the Cloud Function.

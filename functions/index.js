@@ -481,8 +481,8 @@ async function deleteQueryBatch(db, query, resolve) {
 
 exports.createTransaction = functions.https.onCall(async (data, context) => {
   const eventDoc = data.eventDoc;
-  const eventName = data.name;
-  const eventCost = data.cost;
+  const eventName = data.eventName;
+  const eventCost = data.eventCost;
   const userUID = context.auth.uid || data.uid;
   if (!context.auth) {
     // Throwing an HttpsError so that the client gets the error details.
