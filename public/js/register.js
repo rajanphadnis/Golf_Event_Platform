@@ -87,7 +87,7 @@ initApp = function () {
                         button.id = "registerButton";
                         button.innerText = "I Agree";
                         button.addEventListener("click", () => {
-                          agree(eventID, user.uid, hash, hDim, doc.data().Name, doc.data().Cost);
+                          agree(eventID, user.uid, hash, hDim, doc.data().Cost, doc.data().Name);
                         });
                         document
                           .getElementById("eventContentMainFlex")
