@@ -479,7 +479,7 @@ async function deleteQueryBatch(db, query, resolve) {
   });
 }
 
-exports.createTransaction = functions.https.onCall((data, context) => {
+exports.createTransaction = functions.https.onCall(async (data, context) => {
   const eventDoc = data.eventDoc;
   const eventName = data.name;
   const eventCost = data.cost;
