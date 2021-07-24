@@ -165,7 +165,7 @@ function agree(
     uid: uID,
     eventCost: cost,
     eventName: name,
-    backURL: window.location,
+    backURL: window.location.href.toString(),
     eventMaxParticipants: eventMaxParticipants,
     checkoutImage: checkoutImage,
   })
