@@ -444,7 +444,7 @@ exports.userCleanup = functions.auth.user().onDelete(async (user) => {
     .collection("users")
     .doc(user.uid)
     .get()
-    .then((docx) => {
+    .then(async (docx) => {
       stripeID = docx.data().stripeCustomerID;
       await stripe.customers.del(stripeID);
     });
