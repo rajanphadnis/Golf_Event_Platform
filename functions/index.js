@@ -530,7 +530,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
       },
       setup_future_usage: "on_session",
     },
-    submit_type: 'book',
+    submit_type: "book",
     mode: "payment",
     success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/my-events/",
     cancel_url: backURL,
@@ -542,27 +542,111 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
   };
 });
 
-exports.stripePaymentDoneLetsFulfillTheOrder = functions.https.onRequest(
-  (req, res) => {
-    console.log(req.body);
-    res.status(200).end();
-    // var db = admin.firestore();
-    // db.collection(`upcomingEvents/${dID}/registeredUsers`)
-    //   .add({
-    //     uid: uID.toString(),
-    //     dt: new Date(Date.now()),
-    //   })
-    //   // .then((t) => {
-    //   //   window.location =
-    //   //     "/event?e=" +
-    //   //     encodeURIComponent(`${dID}`) +
-    //   //     "&i=" +
-    //   //     encodeURIComponent(`${hash}`) +
-    //   //     "&d=" +
-    //   //     encodeURIComponent(`${hDim}`);
-    //   // })
-    //   .catch((er) => {
-    //     alert(er);
-    //   });
+// functions.https.onRequest(
+//   (req, res) => {
+//     console.log(req.body);
+//     res.status(200).end();
+//     // var db = admin.firestore();
+//     // db.collection(`upcomingEvents/${dID}/registeredUsers`)
+//     //   .add({
+//     //     uid: uID.toString(),
+//     //     dt: new Date(Date.now()),
+//     //   })
+//     //   // .then((t) => {
+//     //   //   window.location =
+//     //   //     "/event?e=" +
+//     //   //     encodeURIComponent(`${dID}`) +
+//     //   //     "&i=" +
+//     //   //     encodeURIComponent(`${hash}`) +
+//     //   //     "&d=" +
+//     //   //     encodeURIComponent(`${hDim}`);
+//     //   // })
+//     //   .catch((er) => {
+//     //     alert(er);
+//     //   });
+//   }
+// );
+const endpointSecret = "whsec_1JwJLZ9uvhZTjWxQUbwaHGvXCB6uN1mB";
+
+// Using Express
+const app = require("express")();
+
+// Match the raw body to content type application/json
+app.post(
+  "/webhook",
+  bodyParser.raw({ type: "application/json" }),
+  (request, response) => {
+    const sig = request.headers["stripe-signature"];
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        request.rawBody.toString(),
+        sig,
+        endpointSecret
+      );
+    } catch (err) {
+      return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+    var userDocID;
+    // // Handle the checkout.session.completed event
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      console.log(session);
+      var db = admin.firestore();
+      // return db.collection(`upcomingEvents/${dID}/registeredUsers`)
+      //   .add({
+      //     uid: uID.toString(),
+      //     dt: new Date(Date.now()),
+      //   })
+      //   // .then((t) => {
+      //   //   window.location =
+      //   //     "/event?e=" +
+      //   //     encodeURIComponent(`${dID}`) +
+      //   //     "&i=" +
+      //   //     encodeURIComponent(`${hash}`) +
+      //   //     "&d=" +
+      //   //     encodeURIComponent(`${hDim}`);
+      //   // })
+      //   .catch((er) => {
+      //     alert(er);
+      //   });
+      //   return db
+      //     .collection("users")
+      //     .where("stripeCustomerID", "==", session.customer)
+      //     .get()
+      //     .then((snapshot) => {
+      //       if (snapshot.empty) {
+      //         console.log("No matching documents.");
+      //       } else {
+      //         snapshot.forEach((doc) => {
+      //           userDocID = doc.id;
+      //         });
+      //       }
+      //       db.collection("users")
+      //         .doc(userDocID)
+      //         .set({ passed: false, canTakeTest: true, active: true }, { merge: true });
+      //       var data = {
+      //         from: "ICCP Admin Panel<app@caddiecertification.com>",
+      //         subject: "Payment Complete",
+      //         html: `Someone just paid for their test. Congratulations! That's $99.99! Funds should be available to withdraw from Stripe in about two weeks. Click <a href="https://dashboard.stripe.com/dashboard">here</a> to view your Stripe Dashboard.`,
+      //         "h:Reply-To": "richardiorio@pga.com",
+      //         to: "richardiorio@pga.com",
+      //       };
+      //       db.collection("users/" + userDocID + "/test/")
+      //         .doc("0")
+      //         .update({ paid: true });
+      //       mailgun.messages().send(data, (error, body) => {
+      //         console.log("Payment email error: " + body);
+      //       });
+      //       return response.status(200).send({ done: true });
+      //     })
+      //     .catch((err) => {
+      //       console.log("Error getting documents - ", err);
+      //       return response.status(400).send({ done: false });
+      //     });
+    }
+    return response.status(200).send({ done: true });
   }
 );
+exports.stripePaymentDoneLetsFulfillTheOrder = functions.https.onRequest(app);
