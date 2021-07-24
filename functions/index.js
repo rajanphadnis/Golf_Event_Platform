@@ -516,11 +516,11 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
           unit_amount: eventCost,
           product_data: { name: eventName, images: [checkoutImage] },
         },
-        adjustable_quantity: {
-          enabled: true,
-          minimum: 1,
-          maximum: eventMaxParticipants,
-        },
+        // adjustable_quantity: {
+        //   enabled: true,
+        //   minimum: 1,
+        //   maximum: eventMaxParticipants,
+        // },
       },
     ],
     payment_intent_data: {
@@ -530,6 +530,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
       },
       setup_future_usage: "on_session",
     },
+    submit_type: 'book',
     mode: "payment",
     success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/my-events/",
     cancel_url: backURL,
