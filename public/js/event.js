@@ -175,6 +175,7 @@ initApp = function () {
         document.getElementById("eventDateTime").innerText = new Date(
           doc.data().DateTime.seconds * 1000
         ).toString();
+        document.getElementById("eventCost").innerText = `$${doc.data().Cost / 100}`;
         document.getElementById("eventOrganizer").innerText =
           doc.data().OrganizerName;
         document.getElementById("eventBlurb").innerHTML = doc.data().Blurb;
