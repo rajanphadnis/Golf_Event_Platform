@@ -516,7 +516,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
         quantity: 1,
         price_data: {
           product_data: {
-            images: [checkoutImage]
+            images: [checkoutImage],
           },
         },
         adjustable_quantity: {
@@ -543,3 +543,28 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
     returnURL: session.url,
   };
 });
+
+exports.stripePaymentDoneLetsFulfillTheOrder = functions.https.onRequest(
+  (req, res) => {
+    console.log(req.body);
+    res.status(200).end();
+    // var db = admin.firestore();
+    // db.collection(`upcomingEvents/${dID}/registeredUsers`)
+    //   .add({
+    //     uid: uID.toString(),
+    //     dt: new Date(Date.now()),
+    //   })
+    //   // .then((t) => {
+    //   //   window.location =
+    //   //     "/event?e=" +
+    //   //     encodeURIComponent(`${dID}`) +
+    //   //     "&i=" +
+    //   //     encodeURIComponent(`${hash}`) +
+    //   //     "&d=" +
+    //   //     encodeURIComponent(`${hDim}`);
+    //   // })
+    //   .catch((er) => {
+    //     alert(er);
+    //   });
+  }
+);

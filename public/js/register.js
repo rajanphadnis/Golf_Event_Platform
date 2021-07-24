@@ -87,7 +87,16 @@ initApp = function () {
                         button.id = "registerButton";
                         button.innerText = "I Agree";
                         button.addEventListener("click", () => {
-                          agree(eventID, user.uid, hash, hDim, doc.data().Cost, doc.data().Name, doc.data().MaxParticipants, doc.data().ImageURL);
+                          agree(
+                            eventID,
+                            user.uid,
+                            hash,
+                            hDim,
+                            doc.data().Cost,
+                            doc.data().Name,
+                            doc.data().MaxParticipants,
+                            doc.data().ImageURL
+                          );
                         });
                         document
                           .getElementById("eventContentMainFlex")
@@ -135,41 +144,63 @@ window.addEventListener("load", function () {
   initApp();
 });
 
-function agree(dID, uID, hash, hDim, cost, name, eventMaxParticipants, checkoutImage) {
+function agree(
+  dID,
+  uID,
+  hash,
+  hDim,
+  cost,
+  name,
+  eventMaxParticipants,
+  checkoutImage
+) {
   document.getElementById("registerButton").disabled = true;
   document.getElementById("registerButton").innerText = "Processing...";
   console.log("agreed");
   // console.log(`ID: ${dID}`);
   var newTransaction = firebase.functions().httpsCallable("createTransaction");
   console.log(`Transmitting: ${dID}, ${uID}, ${cost}, ${name}`);
-  newTransaction({ eventDoc: dID, uid: uID , eventCost: cost, eventName: name, backURL: window.location, eventMaxParticipants: eventMaxParticipants, checkoutImage: checkoutImage})
+  newTransaction({
+    eventDoc: dID,
+    uid: uID,
+    eventCost: cost,
+    eventName: name,
+    backURL: window.location,
+    eventMaxParticipants: eventMaxParticipants,
+    checkoutImage: checkoutImage,
+  })
     .then((result) => {
       // Read result of the Cloud Function.
       var checkoutURL = result.data.returnURL;
       console.log(checkoutURL);
       window.location = checkoutURL;
+    })
+    .catch((er) => {
+      // document.getElementById("registerButton").disabled = false;
+      document.getElementById("registerButton").innerText =
+        "Error. Please Refresh the Page.";
     });
-    // .then((f) => {
-      // Future: redirect to stripe checkout url generated from server (generated on
-      // page load). Success URL is in then() of current
-      // Current: fullfill order with no payment.
-      // var db = firebase.firestore();
-      // db.collection(`upcomingEvents/${dID}/registeredUsers`)
-      //   .add({
-      //     uid: uID.toString(),
-      //     dt: new Date(Date.now()),
-      //   })
-      //   .then((t) => {
-      //     window.location =
-      //       "/event?e=" +
-      //       encodeURIComponent(`${dID}`) +
-      //       "&i=" +
-      //       encodeURIComponent(`${hash}`) +
-      //       "&d=" +
-      //       encodeURIComponent(`${hDim}`);
-      //   })
-      //   .catch((er) => {
-      //     alert(er);
-      //   });
-    // });
+  // .then((f) => {
+  // Future: redirect to stripe checkout url generated from server (generated on
+  // page load). Success URL is in then() of current
+  // Current: fullfill order with no payment.
+  // var db = firebase.firestore();
+  // db.collection(`upcomingEvents/${dID}/registeredUsers`)
+  //   .add({
+  //     uid: uID.toString(),
+  //     dt: new Date(Date.now()),
+  //   })
+  //   .then((t) => {
+  //     window.location =
+  //       "/event?e=" +
+  //       encodeURIComponent(`${dID}`) +
+  //       "&i=" +
+  //       encodeURIComponent(`${hash}`) +
+  //       "&d=" +
+  //       encodeURIComponent(`${hDim}`);
+  //   })
+  //   .catch((er) => {
+  //     alert(er);
+  //   });
+  // });
 }
