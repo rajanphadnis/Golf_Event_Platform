@@ -87,7 +87,7 @@ initApp = function () {
                         button.id = "registerButton";
                         button.innerText = "I Agree";
                         button.addEventListener("click", () => {
-                          agree(eventID, user.uid, hash, hDim, doc.data().Cost, doc.data().Name);
+                          agree(eventID, user.uid, hash, hDim, doc.data().Cost, doc.data().Name, doc.data().MaxParticipants, doc.data().ImageURL);
                         });
                         document
                           .getElementById("eventContentMainFlex")
@@ -135,14 +135,14 @@ window.addEventListener("load", function () {
   initApp();
 });
 
-function agree(dID, uID, hash, hDim, cost, name) {
+function agree(dID, uID, hash, hDim, cost, name, eventMaxParticipants, checkoutImage) {
   document.getElementById("registerButton").disabled = true;
   document.getElementById("registerButton").innerText = "Processing...";
   console.log("agreed");
   // console.log(`ID: ${dID}`);
   var newTransaction = firebase.functions().httpsCallable("createTransaction");
   console.log(`Transmitting: ${dID}, ${uID}, ${cost}, ${name}`);
-  newTransaction({ eventDoc: dID, uid: uID , eventCost: cost, eventName: name, backURL: window.location})
+  newTransaction({ eventDoc: dID, uid: uID , eventCost: cost, eventName: name, backURL: window.location, eventMaxParticipants: eventMaxParticipants, checkoutImage: checkoutImage})
     .then((result) => {
       // Read result of the Cloud Function.
       var checkoutURL = result.data.returnURL;

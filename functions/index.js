@@ -485,6 +485,8 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
   const eventCost = data.eventCost;
   const userUID = context.auth.uid || data.uid;
   const backURL = data.backURL;
+  const eventMaxParticipants = data.eventMaxParticipants;
+  const checkoutImage = data.checkoutImage;
   if (!context.auth) {
     // Throwing an HttpsError so that the client gets the error details.
     throw new functions.https.HttpsError(
@@ -512,6 +514,16 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
         amount: eventCost,
         currency: "usd",
         quantity: 1,
+        price_data: {
+          product_data: {
+            images: [checkoutImage]
+          },
+        },
+        adjustable_quantity: {
+          enabled: true,
+          minimum: 1,
+          maximum: eventMaxParticipants,
+        },
       },
     ],
     payment_intent_data: {
@@ -519,6 +531,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
       transfer_data: {
         destination: "acct_1JEiwOPfBihHlzmx",
       },
+      setup_future_usage: on_session,
     },
     mode: "payment",
     success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/my-events/",
