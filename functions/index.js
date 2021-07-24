@@ -567,7 +567,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
 //     //   });
 //   }
 // );
-const endpointSecret = "whsec_1JwJLZ9uvhZTjWxQUbwaHGvXCB6uN1mB";
+const endpointSecret = "whsec_zl4Ws5Vs3avuDls76GBwHv6qWF5i074R";
 
 // Using Express
 const app = require("express")();
