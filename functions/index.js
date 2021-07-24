@@ -510,10 +510,10 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
     payment_method_types: ["card"],
     line_items: [
       {
-        amount: eventCost,
-        currency: "usd",
         quantity: 1,
         price_data: {
+          currency: "usd",
+          unit_amount: eventCost,
           name: eventName,
           product_data: {
             images: [checkoutImage],
