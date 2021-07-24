@@ -525,7 +525,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
         // },
       },
     ],
-    metadata: {'eventID': eventDoc.toString()},
+    metadata: {'eventID': eventDoc.toString(), 'uID': userUID.toString()},
     payment_intent_data: {
       application_fee_amount: 12,
       transfer_data: {
@@ -595,25 +595,31 @@ app.post(
     // // Handle the checkout.session.completed event
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
+      const eventDocID = event.data.object.metadata.eventID;
+      const userID = event.data.object.metadata.uID;
       console.log(session);
       var db = admin.firestore();
-      // return db.collection(`upcomingEvents/${dID}/registeredUsers`)
-      //   .add({
-      //     uid: uID.toString(),
-      //     dt: new Date(Date.now()),
-      //   })
-      //   // .then((t) => {
-      //   //   window.location =
-      //   //     "/event?e=" +
-      //   //     encodeURIComponent(`${dID}`) +
-      //   //     "&i=" +
-      //   //     encodeURIComponent(`${hash}`) +
-      //   //     "&d=" +
-      //   //     encodeURIComponent(`${hDim}`);
-      //   // })
-      //   .catch((er) => {
-      //     alert(er);
-      //   });
+      return db.collection(`upcomingEvents/${eventDocID}/registeredUsers`)
+        .add({
+          uid: userID.toString(),
+          dt: new Date(Date.now()),
+          paymentIntent: event.data.object.payment_intent.toString(),
+          stripeID: event.data.object.id.toString(),
+          customerID: event.data.object.customer.toString(),
+        })
+        // .then((t) => {
+        //   window.location =
+        //     "/event?e=" +
+        //     encodeURIComponent(`${dID}`) +
+        //     "&i=" +
+        //     encodeURIComponent(`${hash}`) +
+        //     "&d=" +
+        //     encodeURIComponent(`${hDim}`);
+        // })
+        .catch((er) => {
+          // alert(er);
+          return response.status(404).send({ done: false });
+        });
       //   return db
       //     .collection("users")
       //     .where("stripeCustomerID", "==", session.customer)
