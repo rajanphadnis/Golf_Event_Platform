@@ -5,7 +5,9 @@ const os = require("os");
 const admin = require("firebase-admin");
 const fs = require("fs");
 const inkjet = require("inkjet");
-const stripe = require("stripe")("sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn");
+const stripe = require("stripe")(
+  "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
+);
 const { promisify } = require("util");
 const bodyParser = require("body-parser");
 const {
@@ -434,9 +436,17 @@ exports.deleteEvent = functions.firestore
     });
   });
 
-exports.userCleanup = functions.auth.user().onDelete((user) => {
+exports.userCleanup = functions.auth.user().onDelete(async (user) => {
   console.log(user.uid);
-  const uPromise = admin.firestore().collection("users").doc(user.uid).delete();
+  var stripeID;
+  const uPromise = admin
+    .firestore()
+    .collection("users")
+    .doc(user.uid)
+    .delete()
+    .then((docx) => {
+      stripeID = docx.data().customerID;
+    });
   const cPromise = admin
     .firestore()
     .collection("charities")
@@ -452,7 +462,16 @@ exports.userCleanup = functions.auth.user().onDelete((user) => {
         doc.ref.delete();
       });
     });
+  await stripe.customers.del({ stripeID });
   return Promise.all([uPromise, cPromise, ePromise]);
+});
+
+exports.createUser = functions.auth.user().onCreate(async (user) => {
+  const customer = await stripe.customers.create({
+    email: user.email,
+    name: user.displayName,
+  });
+  console.log(customer);
 });
 
 async function deleteQueryBatch(db, query, resolve) {
@@ -525,7 +544,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
         // },
       },
     ],
-    metadata: {'eventID': eventDoc.toString(), 'uID': userUID.toString()},
+    metadata: { eventID: eventDoc.toString(), uID: userUID.toString() },
     payment_intent_data: {
       application_fee_amount: 12,
       transfer_data: {
@@ -545,36 +564,8 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
   };
 });
 
-// functions.https.onRequest(
-//   (req, res) => {
-//     console.log(req.body);
-//     res.status(200).end();
-//     // var db = admin.firestore();
-//     // db.collection(`upcomingEvents/${dID}/registeredUsers`)
-//     //   .add({
-//     //     uid: uID.toString(),
-//     //     dt: new Date(Date.now()),
-//     //   })
-//     //   // .then((t) => {
-//     //   //   window.location =
-//     //   //     "/event?e=" +
-//     //   //     encodeURIComponent(`${dID}`) +
-//     //   //     "&i=" +
-//     //   //     encodeURIComponent(`${hash}`) +
-//     //   //     "&d=" +
-//     //   //     encodeURIComponent(`${hDim}`);
-//     //   // })
-//     //   .catch((er) => {
-//     //     alert(er);
-//     //   });
-//   }
-// );
 const endpointSecret = "whsec_9vjJxZIlW0LGMGN2crrdmQ0Uv5P34FQB";
-
-// Using Express
 const app = require("express")();
-
-// Match the raw body to content type application/json
 app.post(
   "/webhook",
   bodyParser.raw({ type: "application/json" }),
@@ -599,27 +590,30 @@ app.post(
       const userID = event.data.object.metadata.uID;
       console.log(session);
       var db = admin.firestore();
-      return db.collection(`upcomingEvents/${eventDocID}/registeredUsers`)
-        .add({
-          uid: userID.toString(),
-          dt: new Date(Date.now()),
-          paymentIntent: event.data.object.payment_intent.toString(),
-          stripeID: event.data.object.id.toString(),
-          customerID: event.data.object.customer.toString(),
-        })
-        // .then((t) => {
-        //   window.location =
-        //     "/event?e=" +
-        //     encodeURIComponent(`${dID}`) +
-        //     "&i=" +
-        //     encodeURIComponent(`${hash}`) +
-        //     "&d=" +
-        //     encodeURIComponent(`${hDim}`);
-        // })
-        .catch((er) => {
-          // alert(er);
-          return response.status(404).send({ done: false });
-        });
+      return (
+        db
+          .collection(`upcomingEvents/${eventDocID}/registeredUsers`)
+          .add({
+            uid: userID.toString(),
+            dt: new Date(Date.now()),
+            paymentIntent: event.data.object.payment_intent.toString(),
+            stripeID: event.data.object.id.toString(),
+            customerID: event.data.object.customer.toString(),
+          })
+          // .then((t) => {
+          //   window.location =
+          //     "/event?e=" +
+          //     encodeURIComponent(`${dID}`) +
+          //     "&i=" +
+          //     encodeURIComponent(`${hash}`) +
+          //     "&d=" +
+          //     encodeURIComponent(`${hDim}`);
+          // })
+          .catch((er) => {
+            // alert(er);
+            return response.status(404).send({ done: false });
+          })
+      );
       //   return db
       //     .collection("users")
       //     .where("stripeCustomerID", "==", session.customer)
