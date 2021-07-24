@@ -477,7 +477,7 @@ exports.createStripeUser = functions.firestore
   const docProm = admin
     .firestore()
     .collection("charities")
-    .doc(user.uid).set({
+    .doc(snap.id).set({
       stripeCustomerID: customer.id
     }, {merge: true});
   return Promise.all([docProm]);
