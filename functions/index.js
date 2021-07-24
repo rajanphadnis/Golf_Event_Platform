@@ -444,8 +444,9 @@ exports.userCleanup = functions.auth.user().onDelete(async (user) => {
     .collection("users")
     .doc(user.uid)
     .delete()
-    .then((docx) => {
-      stripeID = docx.data().customerID;await stripe.customers.del(stripeID);
+    .then(async (docx) => {
+      stripeID = docx.data().customerID;
+      await stripe.customers.del(stripeID);
     });
   const cPromise = admin
     .firestore()
