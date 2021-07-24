@@ -510,11 +510,11 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
     payment_method_types: ["card"],
     line_items: [
       {
-        name: eventName,
         amount: eventCost,
         currency: "usd",
         quantity: 1,
         price_data: {
+          name: eventName,
           product_data: {
             images: [checkoutImage],
           },
@@ -531,7 +531,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
       transfer_data: {
         destination: "acct_1JEiwOPfBihHlzmx",
       },
-      setup_future_usage: 'on_session',
+      setup_future_usage: "on_session",
     },
     mode: "payment",
     success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/my-events/",
