@@ -525,6 +525,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
         // },
       },
     ],
+    metadata: {'eventID': eventDoc.toString()},
     payment_intent_data: {
       application_fee_amount: 12,
       transfer_data: {
