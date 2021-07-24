@@ -484,6 +484,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
   const eventName = data.eventName;
   const eventCost = data.eventCost;
   const userUID = context.auth.uid || data.uid;
+  const backURL = data.backURL;
   if (!context.auth) {
     // Throwing an HttpsError so that the client gets the error details.
     throw new functions.https.HttpsError(
@@ -491,7 +492,6 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
       "The function must be called " + "while authenticated."
     );
   }
-
   if (!(typeof eventDoc === "string") || eventDoc.length === 0) {
     // Throwing an HttpsError so that the client gets the error details.
     throw new functions.https.HttpsError(
@@ -500,11 +500,6 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
         'one arguments "text" containing the message text to add.'
     );
   }
-
-  console.log(`eventDoc: ${eventDoc}, uid: ${userUID}`);
-  // Checking that the user is authenticated.
-  // Set your secret key. Remember to switch to your live secret key in production.
-  // See your keys here: https://dashboard.stripe.com/apikeys
   const stripe = require("stripe")(
     "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
   );
@@ -526,8 +521,8 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
       },
     },
     mode: "payment",
-    success_url: "https://example.com/success",
-    cancel_url: "https://example.com/failure",
+    success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/my-events/",
+    cancel_url: backURL,
   });
 
   // 303 redirect to session.url
