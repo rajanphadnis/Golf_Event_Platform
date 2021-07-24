@@ -514,10 +514,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
         price_data: {
           currency: "usd",
           unit_amount: eventCost,
-          name: eventName,
-          product_data: {
-            images: [checkoutImage],
-          },
+          product_data: { name: eventName, images: [checkoutImage] },
         },
         adjustable_quantity: {
           enabled: true,
