@@ -439,15 +439,16 @@ exports.deleteEvent = functions.firestore
 exports.userCleanup = functions.auth.user().onDelete(async (user) => {
   console.log(user.uid);
   var stripeID;
-  const uPromise = admin
+  const sPromise = admin
     .firestore()
     .collection("users")
     .doc(user.uid)
-    .delete()
-    .then(async (docx) => {
-      stripeID = docx.data().customerID;
+    .get()
+    .then((docx) => {
+      stripeID = docx.data().stripeCustomerID;
       await stripe.customers.del(stripeID);
     });
+  const uPromise = admin.firestore().collection("users").doc(user.uid).delete();
   const cPromise = admin
     .firestore()
     .collection("charities")
@@ -463,25 +464,25 @@ exports.userCleanup = functions.auth.user().onDelete(async (user) => {
         doc.ref.delete();
       });
     });
-  
-  return Promise.all([uPromise, cPromise, ePromise]);
+
+  return Promise.all([uPromise, cPromise, ePromise, sPromise]);
 });
 
 exports.createStripeUser = functions.firestore
-.document('users/{userId}')
-.onCreate(async (snap, context) => {
-  const customer = await stripe.customers.create({
-    email: snap.data().email,
-    name: snap.data().name,
+  .document("users/{userId}")
+  .onCreate(async (snap, context) => {
+    const customer = await stripe.customers.create({
+      email: snap.data().email,
+      name: snap.data().name,
+    });
+    const docProm = admin.firestore().collection("users").doc(snap.id).set(
+      {
+        stripeCustomerID: customer.id,
+      },
+      { merge: true }
+    );
+    return Promise.all([docProm]);
   });
-  const docProm = admin
-    .firestore()
-    .collection("charities")
-    .doc(snap.id).set({
-      stripeCustomerID: customer.id
-    }, {merge: true});
-  return Promise.all([docProm]);
-});
 
 async function deleteQueryBatch(db, query, resolve) {
   const snapshot = await query.get();
