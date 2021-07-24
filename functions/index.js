@@ -462,23 +462,24 @@ exports.userCleanup = functions.auth.user().onDelete(async (user) => {
         doc.ref.delete();
       });
     });
-  await stripe.customers.del(stripeID);
-  return Promise.all([uPromise, cPromise, ePromise]);
+  const sProm = await stripe.customers.del(stripeID);
+  return Promise.all([uPromise, cPromise, ePromise, sProm]);
 });
 
 exports.createUser = functions.firestore
 .document('users/{userId}')
-.onCreate((snap, context) => {
+.onCreate(async (snap, context) => {
   const customer = await stripe.customers.create({
     email: snap.data().email,
     name: snap.data().name,
   });
-  admin
+  const docProm = admin
     .firestore()
     .collection("charities")
     .doc(user.uid).set({
       stripeCustomerID: customer.id
     }, {merge: true});
+  return Promise.all([customer, docProm]);
 });
 
 async function deleteQueryBatch(db, query, resolve) {
