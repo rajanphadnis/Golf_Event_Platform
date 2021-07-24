@@ -518,6 +518,8 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
   const backURL = data.backURL;
   const eventMaxParticipants = data.eventMaxParticipants;
   const checkoutImage = data.checkoutImage;
+  const customerID = data.customerID;
+  const userEmail = data.userEmail;
   if (!context.auth) {
     // Throwing an HttpsError so that the client gets the error details.
     throw new functions.https.HttpsError(
@@ -539,6 +541,8 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
+    customer: customerID,
+    customer_email: userEmail,
     line_items: [
       {
         quantity: 1,

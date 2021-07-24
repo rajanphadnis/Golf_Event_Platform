@@ -95,7 +95,9 @@ initApp = function () {
                             doc.data().Cost,
                             doc.data().Name,
                             doc.data().MaxParticipants,
-                            doc.data().ImageURL
+                            doc.data().ImageURL,
+                            user.email,
+                            getStripeID(user.uid, hasUser)
                           );
                         });
                         document
@@ -144,6 +146,28 @@ window.addEventListener("load", function () {
   initApp();
 });
 
+function getStripeID(uid, user) {
+  if (user) {
+    return firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .get()
+      .then((doc) => {
+        return doc.data().stripeCustomerID;
+      });
+  } else {
+    return firebase
+      .firestore()
+      .collection("charities")
+      .doc(uid)
+      .get()
+      .then((doc) => {
+        return doc.data().stripeCustomerID;
+      });
+  }
+}
+
 function agree(
   dID,
   uID,
@@ -152,7 +176,9 @@ function agree(
   cost,
   name,
   eventMaxParticipants,
-  checkoutImage
+  checkoutImage,
+  email,
+  stripeID
 ) {
   document.getElementById("registerButton").disabled = true;
   document.getElementById("registerButton").innerText = "Processing...";
@@ -168,6 +194,8 @@ function agree(
     backURL: window.location.href.toString(),
     eventMaxParticipants: eventMaxParticipants,
     checkoutImage: checkoutImage,
+    customerID: stripeID,
+    userEmail: email
   })
     .then((result) => {
       // Read result of the Cloud Function.
