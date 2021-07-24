@@ -6,6 +6,7 @@ const admin = require("firebase-admin");
 const fs = require("fs");
 const inkjet = require("inkjet");
 const { promisify } = require("util");
+const bodyParser = require("body-parser");
 const {
   DocumentBuilder,
 } = require("firebase-functions/lib/providers/firestore");
