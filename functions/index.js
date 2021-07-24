@@ -467,7 +467,7 @@ exports.userCleanup = functions.auth.user().onDelete(async (user) => {
   return Promise.all([uPromise, cPromise, ePromise]);
 });
 
-exports.createUser = functions.firestore
+exports.createStripeUser = functions.firestore
 .document('users/{userId}')
 .onCreate(async (snap, context) => {
   await stripe.customers.create({
