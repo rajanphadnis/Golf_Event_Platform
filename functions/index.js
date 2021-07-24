@@ -470,7 +470,7 @@ exports.userCleanup = functions.auth.user().onDelete(async (user) => {
 exports.createStripeUser = functions.firestore
 .document('users/{userId}')
 .onCreate(async (snap, context) => {
-  await stripe.customers.create({
+  const customer = await stripe.customers.create({
     email: snap.data().email,
     name: snap.data().name,
   });
