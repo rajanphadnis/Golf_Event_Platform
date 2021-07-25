@@ -176,7 +176,7 @@ function agree(
   console.log("agreed");
   // console.log(`ID: ${dID}`);
   var newTransaction = firebase.functions().httpsCallable("createTransaction");
-  console.log(`Transmitting: ${dID}, ${uID}, ${cost}, ${name}`);
+  console.log(`Transmitting: ${dID}, ${uID}, ${cost}, ${name}, ${stripeID}`);
   newTransaction({
     eventDoc: dID,
     uid: uID,
