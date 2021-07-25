@@ -141,10 +141,9 @@ window.addEventListener("load", function () {
 });
 
 function getStripeID(uid) {
-  firebase.firestore().collection("users").doc(uid).get().then((doc) => {
+  return firebase.firestore().collection("users").doc(uid).get().then((doc) => {
     console.log(doc.get("stripeCustomerID"));
     if(doc.get("stripeCustomerID") == undefined) {
-      
       return "null";
     }
     else {
