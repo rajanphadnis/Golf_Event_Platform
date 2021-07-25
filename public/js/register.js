@@ -66,7 +66,7 @@ initApp = function () {
                 db.collection("upcomingEvents")
                   .doc(eventID)
                   .get()
-                  .then(async (doc) => {
+                  .then((doc) => {
                     if (doc.exists) {
                       document.title =
                         "Register - " +
@@ -79,26 +79,55 @@ initApp = function () {
                       var button = document.createElement("button");
                       button.id = "registerButton";
                       button.innerText = "I Agree";
-                      const stripeIDThing = getStripeID(user.uid);
-                      Promise.all([stripeIDThing]).then((f) => {
-                        button.addEventListener("click", () => {
-                          agree(
-                            eventID,
-                            user.uid,
-                            hash,
-                            hDim,
-                            doc.data().Cost,
-                            doc.data().Name,
-                            doc.data().MaxParticipants,
-                            doc.data().ImageURL,
-                            user.email,
-                            stripeIDThing
-                          );
+                      firebase
+                        .firestore()
+                        .collection("users")
+                        .doc(user.uid)
+                        .get()
+                        .then((doc) => {
+                          console.log(doc.get("stripeCustomerID"));
+                          if (doc.get("stripeCustomerID") == undefined) {
+                            console.log(`returning null`);
+                            button.addEventListener("click", () => {
+                              agree(
+                                eventID,
+                                user.uid,
+                                hash,
+                                hDim,
+                                doc.data().Cost,
+                                doc.data().Name,
+                                doc.data().MaxParticipants,
+                                doc.data().ImageURL,
+                                user.email,
+                                "null"
+                              );
+                            });
+                            document
+                              .getElementById("eventContentMainFlex")
+                              .appendChild(button);
+                            // return "null";
+                          } else {
+                            console.log(`returning with StripeID`);
+                            button.addEventListener("click", () => {
+                              agree(
+                                eventID,
+                                user.uid,
+                                hash,
+                                hDim,
+                                doc.data().Cost,
+                                doc.data().Name,
+                                doc.data().MaxParticipants,
+                                doc.data().ImageURL,
+                                user.email,
+                                doc.data().stripeCustomerID.toString()
+                              );
+                            });
+                            document
+                              .getElementById("eventContentMainFlex")
+                              .appendChild(button);
+                            // return doc.data().stripeCustomerID.toString();
+                          }
                         });
-                        document
-                          .getElementById("eventContentMainFlex")
-                          .appendChild(button);
-                      });
                     } else {
                       // doc.data() will be undefined in this case
                       console.log("No such document!");
@@ -143,23 +172,23 @@ window.addEventListener("load", function () {
   initApp();
 });
 
-function getStripeID(uid) {
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(uid)
-    .get()
-    .then((doc) => {
-      console.log(doc.get("stripeCustomerID"));
-      if (doc.get("stripeCustomerID") == undefined) {
-        console.log(`returning null`);
-        return "null";
-      } else {
-        console.log(`returning: ${doc.data().stripeCustomerID.toString()}`);
-        return doc.data().stripeCustomerID.toString();
-      }
-    });
-}
+// function getStripeID(uid) {
+//   firebase
+//     .firestore()
+//     .collection("users")
+//     .doc(uid)
+//     .get()
+//     .then((doc) => {
+//       console.log(doc.get("stripeCustomerID"));
+//       if (doc.get("stripeCustomerID") == undefined) {
+//         console.log(`returning null`);
+//         return "null";
+//       } else {
+//         console.log(`returning: ${doc.data().stripeCustomerID.toString()}`);
+//         return doc.data().stripeCustomerID.toString();
+//       }
+//     });
+// }
 
 function agree(
   dID,
