@@ -113,7 +113,7 @@ initApp = function () {
                             doc.data().MaxParticipants,
                             doc.data().ImageURL,
                             user.email,
-                            doc.data().stripeCustomerID.toString()
+                            userDoc.data().stripeCustomerID.toString()
                           );
                         });
                         document
