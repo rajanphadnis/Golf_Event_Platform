@@ -639,7 +639,7 @@ app.post(
           stripeID: event.data.object.id.toString(),
           customerID: event.data.object.customer.toString(),
         });
-      const updateCustID = db.collection("users").doc(uid).set(
+      const updateCustID = db.collection("users").doc(userID).set(
         {
           stripeCustomerID: event.data.object.customer.toString(),
         },
