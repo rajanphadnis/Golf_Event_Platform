@@ -567,7 +567,6 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       customer: customerID,
-      customer_email: userEmail,
       line_items: [
         {
           quantity: 1,
