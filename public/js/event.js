@@ -1,4 +1,7 @@
-const uri = window.location.search;
+
+
+initApp = function () {
+  const uri = window.location.search;
 var queryString;
 var hash;
 var hDim;
@@ -52,9 +55,7 @@ blurhash.decodePromise(hash, width, height, 1).then((blurhashImgData) => {
 var signInButton = document.getElementById("signInButton");
 var signedInDropdown = document.getElementById("signedInDropdown");
 var eventTitleBlock = document.getElementById("eventTitle");
-
-initApp = function () {
-  var db = firebase.firestore();
+var db = firebase.firestore();
   firebase.auth().onAuthStateChanged(
     function (user) {
       if (user) {
@@ -64,57 +65,67 @@ initApp = function () {
         signedInDropdown.style.display = "flex";
         document.getElementById("accountButton").textContent = email;
         db.collection("users")
-          .where("email", "==", user.email.toString())
+          .doc(user.uid)
           .get()
-          .then((snap) => {
-            return snap.docs.length != 0 ? true : false;
-          })
-          .then((hasUser) => {
-            db.collection("charities")
-              .where("email", "==", user.email.toString())
-              .get()
-              .then((snap) => {
-                var hasCharity = snap.docs.length != 0 ? true : false;
-                if (hasUser || hasCharity) {
-                  db.collection(`upcomingEvents/${eventID}/registeredUsers`)
-                    .where("uid", "==", user.uid.toString())
-                    .get()
-                    .then((sn) => {
-                      if (sn.docs.length != 0) {
-                        document.getElementById("register").innerText =
-                          "Unregister From Event";
-                          document
-                          .getElementById("register")
-                          .addEventListener("click", function () {
-                            window.location = `/event/refund?e=${encodeURIComponent(
-                              eventID
-                            )}&i=${encodeURIComponent(
-                              hash
-                            )}&d=${encodeURIComponent(hDim)}`;
-                          });
-                        
-                      } else {
-                        document
-                          .getElementById("register")
-                          .addEventListener("click", function () {
-                            window.location = `/event/register?e=${encodeURIComponent(
-                              eventID
-                            )}&i=${encodeURIComponent(
-                              hash
-                            )}&d=${encodeURIComponent(hDim)}`;
-                          });
-                      }
-                    });
-                  // window.location = returnTo;
-                  // console.log("logged in");
-                } else {
-                  var encodedURL = encodeURIComponent(
-                    `event/?e=${eventID}&i=${hash}&d=${hDim}`
-                  );
-                  window.location = `/onboarding?l=${encodedURL}`;
-                }
-              });
+          .then((userDoc) => {
+            if (userDoc.exists) {
+              db.collection(`upcomingEvents/${eventID}/registeredUsers`)
+                .where("uid", "==", user.uid.toString())
+                .get()
+                .then((sn) => {
+                  if (sn.docs.length != 0) {
+                    document.getElementById("register").innerText =
+                      "Unregister From Event";
+                    document
+                      .getElementById("register")
+                      .addEventListener("click", function () {
+                        window.location = `/event/refund?e=${encodeURIComponent(
+                          eventID
+                        )}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(
+                          hDim
+                        )}`;
+                      });
+                  } else {
+                    document.getElementById("register").innerText =
+                      "Register For Event";
+                    document
+                      .getElementById("register")
+                      .addEventListener("click", function () {
+                        window.location = `/event/register?e=${encodeURIComponent(
+                          eventID
+                        )}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(
+                          hDim
+                        )}`;
+                      });
+                  }
+                });
+            } else {
+              var encodedURL = encodeURIComponent(
+                `event/?e=${eventID}&i=${hash}&d=${hDim}`
+              );
+              window.location = `/onboarding?l=${encodedURL}`;
+            }
           });
+        // .where("email", "==", user.email.toString())
+        // .get()
+        // .then((snap) => {
+        //   return snap.docs.length != 0 ? true : false;
+        // })
+        // .then((hasUser) => {
+        //   db.collection("charities")
+        //     .where("email", "==", user.email.toString())
+        //     .get()
+        //     .then((snap) => {
+        //       var hasCharity = snap.docs.length != 0 ? true : false;
+        //       if (hasUser || hasCharity) {
+
+        //         // window.location = returnTo;
+        //         // console.log("logged in");
+        //       } else {
+
+        //       }
+        //     });
+        // });
       } else {
         // User is signed out.
         signInButton.style.display = "block";
@@ -175,7 +186,9 @@ initApp = function () {
         document.getElementById("eventDateTime").innerText = new Date(
           doc.data().DateTime.seconds * 1000
         ).toString();
-        document.getElementById("eventCost").innerText = `$${doc.data().Cost / 100}`;
+        document.getElementById("eventCost").innerText = `$${
+          doc.data().Cost / 100
+        }`;
         document.getElementById("eventOrganizer").innerText =
           doc.data().OrganizerName;
         document.getElementById("eventBlurb").innerHTML = doc.data().Blurb;

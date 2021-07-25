@@ -31,46 +31,59 @@ initApp = function () {
         signedInDropdown.style.display = "flex";
         document.getElementById("accountButton").textContent = email;
         db.collection("users")
-          .where("email", "==", user.email.toString())
+          .doc(user.uid)
           .get()
-          .then((snap) => {
-            return snap.docs.length != 0 ? true : false;
-          })
-          .then((hasUser) => {
-            db.collection("charities")
-              .where("email", "==", user.email.toString())
-              .get()
-              .then((snap) => {
-                var hasCharity = snap.docs.length != 0 ? true : false;
-                if (hasUser || hasCharity) {
-                  // window.location = returnTo;
-                  // console.log("logged in");
-                } else {
-                  window.location = "/onboarding";
-                }
-              });
+          .then((userDoc) => {
+            if (userDoc.exists) {
+              if (userDoc.data().accountType == "standard") {
+                db.collection("upcomingEvents")
+                  .get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      // doc.data() is never undefined for query doc snapshots
+                      // console.log(doc.id, " => ", doc.data());
+                      parentList.innerHTML =
+                        parentList.innerHTML +
+                        addEventCard(
+                          doc.data().Name,
+                          doc.data().Location,
+                          doc.data().Cost,
+                          doc.data().DateTime,
+                          doc.data().ImageURL,
+                          doc.data().OrganizerName,
+                          doc.id,
+                          doc.data().MainHash,
+                          doc.data().ImageDim
+                        );
+                    });
+                  });
+              } else {
+                window.location = "/my-events";
+              }
+            } else {
+              window.location = "/onboarding";
+            }
           });
-        db.collection("upcomingEvents")
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              // doc.data() is never undefined for query doc snapshots
-              // console.log(doc.id, " => ", doc.data());
-              parentList.innerHTML =
-                parentList.innerHTML +
-                addEventCard(
-                  doc.data().Name,
-                  doc.data().Location,
-                  doc.data().Cost,
-                  doc.data().DateTime,
-                  doc.data().ImageURL,
-                  doc.data().OrganizerName,
-                  doc.id,
-                  doc.data().MainHash,
-                  doc.data().ImageDim
-                );
-            });
-          });
+        // db.collection("users")
+        //   .where("email", "==", user.email.toString())
+        //   .get()
+        //   .then((snap) => {
+        //     return snap.docs.length != 0 ? true : false;
+        //   })
+        //   .then((hasUser) => {
+        //     db.collection("charities")
+        //       .where("email", "==", user.email.toString())
+        //       .get()
+        //       .then((snap) => {
+        //         var hasCharity = snap.docs.length != 0 ? true : false;
+        //         if (hasUser || hasCharity) {
+        //           // window.location = returnTo;
+        //           // console.log("logged in");
+        //         } else {
+        //           window.location = "/onboarding";
+        //         }
+        //       });
+        //   });
       } else {
         // User is signed out.
         signInButton.style.display = "block";
@@ -79,9 +92,6 @@ initApp = function () {
           .get()
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-              // doc.data() is never undefined for query doc snapshots
-              // console.log(doc.id, " => ", doc.data());
-
               parentList.innerHTML =
                 parentList.innerHTML +
                 addEventCard(

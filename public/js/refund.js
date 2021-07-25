@@ -32,21 +32,19 @@ initApp = function () {
         signInButton.style.display = "none";
         signedInDropdown.style.display = "flex";
         document.getElementById("accountButton").textContent = email;
-        db.collection("users")
-          .where("email", "==", user.email.toString())
-          .get()
-          .then((snap) => {
-            var toReturn = snap.docs.length != 0 ? true : false;
-            return toReturn;
-          })
-          .then((hasUser) => {
-            db.collection("charities")
-              .where("email", "==", user.email.toString())
+        // db.collection("users")
+        //   .where("email", "==", user.email.toString())
+        //   .get()
+        //   .then((snap) => {
+        //     var toReturn = snap.docs.length != 0 ? true : false;
+        //     return toReturn;
+        //   })
+        //   .then((hasUser) => {
+            db.collection("users")
+              .doc(user.uid)
               .get()
-              .then((snap) => {
-                var hasCharity = snap.docs.length != 0 ? true : false;
-                if (hasUser || hasCharity) {
-                  // window.location = returnTo;
+              .then((userDoc) => {
+                if (userDoc.exists) {
                   db.collection(`upcomingEvents/${eventID}/registeredUsers`)
                     .where("uid", "==", user.uid)
                     .get()
@@ -72,7 +70,18 @@ initApp = function () {
                   window.location = `/onboarding?l=${encodedURL}`;
                 }
               });
-          });
+            //     .where("email", "==", user.email.toString())
+            //     .get()
+            //     .then((snap) => {
+            //       var hasCharity = snap.docs.length != 0 ? true : false;
+            //       if (hasUser || hasCharity) {
+            //         // window.location = returnTo;
+
+            //       } else {
+
+            //       }
+            //     });
+          // });
       } else {
         // User is signed out.
         signInButton.style.display = "block";

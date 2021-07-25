@@ -8,27 +8,36 @@ initApp = function () {
         signedInDropdown.style.display = "flex";
         document.getElementById("accountButton").textContent = email;
         db.collection("users")
-          .where("email", "==", user.email.toString())
+          .doc(user.uid)
           .get()
-          .then((snap) => {
-            return snap.docs.length != 0 ? true : false;
-          })
-          .then((hasUser) => {
-            db.collection("charities")
-              .where("email", "==", user.email.toString())
-              .get()
-              .then((snap) => {
-                var hasCharity = snap.docs.length != 0 ? true : false;
-                if (hasUser || hasCharity) {
-                  // window.location = returnTo;
-                  console.log("logged in");
-                } else {
-                  window.location = "/onboarding?l=account";
-                }
-              });
+          .then((userDoc) => {
+            if (userDoc.exists) {
+              console.log("logged in");
+              document.getElementById("firebaseui-auth-container").innerHTML =
+                "Hello, " + user.displayName.toString();
+            } else {
+              window.location = "/onboarding?l=account";
+            }
           });
-        document.getElementById("firebaseui-auth-container").innerHTML =
-          "Hello, " + user.displayName.toString();
+        // .where("email", "==", user.email.toString())
+        // .get()
+        // .then((snap) => {
+        //   return snap.docs.length != 0 ? true : false;
+        // })
+        // .then((hasUser) => {
+        //   db.collection("charities")
+        //     .where("email", "==", user.email.toString())
+        //     .get()
+        //     .then((snap) => {
+        //       var hasCharity = snap.docs.length != 0 ? true : false;
+        //       if (hasUser || hasCharity) {
+        //         // window.location = returnTo;
+        //         console.log("logged in");
+        //       } else {
+        //         window.location = "/onboarding?l=account";
+        //       }
+        //     });
+        // });
       } else {
         signInButton.style.display = "block";
         signedInDropdown.style.display = "none";

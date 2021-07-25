@@ -48,7 +48,7 @@ initApp = function () {
   var signedInDropdown = document.getElementById("signedInDropdown");
   var eventTitleBlock = document.getElementById("eventTitle");
   var db = firebase.firestore();
-  var docRef = db.collection("upcomingEvents").doc(eventID);
+  // var docRef = ;
   firebase.auth().onAuthStateChanged(
     function (user) {
       if (user) {
@@ -58,73 +58,83 @@ initApp = function () {
         signedInDropdown.style.display = "flex";
         document.getElementById("accountButton").textContent = email;
         db.collection("users")
-          .where("email", "==", user.email.toString())
+          .doc(user.uid)
           .get()
-          .then((snap) => {
-            return snap.docs.length != 0 ? true : false;
-          })
-          .then((hasUser) => {
-            db.collection("charities")
-              .where("email", "==", user.email.toString())
-              .get()
-              .then((snap) => {
-                var hasCharity = snap.docs.length != 0 ? true : false;
-                if (hasUser || hasCharity) {
-                  // window.location = returnTo;
-                  docRef
-                    .get()
-                    .then((doc) => {
-                      if (doc.exists) {
-                        document.title =
-                          "Register - " +
-                          doc.data().Name.toString() +
-                          " | Golf_Event_Platform";
-                        document.getElementById("eventTitle").innerText =
-                          doc.data().Name;
-                        document.getElementById("eventImageMain").src =
-                          doc.data().ImageURL;
-                        var button = document.createElement("button");
-                        button.id = "registerButton";
-                        button.innerText = "I Agree";
-                        button.addEventListener("click", () => {
-                          agree(
-                            eventID,
-                            user.uid,
-                            hash,
-                            hDim,
-                            doc.data().Cost,
-                            doc.data().Name,
-                            doc.data().MaxParticipants,
-                            doc.data().ImageURL,
-                            user.email,
-                            getStripeID(user.uid, hasUser)
-                          );
-                        });
-                        document
-                          .getElementById("eventContentMainFlex")
-                          .appendChild(button);
-                      } else {
-                        // doc.data() will be undefined in this case
-                        console.log("No such document!");
-                        alert(
-                          "hmm... Something went wrong. Try again in a few minutes"
-                        );
-                        window.location = "/404.html";
-                      }
-                    })
-                    .catch((error) => {
-                      console.log("Error getting document:", error);
-                      // window.location = "/404.html";
+          .then((userDoc) => {
+            if (userDoc.exists) {
+              db.collection("upcomingEvents")
+                .doc(eventID)
+                .get()
+                .then((doc) => {
+                  if (doc.exists) {
+                    document.title =
+                      "Register - " +
+                      doc.data().Name.toString() +
+                      " | Golf_Event_Platform";
+                    document.getElementById("eventTitle").innerText =
+                      doc.data().Name;
+                    document.getElementById("eventImageMain").src =
+                      doc.data().ImageURL;
+                    var button = document.createElement("button");
+                    button.id = "registerButton";
+                    button.innerText = "I Agree";
+                    button.addEventListener("click", () => {
+                      agree(
+                        eventID,
+                        user.uid,
+                        hash,
+                        hDim,
+                        doc.data().Cost,
+                        doc.data().Name,
+                        doc.data().MaxParticipants,
+                        doc.data().ImageURL,
+                        user.email,
+                        getStripeID(user.uid, hasUser)
+                      );
                     });
-                  console.log("logged in");
-                } else {
-                  var encodedURL = encodeURIComponent(
-                    `event/register/?e=${eventID}&i=${hash}&d=${hDim}`
-                  );
-                  window.location = `/onboarding?l=${encodedURL}`;
-                }
-              });
+                    document
+                      .getElementById("eventContentMainFlex")
+                      .appendChild(button);
+                  } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such document!");
+                    alert(
+                      "hmm... Something went wrong. Try again in a few minutes"
+                    );
+                    window.location = "/404.html";
+                  }
+                })
+                .catch((error) => {
+                  console.log("Error getting document:", error);
+                  // window.location = "/404.html";
+                });
+              // console.log("logged in");
+            } else {
+              var encodedURL = encodeURIComponent(
+                `event/register/?e=${eventID}&i=${hash}&d=${hDim}`
+              );
+              window.location = `/onboarding?l=${encodedURL}`;
+            }
           });
+        // .where("email", "==", user.email.toString())
+        // .get()
+        // .then((snap) => {
+        //   return snap.docs.length != 0 ? true : false;
+        // })
+        // .then((hasUser) => {
+        //   db.collection("charities")
+        //     .where("email", "==", user.email.toString())
+        //     .get()
+        //     .then((snap) => {
+        //       var hasCharity = snap.docs.length != 0 ? true : false;
+        //       if (hasUser || hasCharity) {
+        //         // window.location = returnTo;
+
+        //       } else {
+
+        //       }
+        //     });
+        // });
       } else {
         // User is signed out.
         signInButton.style.display = "block";
@@ -147,25 +157,14 @@ window.addEventListener("load", function () {
 });
 
 function getStripeID(uid, user) {
-  if (user) {
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .get()
-      .then((doc) => {
-        return doc.data().stripeCustomerID;
-      });
-  } else {
-    return firebase
-      .firestore()
-      .collection("charities")
-      .doc(uid)
-      .get()
-      .then((doc) => {
-        return doc.data().stripeCustomerID;
-      });
-  }
+  return firebase
+    .firestore()
+    .collection("users")
+    .doc(uid)
+    .get()
+    .then((doc) => {
+      return doc.data().stripeCustomerID;
+    });
 }
 
 function agree(
@@ -195,7 +194,7 @@ function agree(
     eventMaxParticipants: eventMaxParticipants,
     checkoutImage: checkoutImage,
     customerID: stripeID,
-    userEmail: email
+    userEmail: email,
   })
     .then((result) => {
       // Read result of the Cloud Function.

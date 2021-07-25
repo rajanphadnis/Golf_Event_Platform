@@ -12,46 +12,64 @@ var initApp = function () {
         document.getElementById("accountButton").textContent = email;
         if (hasntAddedNewScript) {
           db.collection("users")
-            .where("email", "==", user.email.toString())
+            .doc(user.uid)
             .get()
-            .then((snap) => {
-              return snap.docs.length != 0 ? "true" : "false";
-            })
-            .then((hasUser) => {
-              db.collection("charities")
-                .where("email", "==", user.email.toString())
-                .get()
-                .then((snap) => {
-                  var hasCharity = snap.docs.length != 0 ? true : false;
-                  if (hasUser == "true") {
-                    
-                    // document.getElementById("standardPage").style.display =
-                    //   "block";
-                    var script2 = document.createElement("script");
-                    script2.setAttribute("src", "/js/myEvents/standard.js");
-                    document.getElementById("newScript").appendChild(script2);
-                    hasAddedNewScript = false;
-                    //   var style2 = document.createElement("link");
-                    //   style2.setAttribute("rel", "stylesheet");
-                    //   style2.setAttribute("src", "/css/my-events/standard.css");
-                    //   document.getElementById("mainHead").appendChild(style2);
-                  } else if (hasCharity) {
-                    var script2 = document.createElement("script");
-                    script2.setAttribute("src", "/js/myEvents/charity.js");
-                    document.getElementById("newScript").appendChild(script2);
-                    // document.getElementById("newScript").innerHTML = '<script src="/js/myEvents/charity.js"></script>';
-                    hasAddedNewScript = false;
-                    //   var style2 = document.createElement("link");
-                    //   style2.setAttribute("rel", "stylesheet");
-                    //   style2.setAttribute("src", "/css/my-events/charity.css");
-                    //   document.getElementById("mainHead").appendChild(style2);
-                  } else {
-                    window.location = "/onboarding?l=my-events";
-                  }
-                });
+            .then((userDoc) => {
+              if (userDoc.exists) {
+                if (userDoc.data().accountType == "standard") {
+                  var script2 = document.createElement("script");
+                  script2.setAttribute("src", "/js/myEvents/standard.js");
+                  document.getElementById("newScript").appendChild(script2);
+                  hasntAddedNewScript = false;
+                } else {
+                  var script2 = document.createElement("script");
+                  script2.setAttribute("src", "/js/myEvents/charity.js");
+                  document.getElementById("newScript").appendChild(script2);
+                  // document.getElementById("newScript").innerHTML = '<script src="/js/myEvents/charity.js"></script>';
+                  hasntAddedNewScript = false;
+                }
+              } else {
+                window.location = "/onboarding?l=my-events";
+              }
             });
-        }
-        else {
+          // .where("email", "==", user.email.toString())
+          // .get()
+          // .then((snap) => {
+          //   return snap.docs.length != 0 ? "true" : "false";
+          // })
+          // .then((hasUser) => {
+          //   db.collection("charities")
+          //     .where("email", "==", user.email.toString())
+          //     .get()
+          //     .then((snap) => {
+          //       var hasCharity = snap.docs.length != 0 ? true : false;
+          //       if (hasUser == "true") {
+          //         // document.getElementById("standardPage").style.display =
+          //         //   "block";
+          //         var script2 = document.createElement("script");
+          //         script2.setAttribute("src", "/js/myEvents/standard.js");
+          //         document.getElementById("newScript").appendChild(script2);
+          //         hasAddedNewScript = false;
+          //         //   var style2 = document.createElement("link");
+          //         //   style2.setAttribute("rel", "stylesheet");
+          //         //   style2.setAttribute("src", "/css/my-events/standard.css");
+          //         //   document.getElementById("mainHead").appendChild(style2);
+          //       } else if (hasCharity) {
+          //         var script2 = document.createElement("script");
+          //         script2.setAttribute("src", "/js/myEvents/charity.js");
+          //         document.getElementById("newScript").appendChild(script2);
+          //         // document.getElementById("newScript").innerHTML = '<script src="/js/myEvents/charity.js"></script>';
+          //         hasAddedNewScript = false;
+          //         //   var style2 = document.createElement("link");
+          //         //   style2.setAttribute("rel", "stylesheet");
+          //         //   style2.setAttribute("src", "/css/my-events/charity.css");
+          //         //   document.getElementById("mainHead").appendChild(style2);
+          //       } else {
+
+          //       }
+          //     });
+          // });
+        } else {
           console.log("has already added script");
         }
       } else {
