@@ -66,7 +66,7 @@ initApp = function () {
                 db.collection("upcomingEvents")
                   .doc(eventID)
                   .get()
-                  .then((doc) => {
+                  .then(async (doc) => {
                     if (doc.exists) {
                       document.title =
                         "Register - " +
@@ -79,7 +79,8 @@ initApp = function () {
                       var button = document.createElement("button");
                       button.id = "registerButton";
                       button.innerText = "I Agree";
-                      button.addEventListener("click", async () => {
+                      const stripeIDThing = await getStripeID(user.uid);
+                      button.addEventListener("click", () => {
                         agree(
                           eventID,
                           user.uid,
@@ -90,7 +91,7 @@ initApp = function () {
                           doc.data().MaxParticipants,
                           doc.data().ImageURL,
                           user.email,
-                          await getStripeID(user.uid)
+                          stripeIDThing
                         );
                       });
                       document
