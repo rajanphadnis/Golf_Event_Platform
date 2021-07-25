@@ -524,6 +524,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
   );
 
   if (customerID == null) {
+    console.log("customer ID was blank");
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       customer_email: userEmail,
@@ -562,6 +563,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
       returnURL: session.url,
     };
   } else {
+    console.log("customerID was not blank");
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       customer: customerID,
@@ -622,73 +624,36 @@ app.post(
       return response.status(400).send(`Webhook Error: ${err.message}`);
     }
     var userDocID;
-    // // Handle the checkout.session.completed event
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       const eventDocID = event.data.object.metadata.eventID;
       const userID = event.data.object.metadata.uID;
-      console.log(session);
+      // console.log(session);
       var db = admin.firestore();
-      return (
-        db
-          .collection(`upcomingEvents/${eventDocID}/registeredUsers`)
-          .add({
-            uid: userID.toString(),
-            dt: new Date(Date.now()),
-            paymentIntent: event.data.object.payment_intent.toString(),
-            stripeID: event.data.object.id.toString(),
-            customerID: event.data.object.customer.toString(),
-          })
-          // .then((t) => {
-          //   window.location =
-          //     "/event?e=" +
-          //     encodeURIComponent(`${dID}`) +
-          //     "&i=" +
-          //     encodeURIComponent(`${hash}`) +
-          //     "&d=" +
-          //     encodeURIComponent(`${hDim}`);
-          // })
-          .catch((er) => {
-            // alert(er);
-            return response.status(404).send({ done: false });
-          })
+      const fulfill = db
+        .collection(`upcomingEvents/${eventDocID}/registeredUsers`)
+        .add({
+          uid: userID.toString(),
+          dt: new Date(Date.now()),
+          paymentIntent: event.data.object.payment_intent.toString(),
+          stripeID: event.data.object.id.toString(),
+          customerID: event.data.object.customer.toString(),
+        });
+      const updateCustID = db.collection("users").doc(uid).set(
+        {
+          stripeCustomerID: event.data.object.customer.toString(),
+        },
+        { merge: true }
       );
-      //   return db
-      //     .collection("users")
-      //     .where("stripeCustomerID", "==", session.customer)
-      //     .get()
-      //     .then((snapshot) => {
-      //       if (snapshot.empty) {
-      //         console.log("No matching documents.");
-      //       } else {
-      //         snapshot.forEach((doc) => {
-      //           userDocID = doc.id;
-      //         });
-      //       }
-      //       db.collection("users")
-      //         .doc(userDocID)
-      //         .set({ passed: false, canTakeTest: true, active: true }, { merge: true });
-      //       var data = {
-      //         from: "ICCP Admin Panel<app@caddiecertification.com>",
-      //         subject: "Payment Complete",
-      //         html: `Someone just paid for their test. Congratulations! That's $99.99! Funds should be available to withdraw from Stripe in about two weeks. Click <a href="https://dashboard.stripe.com/dashboard">here</a> to view your Stripe Dashboard.`,
-      //         "h:Reply-To": "richardiorio@pga.com",
-      //         to: "richardiorio@pga.com",
-      //       };
-      //       db.collection("users/" + userDocID + "/test/")
-      //         .doc("0")
-      //         .update({ paid: true });
-      //       mailgun.messages().send(data, (error, body) => {
-      //         console.log("Payment email error: " + body);
-      //       });
-      //       return response.status(200).send({ done: true });
-      //     })
-      //     .catch((err) => {
-      //       console.log("Error getting documents - ", err);
-      //       return response.status(400).send({ done: false });
-      //     });
+      return Promise.all([fulfill, updateCustID])
+        .then((t) => {
+          return response.status(200).send({ done: true });
+        })
+        .catch((er) => {
+          // alert(er);
+          return response.status(400).send(`Webhook Error: ${err.message}`);
+        });
     }
-    return response.status(200).send({ done: true });
   }
 );
 exports.stripePaymentDoneLetsFulfillTheOrder = functions.https.onRequest(app);
