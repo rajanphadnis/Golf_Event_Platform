@@ -605,7 +605,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
   }
 });
 
-const endpointSecret = "whsec_9vjJxZIlW0LGMGN2crrdmQ0Uv5P34FQB";
+const endpointSecret = "whsec_M1G6CIpLr2HsOehz5D8E0InfUv885nZT";
 const app = require("express")();
 app.post(
   "/webhook",
