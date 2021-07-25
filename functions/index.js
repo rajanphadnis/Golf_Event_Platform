@@ -502,7 +502,7 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
   const backURL = data.backURL;
   const eventMaxParticipants = data.eventMaxParticipants;
   const checkoutImage = data.checkoutImage;
-  const customerID = data.customerID;
+  const customerID = data.customerID.toString();
   const userEmail = data.userEmail;
   if (!context.auth) {
     // Throwing an HttpsError so that the client gets the error details.
@@ -522,8 +522,8 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
   const stripe = require("stripe")(
     "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
   );
-
-  if (customerID == null) {
+  console.log(customerID);
+  if (customerID == "null") {
     console.log("customer ID was blank");
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],

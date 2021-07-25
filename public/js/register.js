@@ -90,7 +90,7 @@ initApp = function () {
                           doc.data().MaxParticipants,
                           doc.data().ImageURL,
                           user.email,
-                          getStripeID(user.uid)
+                          getStripeID(user.uid),
                         );
                       });
                       document
@@ -145,10 +145,10 @@ function getStripeID(uid) {
     console.log(doc.get("stripeCustomerID"));
     if(doc.get("stripeCustomerID") == null) {
       
-      return null
+      return "null";
     }
     else {
-      return doc.data().stripeCustomerID;
+      return doc.data().stripeCustomerID.toString();
     }
   });
 }
@@ -179,7 +179,7 @@ function agree(
     backURL: window.location.href.toString(),
     eventMaxParticipants: eventMaxParticipants,
     checkoutImage: checkoutImage,
-    customerID: stripeID,
+    customerID: stripeID.toString(),
     userEmail: email,
   })
     .then((result) => {
