@@ -79,24 +79,26 @@ initApp = function () {
                       var button = document.createElement("button");
                       button.id = "registerButton";
                       button.innerText = "I Agree";
-                      const stripeIDThing = await getStripeID(user.uid);
-                      button.addEventListener("click", () => {
-                        agree(
-                          eventID,
-                          user.uid,
-                          hash,
-                          hDim,
-                          doc.data().Cost,
-                          doc.data().Name,
-                          doc.data().MaxParticipants,
-                          doc.data().ImageURL,
-                          user.email,
-                          stripeIDThing
-                        );
+                      const stripeIDThing = getStripeID(user.uid);
+                      Promise.all([stripeIDThing]).then((f) => {
+                        button.addEventListener("click", () => {
+                          agree(
+                            eventID,
+                            user.uid,
+                            hash,
+                            hDim,
+                            doc.data().Cost,
+                            doc.data().Name,
+                            doc.data().MaxParticipants,
+                            doc.data().ImageURL,
+                            user.email,
+                            stripeIDThing
+                          );
+                        });
+                        document
+                          .getElementById("eventContentMainFlex")
+                          .appendChild(button);
                       });
-                      document
-                        .getElementById("eventContentMainFlex")
-                        .appendChild(button);
                     } else {
                       // doc.data() will be undefined in this case
                       console.log("No such document!");
