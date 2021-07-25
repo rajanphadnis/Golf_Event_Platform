@@ -468,22 +468,6 @@ exports.userCleanup = functions.auth.user().onDelete(async (user) => {
   return Promise.all([uPromise, cPromise, ePromise, sPromise]);
 });
 
-exports.createStripeUser = functions.firestore
-  .document("users/{userId}")
-  .onCreate(async (snap, context) => {
-    const customer = await stripe.customers.create({
-      email: snap.data().email,
-      name: snap.data().name,
-    });
-    const docProm = admin.firestore().collection("users").doc(snap.id).set(
-      {
-        stripeCustomerID: customer.id,
-      },
-      { merge: true }
-    );
-    return Promise.all([docProm]);
-  });
-
 async function deleteQueryBatch(db, query, resolve) {
   const snapshot = await query.get();
 
@@ -539,43 +523,84 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
     "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
   );
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    customer: customerID,
-    customer_email: userEmail,
-    line_items: [
-      {
-        quantity: 1,
-        price_data: {
-          currency: "usd",
-          unit_amount: eventCost,
-          product_data: { name: eventName, images: [checkoutImage] },
+  if (customerID == null) {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      customer_email: userEmail,
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "usd",
+            unit_amount: eventCost,
+            product_data: { name: eventName, images: [checkoutImage] },
+          },
+          // adjustable_quantity: {
+          //   enabled: true,
+          //   minimum: 1,
+          //   maximum: eventMaxParticipants,
+          // },
         },
-        // adjustable_quantity: {
-        //   enabled: true,
-        //   minimum: 1,
-        //   maximum: eventMaxParticipants,
-        // },
+      ],
+      metadata: { eventID: eventDoc.toString(), uID: userUID.toString() },
+      payment_intent_data: {
+        application_fee_amount: 12,
+        transfer_data: {
+          destination: "acct_1JEiwOPfBihHlzmx",
+        },
+        setup_future_usage: "on_session",
       },
-    ],
-    metadata: { eventID: eventDoc.toString(), uID: userUID.toString() },
-    payment_intent_data: {
-      application_fee_amount: 12,
-      transfer_data: {
-        destination: "acct_1JEiwOPfBihHlzmx",
-      },
-      setup_future_usage: "on_session",
-    },
-    submit_type: "book",
-    mode: "payment",
-    success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/my-events/",
-    cancel_url: backURL,
-  });
+      submit_type: "book",
+      mode: "payment",
+      success_url:
+        "https://golf-event-platform--dev-u2suwtdi.web.app/my-events/",
+      cancel_url: backURL,
+    });
 
-  // 303 redirect to session.url
-  return {
-    returnURL: session.url,
-  };
+    // 303 redirect to session.url
+    return {
+      returnURL: session.url,
+    };
+  } else {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      customer: customerID,
+      customer_email: userEmail,
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "usd",
+            unit_amount: eventCost,
+            product_data: { name: eventName, images: [checkoutImage] },
+          },
+          // adjustable_quantity: {
+          //   enabled: true,
+          //   minimum: 1,
+          //   maximum: eventMaxParticipants,
+          // },
+        },
+      ],
+      metadata: { eventID: eventDoc.toString(), uID: userUID.toString() },
+      payment_intent_data: {
+        application_fee_amount: 12,
+        transfer_data: {
+          destination: "acct_1JEiwOPfBihHlzmx",
+        },
+        setup_future_usage: "on_session",
+      },
+      submit_type: "book",
+      mode: "payment",
+      success_url:
+        "https://golf-event-platform--dev-u2suwtdi.web.app/my-events/",
+      cancel_url: backURL,
+    });
+
+    // 303 redirect to session.url
+    return {
+      returnURL: session.url,
+    };
+  }
 });
 
 const endpointSecret = "whsec_9vjJxZIlW0LGMGN2crrdmQ0Uv5P34FQB";

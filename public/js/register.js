@@ -62,53 +62,56 @@ initApp = function () {
           .get()
           .then((userDoc) => {
             if (userDoc.exists) {
-              db.collection("upcomingEvents")
-                .doc(eventID)
-                .get()
-                .then((doc) => {
-                  if (doc.exists) {
-                    document.title =
-                      "Register - " +
-                      doc.data().Name.toString() +
-                      " | Golf_Event_Platform";
-                    document.getElementById("eventTitle").innerText =
-                      doc.data().Name;
-                    document.getElementById("eventImageMain").src =
-                      doc.data().ImageURL;
-                    var button = document.createElement("button");
-                    button.id = "registerButton";
-                    button.innerText = "I Agree";
-                    button.addEventListener("click", () => {
-                      agree(
-                        eventID,
-                        user.uid,
-                        hash,
-                        hDim,
-                        doc.data().Cost,
-                        doc.data().Name,
-                        doc.data().MaxParticipants,
-                        doc.data().ImageURL,
-                        user.email,
-                        getStripeID(user.uid, hasUser)
+              if (userDoc.data().accountType == "standard") {
+                db.collection("upcomingEvents")
+                  .doc(eventID)
+                  .get()
+                  .then((doc) => {
+                    if (doc.exists) {
+                      document.title =
+                        "Register - " +
+                        doc.data().Name.toString() +
+                        " | Golf_Event_Platform";
+                      document.getElementById("eventTitle").innerText =
+                        doc.data().Name;
+                      document.getElementById("eventImageMain").src =
+                        doc.data().ImageURL;
+                      var button = document.createElement("button");
+                      button.id = "registerButton";
+                      button.innerText = "I Agree";
+                      button.addEventListener("click", () => {
+                        agree(
+                          eventID,
+                          user.uid,
+                          hash,
+                          hDim,
+                          doc.data().Cost,
+                          doc.data().Name,
+                          doc.data().MaxParticipants,
+                          doc.data().ImageURL,
+                          user.email,
+                          getStripeID(user.uid)
+                        );
+                      });
+                      document
+                        .getElementById("eventContentMainFlex")
+                        .appendChild(button);
+                    } else {
+                      // doc.data() will be undefined in this case
+                      console.log("No such document!");
+                      alert(
+                        "hmm... Something went wrong. Try again in a few minutes"
                       );
-                    });
-                    document
-                      .getElementById("eventContentMainFlex")
-                      .appendChild(button);
-                  } else {
-                    // doc.data() will be undefined in this case
-                    console.log("No such document!");
-                    alert(
-                      "hmm... Something went wrong. Try again in a few minutes"
-                    );
-                    window.location = "/404.html";
-                  }
-                })
-                .catch((error) => {
-                  console.log("Error getting document:", error);
-                  // window.location = "/404.html";
-                });
-              // console.log("logged in");
+                      window.location = "/404.html";
+                    }
+                  })
+                  .catch((error) => {
+                    console.log("Error getting document:", error);
+                    // window.location = "/404.html";
+                  });
+              } else {
+                window.location = "/404.html";
+              }
             } else {
               var encodedURL = encodeURIComponent(
                 `event/register/?e=${eventID}&i=${hash}&d=${hDim}`
@@ -116,25 +119,6 @@ initApp = function () {
               window.location = `/onboarding?l=${encodedURL}`;
             }
           });
-        // .where("email", "==", user.email.toString())
-        // .get()
-        // .then((snap) => {
-        //   return snap.docs.length != 0 ? true : false;
-        // })
-        // .then((hasUser) => {
-        //   db.collection("charities")
-        //     .where("email", "==", user.email.toString())
-        //     .get()
-        //     .then((snap) => {
-        //       var hasCharity = snap.docs.length != 0 ? true : false;
-        //       if (hasUser || hasCharity) {
-        //         // window.location = returnTo;
-
-        //       } else {
-
-        //       }
-        //     });
-        // });
       } else {
         // User is signed out.
         signInButton.style.display = "block";
@@ -156,15 +140,15 @@ window.addEventListener("load", function () {
   initApp();
 });
 
-function getStripeID(uid, user) {
-  return firebase
-    .firestore()
-    .collection("users")
-    .doc(uid)
-    .get()
-    .then((doc) => {
+function getStripeID(uid) {
+  firebase.firestore().collection("users").doc(uid).get().then((doc) => {
+    if(doc.get("stripeCustomerID") == null) {
+      return null
+    }
+    else {
       return doc.data().stripeCustomerID;
-    });
+    }
+  });
 }
 
 function agree(
