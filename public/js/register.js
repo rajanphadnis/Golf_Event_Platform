@@ -79,7 +79,7 @@ initApp = function () {
                       var button = document.createElement("button");
                       button.id = "registerButton";
                       button.innerText = "I Agree";
-                      button.addEventListener("click", () => {
+                      button.addEventListener("click", async () => {
                         agree(
                           eventID,
                           user.uid,
@@ -90,7 +90,7 @@ initApp = function () {
                           doc.data().MaxParticipants,
                           doc.data().ImageURL,
                           user.email,
-                          getStripeID(user.uid),
+                          await getStripeID(user.uid)
                         );
                       });
                       document
@@ -141,15 +141,21 @@ window.addEventListener("load", function () {
 });
 
 function getStripeID(uid) {
-  firebase.firestore().collection("users").doc(uid).get().then((doc) => {
-    console.log(doc.get("stripeCustomerID"));
-    if(doc.get("stripeCustomerID") == undefined) {
-      return "null";
-    }
-    else {
-      return doc.data().stripeCustomerID.toString();
-    }
-  });
+  firebase
+    .firestore()
+    .collection("users")
+    .doc(uid)
+    .get()
+    .then((doc) => {
+      console.log(doc.get("stripeCustomerID"));
+      if (doc.get("stripeCustomerID") == undefined) {
+        console.log(`returning null`);
+        return "null";
+      } else {
+        console.log(`returning: ${doc.data().stripeCustomerID.toString()}`);
+        return doc.data().stripeCustomerID.toString();
+      }
+    });
 }
 
 function agree(
