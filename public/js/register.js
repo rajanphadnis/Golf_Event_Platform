@@ -79,55 +79,49 @@ initApp = function () {
                       var button = document.createElement("button");
                       button.id = "registerButton";
                       button.innerText = "I Agree";
-                      firebase
-                        .firestore()
-                        .collection("users")
-                        .doc(user.uid)
-                        .get()
-                        .then((doc) => {
-                          console.log(doc.get("stripeCustomerID"));
-                          if (doc.get("stripeCustomerID") == undefined) {
-                            console.log(`returning null`);
-                            button.addEventListener("click", () => {
-                              agree(
-                                eventID,
-                                user.uid,
-                                hash,
-                                hDim,
-                                doc.data().Cost,
-                                doc.data().Name,
-                                doc.data().MaxParticipants,
-                                doc.data().ImageURL,
-                                user.email,
-                                "null"
-                              );
-                            });
-                            document
-                              .getElementById("eventContentMainFlex")
-                              .appendChild(button);
-                            // return "null";
-                          } else {
-                            console.log(`returning with StripeID`);
-                            button.addEventListener("click", () => {
-                              agree(
-                                eventID,
-                                user.uid,
-                                hash,
-                                hDim,
-                                doc.data().Cost,
-                                doc.data().Name,
-                                doc.data().MaxParticipants,
-                                doc.data().ImageURL,
-                                user.email,
-                                doc.data().stripeCustomerID.toString()
-                              );
-                            });
-                            document
-                              .getElementById("eventContentMainFlex")
-                              .appendChild(button);
-                            // return doc.data().stripeCustomerID.toString();
-                          }
+                      console.log(userDoc.get("stripeCustomerID"));
+                      if (userDoc.get("stripeCustomerID") == undefined) {
+                        console.log(`returning null`);
+                        button.addEventListener("click", () => {
+                          agree(
+                            eventID,
+                            user.uid,
+                            hash,
+                            hDim,
+                            doc.data().Cost,
+                            doc.data().Name,
+                            doc.data().MaxParticipants,
+                            doc.data().ImageURL,
+                            user.email,
+                            "null"
+                          );
                         });
+                        document
+                          .getElementById("eventContentMainFlex")
+                          .appendChild(button);
+                        // return "null";
+                      } else {
+                        console.log(`returning with StripeID`);
+                        button.addEventListener("click", () => {
+                          agree(
+                            eventID,
+                            user.uid,
+                            hash,
+                            hDim,
+                            doc.data().Cost,
+                            doc.data().Name,
+                            doc.data().MaxParticipants,
+                            doc.data().ImageURL,
+                            user.email,
+                            doc.data().stripeCustomerID.toString()
+                          );
+                        });
+                        document
+                          .getElementById("eventContentMainFlex")
+                          .appendChild(button);
+                        // return doc.data().stripeCustomerID.toString();
+                      }
+                      // });
                     } else {
                       // doc.data() will be undefined in this case
                       console.log("No such document!");
