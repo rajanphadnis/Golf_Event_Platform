@@ -142,7 +142,9 @@ window.addEventListener("load", function () {
 
 function getStripeID(uid) {
   firebase.firestore().collection("users").doc(uid).get().then((doc) => {
+    console.log(doc.get("stripeCustomerID"));
     if(doc.get("stripeCustomerID") == null) {
+      
       return null
     }
     else {
