@@ -31,6 +31,7 @@ initApp = function () {
               document
                 .getElementById("standard")
                 .addEventListener("click", function () {
+                  document.getElementById("hint").innerText = "Loading...Please do not refresh the page.";
                   document.getElementById("options").style.display = "none";
                   var newTransaction = firebase
                     .functions()
@@ -51,7 +52,8 @@ initApp = function () {
                       })
                       .catch((er) => {
                         // document.getElementById("registerButton").disabled = false;
-                        document.getElementById("registerButton").innerText =
+                        console.log(er);
+                        document.getElementById("hint").innerText =
                           "Error. Please Refresh the Page.";
                       });
                   }
@@ -71,7 +73,8 @@ initApp = function () {
                       })
                       .catch((er) => {
                         // document.getElementById("registerButton").disabled = false;
-                        document.getElementById("registerButton").innerText =
+                        console.log(er);
+                        document.getElementById("hint").innerText =
                           "Error. Please Refresh the Page.";
                       });
                   }
