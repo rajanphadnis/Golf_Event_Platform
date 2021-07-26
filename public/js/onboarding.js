@@ -32,7 +32,49 @@ initApp = function () {
                 .getElementById("standard")
                 .addEventListener("click", function () {
                   document.getElementById("options").style.display = "none";
-                  addUser(user.displayName, user.email, user.uid, "standard");
+                  var newTransaction = firebase
+                    .functions()
+                    .httpsCallable("createSubscription");
+                  if (userDoc.get("stripeCustomerID") == undefined) {
+                    newTransaction({
+                      userName: user.displayName.toString(),
+                      uid: user.uid.toString(),
+                      backURL: window.location.href.toString(),
+                      customerID: "null",
+                      userEmail: user.email,
+                    })
+                      .then((result) => {
+                        // Read result of the Cloud Function.
+                        var checkoutURL = result.data.returnURL;
+                        console.log(checkoutURL);
+                        window.location = checkoutURL;
+                      })
+                      .catch((er) => {
+                        // document.getElementById("registerButton").disabled = false;
+                        document.getElementById("registerButton").innerText =
+                          "Error. Please Refresh the Page.";
+                      });
+                  }
+                  else {
+                    newTransaction({
+                      userName: user.displayName.toString(),
+                      uid: user.uid.toString(),
+                      backURL: window.location.href.toString(),
+                      customerID: userDoc.data().stripeCustomerID.toString(),
+                      userEmail: user.email,
+                    })
+                      .then((result) => {
+                        // Read result of the Cloud Function.
+                        var checkoutURL = result.data.returnURL;
+                        console.log(checkoutURL);
+                        window.location = checkoutURL;
+                      })
+                      .catch((er) => {
+                        // document.getElementById("registerButton").disabled = false;
+                        document.getElementById("registerButton").innerText =
+                          "Error. Please Refresh the Page.";
+                      });
+                  }
                 });
               document
                 .getElementById("charity")
@@ -45,6 +87,7 @@ initApp = function () {
                 .getElementById("submitCharityName")
                 .addEventListener("click", function () {
                   // document.getElementById("options").style.display = "none";
+
                   addUser(
                     document.getElementById("charityNameInput").value,
                     user.email,
@@ -91,6 +134,8 @@ window.addEventListener("load", function () {
 });
 
 function addUser(displayName, email, uid, type) {
+  // console.log(`Transmitting: ${dID}, ${uID}, ${cost}, ${name}, ${stripeID}`);
+
   firebase
     .firestore()
     .collection("users")

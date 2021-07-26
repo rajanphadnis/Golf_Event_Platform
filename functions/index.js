@@ -604,7 +604,67 @@ exports.createTransaction = functions.https.onCall(async (data, context) => {
   }
 });
 
-const endpointSecret = "whsec_M1G6CIpLr2HsOehz5D8E0InfUv885nZT";
+exports.createSubscription = functions.https.onCall(async (data, context) => {
+  const userName = data.userName;
+  const userUID = data.uid;
+  const backURL = data.backURL;
+  const customerID = data.customerID.toString();
+  const userEmail = data.userEmail;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError(
+      "failed-precondition",
+      "The function must be called " + "while authenticated."
+    );
+  }
+  if (!(typeof eventDoc === "string") || eventDoc.length === 0) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      "The function must be called with " +
+        'one arguments "text" containing the message text to add.'
+    );
+  }
+  const stripe = require("stripe")(
+    "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
+  );
+  if (customerID == "null") {
+    const session = await stripe.checkout.sessions.create({
+      success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
+      cancel_url: backURL,
+      payment_method_types: ["card"],
+      customer_email: userEmail,
+      line_items: [{ price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 }],
+      mode: "subscription",
+      metadata: {
+        userEmail: userEmail.toString(),
+        uID: userUID.toString(),
+        userName: userName.toString(),
+      },
+    });
+    return {
+      returnURL: session.url,
+    };
+  } else {
+    const session = await stripe.checkout.sessions.create({
+      success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
+      cancel_url: backURL,
+      payment_method_types: ["card"],
+      customer: customerID,
+      line_items: [{ price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 }],
+      mode: "subscription",
+      metadata: {
+        userEmail: userEmail.toString(),
+        uID: userUID.toString(),
+        userName: userName.toString(),
+      },
+    });
+    return {
+      returnURL: session.url,
+    };
+  }
+});
+
 const app = require("express")();
 app.post(
   "/webhook",
@@ -612,7 +672,7 @@ app.post(
   (request, response) => {
     const sig = request.headers["stripe-signature"];
     let event;
-
+    const endpointSecret = "whsec_M1G6CIpLr2HsOehz5D8E0InfUv885nZT";
     try {
       event = stripe.webhooks.constructEvent(
         request.rawBody.toString(),
@@ -623,7 +683,10 @@ app.post(
       return response.status(400).send(`Webhook Error: ${err.message}`);
     }
     var userDocID;
-    if (event.type === "checkout.session.completed") {
+    if (
+      event.type === "checkout.session.completed" &&
+      event.data.object.mode == "payment"
+    ) {
       const session = event.data.object;
       const eventDocID = event.data.object.metadata.eventID;
       const userID = event.data.object.metadata.uID;
@@ -656,3 +719,73 @@ app.post(
   }
 );
 exports.stripePaymentDoneLetsFulfillTheOrder = functions.https.onRequest(app);
+
+app.post(
+  "/webhook",
+  bodyParser.raw({ type: "application/json" }),
+  (request, response) => {
+    const sig = request.headers["stripe-signature"];
+    let event;
+    const endpointSecret = "whsec_M1G6CIpLr2HsOehz5D8E0InfUv885nZT";
+    try {
+      event = stripe.webhooks.constructEvent(
+        request.rawBody.toString(),
+        sig,
+        endpointSecret
+      );
+    } catch (err) {
+      return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+    var userDocID;
+    if (
+      event.type === "checkout.session.completed" &&
+      event.data.object.mode == "subscription"
+    ) {
+      const session = event.data.object;
+      const userEmail = event.data.object.metadata.userEmail;
+      const userID = event.data.object.metadata.uID;
+      const userName = event.data.object.metadata.userName;
+      // console.log(session);
+      var db = admin.firestore();
+      const fulfill = db
+        .collection("users")
+        .doc(userID.toString())
+        .set({
+          accountCreated: new Date(Date.now()),
+          accountType: "standard",
+          stripeCustomerID: event.data.object.customer.toString(),
+          email: userEmail.toString(),
+          name: userName.toString(),
+        });
+      return Promise.all([fulfill])
+        .then((t) => {
+          return response.status(200).send({ done: true });
+        })
+        .catch((er) => {
+          // alert(er);
+          return response.status(400).send(`Webhook Error: ${err.message}`);
+        });
+    }
+  }
+);
+exports.stripeSubscriptionDoneLetsFulfill = functions.https.onRequest(app);
+
+exports.createNewStripeProductFromFirestore = functions.firestore
+  .document("upcomingEvents/{eventID}")
+  .onCreate((doc, context) => {
+    const stripe = require("stripe")(
+      "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
+    );
+    return stripe.products
+      .create({
+        name: doc.data().Name,
+        images: [doc.data().ImageURL],
+      })
+      .then((f) => {
+        stripe.prices.create({
+          unit_amount: doc.data().Cost,
+          currency: "usd",
+          product: f.id,
+        });
+      });
+  });
