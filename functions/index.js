@@ -738,7 +738,7 @@ app.post(
     let event;
 
     try {
-      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+      event = stripe.webhooks.constructEvent(request.body, sig, "whsec_h2UmGOY7AYPHMZqcOaEbmXxNxzCBo8pC");
     } catch (err) {
       response.status(400).send(`Webhook Error: ${err.message}`);
     }
