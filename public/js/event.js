@@ -128,12 +128,12 @@ var db = firebase.firestore();
         // });
       } else {
         // User is signed out.
-        window.location = `/sign-in?l=${encodedURL}`;
         // signInButton.style.display = "block";
         // signedInDropdown.style.display = "none";
-        // var encodedURL = encodeURIComponent(
-        //   `event?e=${eventID}&i=${hash}&d=${hDim}`
-        // );
+        var encodedURL = encodeURIComponent(
+          `event?e=${eventID}&i=${hash}&d=${hDim}`
+        );
+        window.location = `/sign-in?l=${encodedURL}`;
         // document.getElementById(
         //   "signInButton"
         // ).href = `/sign-in?l=${encodedURL}`;

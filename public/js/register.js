@@ -147,14 +147,15 @@ initApp = function () {
           });
       } else {
         // User is signed out.
-        signInButton.style.display = "block";
-        signedInDropdown.style.display = "none";
+        // signInButton.style.display = "block";
+        // signedInDropdown.style.display = "none";
         var encodedURL = encodeURIComponent(
           `event/register?e=${eventID}&i=${hash}&d=${hDim}`
         );
-        document.getElementById(
-          "signInButton"
-        ).href = `/sign-in?l=${encodedURL}`;
+        window.location = `/sign-in?l=${encodedURL}`;
+        // document.getElementById(
+        //   "signInButton"
+        // ).href = `/sign-in?l=${encodedURL}`;
       }
     },
     function (error) {

@@ -86,7 +86,7 @@ initApp = function () {
         //   });
       } else {
         // User is signed out.
-        window.location = "/sign-in";
+        window.location = "/landing";
         // signInButton.style.display = "block";
         // signedInDropdown.style.display = "none";
         // db.collection("upcomingEvents")

@@ -10,7 +10,7 @@ initApp = function () {
             document.getElementById('accountButton').textContent = email;
             // User is signed in.
             firebase.auth().signOut().then(function() {
-                window.location = "/";
+                window.location = "/landing";
               }).catch(function(error) {
                 alert("Something happened. Try again in a few minutes");
               });
