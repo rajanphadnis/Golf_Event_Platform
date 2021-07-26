@@ -728,7 +728,7 @@ app.post(
   (request, response) => {
     const sig = request.headers["stripe-signature"];
     let event;
-    const endpointSecret = "whsec_M1G6CIpLr2HsOehz5D8E0InfUv885nZT";
+    const endpointSecret = "whsec_h2UmGOY7AYPHMZqcOaEbmXxNxzCBo8pC";
     try {
       event = stripe.webhooks.constructEvent(
         request.rawBody.toString(),
