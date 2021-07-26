@@ -34,54 +34,48 @@ initApp = function () {
                   document.getElementById("hint").innerText =
                     "Loading...Please do not refresh the page.";
                   document.getElementById("options").style.display = "none";
-                  var newTransaction = firebase
-                    .functions()
-                    .httpsCallable("createSubscription");
-                  if (userDoc.get("stripeCustomerID") == undefined) {
-                    console.log(
-                      `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
-                        user.email
-                      }, ${window.location.href.toString()}`
-                    );
-                    newTransaction({
-                      userName: user.displayName.toString(),
-                      uid: user.uid.toString(),
-                      backURL: window.location.href.toString(),
-                      customerID: "null",
-                      userEmail: user.email,
-                    })
-                      .then((result) => {
-                        // Read result of the Cloud Function.
-                        var checkoutURL = result.data.returnURL;
-                        console.log(checkoutURL);
-                        window.location = checkoutURL;
-                      })
-                      .catch((er) => {
-                        console.log(er);
-                        document.getElementById("hint").innerText =
-                          "Error. Please Refresh the Page.";
-                      });
-                  } else {
-                    newTransaction({
-                      userName: user.displayName.toString(),
-                      uid: user.uid.toString(),
-                      backURL: window.location.href.toString(),
-                      customerID: userDoc.data().stripeCustomerID.toString(),
-                      userEmail: user.email,
-                    })
-                      .then((result) => {
-                        // Read result of the Cloud Function.
-                        var checkoutURL = result.data.returnURL;
-                        console.log(checkoutURL);
-                        window.location = checkoutURL;
-                      })
-                      .catch((er) => {
-                        // document.getElementById("registerButton").disabled = false;
-                        console.log(er);
-                        document.getElementById("hint").innerText =
-                          "Error. Please Refresh the Page.";
-                      });
-                  }
+                  db.collection("admin")
+                    .doc("general")
+                    .get()
+                    .then((adminDoc) => {
+                      if (adminDoc.data().enableSubscription) {
+                        var newTransaction = firebase
+                          .functions()
+                          .httpsCallable("createSubscription");
+                        console.log(
+                          `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
+                            user.email
+                          }, ${window.location.href.toString()}`
+                        );
+                        newTransaction({
+                          userName: user.displayName.toString(),
+                          uid: user.uid.toString(),
+                          backURL: window.location.href.toString(),
+                          customerID: "null",
+                          userEmail: user.email,
+                        })
+                          .then((result) => {
+                            // Read result of the Cloud Function.
+                            var checkoutURL = result.data.returnURL;
+                            console.log(checkoutURL);
+                            window.location = checkoutURL;
+                          })
+                          .catch((er) => {
+                            console.log(er);
+                            document.getElementById("hint").innerText =
+                              "Error. Please Refresh the Page.";
+                          });
+                      } else {
+                        db.collection("users")
+                          .doc(user.uid.toString())
+                          .set({
+                            accountCreated: new Date(Date.now()),
+                            accountType: "standard",
+                            email: user.email.toString(),
+                            name: user.displayName.toString(),
+                          });
+                      }
+                    });
                 });
               document
                 .getElementById("charity")
