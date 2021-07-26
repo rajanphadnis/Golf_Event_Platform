@@ -5,6 +5,7 @@ const os = require("os");
 const admin = require("firebase-admin");
 const fs = require("fs");
 const inkjet = require("inkjet");
+const express = require('express');
 const stripe = require("stripe")(
   "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
 );
@@ -672,6 +673,9 @@ app.post(
   "/webhook",
   bodyParser.raw({ type: "application/json" }),
   (request, response) => {
+    const stripe = require("stripe")(
+      "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
+    );
     const sig = request.headers["stripe-signature"];
     let event;
     const endpointSecret = "whsec_M1G6CIpLr2HsOehz5D8E0InfUv885nZT";
@@ -685,38 +689,39 @@ app.post(
       return response.status(400).send(`Webhook Error: ${err.message}`);
     }
     var userDocID;
-    if (
-      event.type === "checkout.session.completed" &&
-      event.data.object.mode == "payment"
-    ) {
-      const session = event.data.object;
-      const eventDocID = event.data.object.metadata.eventID;
-      const userID = event.data.object.metadata.uID;
-      // console.log(session);
-      var db = admin.firestore();
-      const fulfill = db
-        .collection(`upcomingEvents/${eventDocID}/registeredUsers`)
-        .add({
-          uid: userID.toString(),
-          dt: new Date(Date.now()),
-          paymentIntent: event.data.object.payment_intent.toString(),
-          stripeID: event.data.object.id.toString(),
-          customerID: event.data.object.customer.toString(),
-        });
-      const updateCustID = db.collection("users").doc(userID).set(
-        {
-          stripeCustomerID: event.data.object.customer.toString(),
-        },
-        { merge: true }
-      );
-      return Promise.all([fulfill, updateCustID])
-        .then((t) => {
-          return response.status(200).send({ done: true });
-        })
-        .catch((er) => {
-          // alert(er);
-          return response.status(400).send(`Webhook Error: ${err.message}`);
-        });
+    if (event.type === "checkout.session.completed") {
+      if (event.data.object.mode == "payment") {
+        const session = event.data.object;
+        const eventDocID = event.data.object.metadata.eventID;
+        const userID = event.data.object.metadata.uID;
+        // console.log(session);
+        var db = admin.firestore();
+        const fulfill = db
+          .collection(`upcomingEvents/${eventDocID}/registeredUsers`)
+          .add({
+            uid: userID.toString(),
+            dt: new Date(Date.now()),
+            paymentIntent: event.data.object.payment_intent.toString(),
+            stripeID: event.data.object.id.toString(),
+            customerID: event.data.object.customer.toString(),
+          });
+        const updateCustID = db.collection("users").doc(userID).set(
+          {
+            stripeCustomerID: event.data.object.customer.toString(),
+          },
+          { merge: true }
+        );
+        return Promise.all([fulfill, updateCustID])
+          .then((t) => {
+            return response.status(200).send({ done: true });
+          })
+          .catch((er) => {
+            // alert(er);
+            return response.status(400).send(`Webhook Error: ${err.message}`);
+          });
+      } else {
+        return response.status(200).send({ done: false });
+      }
     }
   }
 );
@@ -724,14 +729,17 @@ exports.stripePaymentDoneLetsFulfillTheOrder = functions.https.onRequest(app);
 
 app.post(
   "/webhook",
-  bodyParser.raw({ type: "application/json" }),
+  express.raw({ type: "application/json" }),
   (request, response) => {
+    const stripe = require("stripe")(
+      "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
+    );
     const sig = request.headers["stripe-signature"];
     let event;
     const endpointSecret = "whsec_h2UmGOY7AYPHMZqcOaEbmXxNxzCBo8pC";
     try {
       event = stripe.webhooks.constructEvent(
-        request.rawBody.toString(),
+        request.body,
         sig,
         endpointSecret
       );
@@ -739,34 +747,35 @@ app.post(
       return response.status(400).send(`Webhook Error: ${err.message}`);
     }
     var userDocID;
-    if (
-      event.type === "checkout.session.completed" &&
-      event.data.object.mode == "subscription"
-    ) {
-      const session = event.data.object;
-      const userEmail = event.data.object.metadata.userEmail;
-      const userID = event.data.object.metadata.uID;
-      const userName = event.data.object.metadata.userName;
-      // console.log(session);
-      var db = admin.firestore();
-      const fulfill = db
-        .collection("users")
-        .doc(userID.toString())
-        .set({
-          accountCreated: new Date(Date.now()),
-          accountType: "standard",
-          stripeCustomerID: event.data.object.customer.toString(),
-          email: userEmail.toString(),
-          name: userName.toString(),
-        });
-      return Promise.all([fulfill])
-        .then((t) => {
-          return response.status(200).send({ done: true });
-        })
-        .catch((er) => {
-          // alert(er);
-          return response.status(400).send(`Webhook Error: ${err.message}`);
-        });
+    if (event.type === "checkout.session.completed") {
+      if (event.data.object.mode == "subscription") {
+        const session = event.data.object;
+        const userEmail = event.data.object.metadata.userEmail;
+        const userID = event.data.object.metadata.uID;
+        const userName = event.data.object.metadata.userName;
+        // console.log(session);
+        var db = admin.firestore();
+        const fulfill = db
+          .collection("users")
+          .doc(userID.toString())
+          .set({
+            accountCreated: new Date(Date.now()),
+            accountType: "standard",
+            stripeCustomerID: event.data.object.customer.toString(),
+            email: userEmail.toString(),
+            name: userName.toString(),
+          });
+        return Promise.all([fulfill])
+          .then((t) => {
+            return response.status(200).send({ done: true });
+          })
+          .catch((er) => {
+            // alert(er);
+            return response.status(400).send(`Webhook Error: ${err.message}`);
+          });
+      } else {
+        return response.status(200).send({ done: false });
+      }
     }
   }
 );
