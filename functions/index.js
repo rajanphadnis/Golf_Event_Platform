@@ -5,7 +5,7 @@ const os = require("os");
 const admin = require("firebase-admin");
 const fs = require("fs");
 const inkjet = require("inkjet");
-const express = require('express');
+const express = require("express");
 const stripe = require("stripe")(
   "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
 );
@@ -728,21 +728,20 @@ app.post(
 exports.stripePaymentDoneLetsFulfillTheOrder = functions.https.onRequest(app);
 
 app.post(
-  "/webhook",
-  bodyParser.raw({type: 'application/json'}),
+  "/webhook2",
+  bodyParser.raw({ type: "application/json" }),
   (request, response) => {
     // const stripe = require("stripe")(
     //   "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
     // );
-    const sig = request.headers['stripe-signature'];
-  let event;
+    const sig = request.headers["stripe-signature"];
+    let event;
 
-  try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-  }
-  catch (err) {
-    response.status(400).send(`Webhook Error: ${err.message}`);
-  }
+    try {
+      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+      response.status(400).send(`Webhook Error: ${err.message}`);
+    }
     var userDocID;
     if (event.type === "checkout.session.completed") {
       if (event.data.object.mode == "subscription") {
