@@ -727,9 +727,10 @@ app.post(
 );
 exports.stripePaymentDoneLetsFulfillTheOrder = functions.https.onRequest(app);
 
-app.post(
+const app2 = express();
+app2.post(
   "/webhook2",
-  bodyParser.raw({ type: "application/json" }),
+  express.raw({ type: "application/json" }),
   (request, response) => {
     // const stripe = require("stripe")(
     //   "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
@@ -775,7 +776,7 @@ app.post(
     }
   }
 );
-exports.stripeSubscriptionDoneLetsFulfill = functions.https.onRequest(app);
+exports.stripeSubscriptionDoneLetsFulfill = functions.https.onRequest(app2);
 
 exports.createNewStripeProductFromFirestore = functions.firestore
   .document("upcomingEvents/{eventID}")
