@@ -629,6 +629,7 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
     "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
   );
   if (customerID == "null") {
+    console.log("null customerID");
     const session = await stripe.checkout.sessions.create({
       success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
       cancel_url: backURL,
@@ -642,6 +643,7 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
         userName: userName.toString(),
       },
     });
+    console.log(`session generated: ${session.toString()}`);
     return {
       returnURL: session.url,
     };
