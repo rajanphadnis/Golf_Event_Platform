@@ -739,7 +739,11 @@ app2.post(
     let event;
 
     try {
-      event = stripe.webhooks.constructEvent(request.body, sig, "whsec_h2UmGOY7AYPHMZqcOaEbmXxNxzCBo8pC");
+      event = stripe.webhooks.constructEvent(
+        request.rawBody,
+        sig,
+        "whsec_h2UmGOY7AYPHMZqcOaEbmXxNxzCBo8pC"
+      );
     } catch (err) {
       response.status(400).send(`Webhook Error: ${err.message}`);
     }
@@ -768,7 +772,9 @@ app2.post(
           })
           .catch((er) => {
             // alert(er);
-            return response.status(400).send(`Webhook Error: ${err.message}`);
+            return response
+              .status(400)
+              .send(`Webhook Processing Error: ${err.message}`);
           });
       } else {
         return response.status(200).send({ done: false });
