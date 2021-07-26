@@ -617,14 +617,14 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
       "The function must be called " + "while authenticated."
     );
   }
-  if (!(typeof eventDoc === "string") || eventDoc.length === 0) {
-    // Throwing an HttpsError so that the client gets the error details.
-    throw new functions.https.HttpsError(
-      "invalid-argument",
-      "The function must be called with " +
-        'one arguments "text" containing the message text to add.'
-    );
-  }
+  // if (!(typeof eventDoc === "string") || eventDoc.length === 0) {
+  //   // Throwing an HttpsError so that the client gets the error details.
+  //   throw new functions.https.HttpsError(
+  //     "invalid-argument",
+  //     "The function must be called with " +
+  //       'one arguments "text" containing the message text to add.'
+  //   );
+  // }
   const stripe = require("stripe")(
     "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
   );
