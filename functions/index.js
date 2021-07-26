@@ -739,7 +739,7 @@ app.post(
     const endpointSecret = "whsec_h2UmGOY7AYPHMZqcOaEbmXxNxzCBo8pC";
     try {
       event = stripe.webhooks.constructEvent(
-        request.body,
+        request.rawBody,
         sig,
         endpointSecret
       );
