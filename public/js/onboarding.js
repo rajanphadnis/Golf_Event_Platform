@@ -31,12 +31,18 @@ initApp = function () {
               document
                 .getElementById("standard")
                 .addEventListener("click", function () {
-                  document.getElementById("hint").innerText = "Loading...Please do not refresh the page.";
+                  document.getElementById("hint").innerText =
+                    "Loading...Please do not refresh the page.";
                   document.getElementById("options").style.display = "none";
                   var newTransaction = firebase
                     .functions()
                     .httpsCallable("createSubscription");
                   if (userDoc.get("stripeCustomerID") == undefined) {
+                    console.log(
+                      `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
+                        user.email
+                      }, ${window.location.href.toString()}`
+                    );
                     newTransaction({
                       userName: user.displayName.toString(),
                       uid: user.uid.toString(),
@@ -56,8 +62,7 @@ initApp = function () {
                         document.getElementById("hint").innerText =
                           "Error. Please Refresh the Page.";
                       });
-                  }
-                  else {
+                  } else {
                     newTransaction({
                       userName: user.displayName.toString(),
                       uid: user.uid.toString(),
