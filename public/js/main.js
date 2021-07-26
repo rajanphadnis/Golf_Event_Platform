@@ -86,27 +86,28 @@ initApp = function () {
         //   });
       } else {
         // User is signed out.
-        signInButton.style.display = "block";
-        signedInDropdown.style.display = "none";
-        db.collection("upcomingEvents")
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              parentList.innerHTML =
-                parentList.innerHTML +
-                addEventCard(
-                  doc.data().Name,
-                  doc.data().Location,
-                  doc.data().Cost,
-                  doc.data().DateTime,
-                  doc.data().ImageURL,
-                  doc.data().OrganizerName,
-                  doc.id,
-                  doc.data().MainHash,
-                  doc.data().ImageDim
-                );
-            });
-          });
+        window.location = "/sign-in";
+        // signInButton.style.display = "block";
+        // signedInDropdown.style.display = "none";
+        // db.collection("upcomingEvents")
+        //   .get()
+        //   .then((querySnapshot) => {
+        //     querySnapshot.forEach((doc) => {
+        //       parentList.innerHTML =
+        //         parentList.innerHTML +
+        //         addEventCard(
+        //           doc.data().Name,
+        //           doc.data().Location,
+        //           doc.data().Cost,
+        //           doc.data().DateTime,
+        //           doc.data().ImageURL,
+        //           doc.data().OrganizerName,
+        //           doc.id,
+        //           doc.data().MainHash,
+        //           doc.data().ImageDim
+        //         );
+        //     });
+        //   });
       }
     },
     function (error) {

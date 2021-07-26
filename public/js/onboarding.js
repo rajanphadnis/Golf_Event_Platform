@@ -57,7 +57,6 @@ initApp = function () {
                         window.location = checkoutURL;
                       })
                       .catch((er) => {
-                        // document.getElementById("registerButton").disabled = false;
                         console.log(er);
                         document.getElementById("hint").innerText =
                           "Error. Please Refresh the Page.";
@@ -94,40 +93,15 @@ initApp = function () {
               document
                 .getElementById("submitCharityName")
                 .addEventListener("click", function () {
-                  // document.getElementById("options").style.display = "none";
-
                   addUser(
                     document.getElementById("charityNameInput").value,
                     user.email,
                     user.uid,
                     "charity"
                   );
-                  //   addCharity(
-                  //     document.getElementById("charityNameInput").value,
-                  //     user.email,
-                  //     user.uid
-                  //   );
                 });
             }
           });
-        //   .where("email", "==", user.email.toString())
-        //   .get()
-        //   .then((snap) => {
-        //     return snap.docs.length != 0 ? true : false;
-        //   })
-        //   .then((hasUser) => {
-        //     db.collection("charities")
-        //       .where("email", "==", user.email.toString())
-        //       .get()
-        //       .then((snap) => {
-        //         var hasCharity = snap.docs.length != 0 ? true : false;
-        //         if (hasUser || hasCharity) {
-
-        //         } else {
-
-        //         }
-        //       });
-        //   });
       } else {
         window.location = "/sign-in";
       }
@@ -142,8 +116,6 @@ window.addEventListener("load", function () {
 });
 
 function addUser(displayName, email, uid, type) {
-  // console.log(`Transmitting: ${dID}, ${uID}, ${cost}, ${name}, ${stripeID}`);
-
   firebase
     .firestore()
     .collection("users")
@@ -162,22 +134,3 @@ function addUser(displayName, email, uid, type) {
       console.error("Error adding document: ", error);
     });
 }
-// function addCharity(charityName, email, uid) {
-//   firebase
-//     .firestore()
-//     .collection("users")
-//     .doc(uid)
-//     .set({
-//       name: charityName,
-//       email: email,
-//       accountCreated: new Date(Date.now()),
-//       accountType: "charity",
-//     })
-//     .then((docRef) => {
-//       // console.log("Document written with ID: ", docRef.id);
-//       window.location = returnTo;
-//     })
-//     .catch((error) => {
-//       console.error("Error adding document: ", error);
-//     });
-// }

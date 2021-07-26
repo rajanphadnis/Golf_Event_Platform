@@ -128,22 +128,23 @@ var db = firebase.firestore();
         // });
       } else {
         // User is signed out.
-        signInButton.style.display = "block";
-        signedInDropdown.style.display = "none";
-        var encodedURL = encodeURIComponent(
-          `event?e=${eventID}&i=${hash}&d=${hDim}`
-        );
-        document.getElementById(
-          "signInButton"
-        ).href = `/sign-in?l=${encodedURL}`;
-        document
-          .getElementById("register")
-          .addEventListener("click", function () {
-            var toEncode = `event/register?e=${eventID}&i=${hash}&d=${hDim}`;
-            var laterLocation = encodeURIComponent(toEncode);
-            // console.log(laterLocation);
-            window.location = `/sign-in/?l=${laterLocation}`;
-          });
+        window.location = `/sign-in?l=${encodedURL}`;
+        // signInButton.style.display = "block";
+        // signedInDropdown.style.display = "none";
+        // var encodedURL = encodeURIComponent(
+        //   `event?e=${eventID}&i=${hash}&d=${hDim}`
+        // );
+        // document.getElementById(
+        //   "signInButton"
+        // ).href = `/sign-in?l=${encodedURL}`;
+        // document
+        //   .getElementById("register")
+        //   .addEventListener("click", function () {
+        //     var toEncode = `event/register?e=${eventID}&i=${hash}&d=${hDim}`;
+        //     var laterLocation = encodeURIComponent(toEncode);
+        //     // console.log(laterLocation);
+        //     window.location = `/sign-in/?l=${laterLocation}`;
+        //   });
       }
     },
     function (error) {

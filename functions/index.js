@@ -732,12 +732,8 @@ app2.post(
   "/webhook2",
   express.raw({ type: "application/json" }),
   (request, response) => {
-    // const stripe = require("stripe")(
-    //   "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
-    // );
     const sig = request.headers["stripe-signature"];
     let event;
-
     try {
       event = stripe.webhooks.constructEvent(
         request.rawBody,
