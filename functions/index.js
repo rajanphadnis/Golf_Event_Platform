@@ -848,7 +848,7 @@ app3.post(
     }
     var userDocID;
     if (event.type === "customer.subscription.updated") {
-      console.log(`${event.data.object.pause_collection.toString()}`);
+      console.log(`data: ${event.data.object.pause_collection.toString()}`);
       return response.status(200).send({ done: false }); 
     }
   }
