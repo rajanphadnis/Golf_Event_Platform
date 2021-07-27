@@ -42,37 +42,86 @@ initApp = function () {
                         var newTransaction = firebase
                           .functions()
                           .httpsCallable("createSubscription");
-                        console.log(
-                          `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
-                            user.email
-                          }, ${window.location.href.toString()}`
-                        );
-                        newTransaction({
-                          userName: user.displayName.toString(),
-                          uid: user.uid.toString(),
-                          backURL: window.location.href.toString(),
-                          customerID: "null",
-                          userEmail: user.email,
-                        })
-                          .then((result) => {
-                            // Read result of the Cloud Function.
-                            var checkoutURL = result.data.returnURL;
-                            console.log(checkoutURL);
-                            window.location = checkoutURL;
-                          })
-                          .catch((er) => {
-                            console.log(er);
-                            document.getElementById("hint").innerText =
-                              "Error. Please Refresh the Page.";
+                        db.collection("archivedUsers")
+                          .doc(user.uid.toString())
+                          .get()
+                          .then((aUsers) => {
+                            if (aUsers.exists) {
+                              console.log(
+                                `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
+                                  user.email
+                                }, ${window.location.href.toString()}`
+                              );
+                              newTransaction({
+                                userName: user.displayName.toString(),
+                                uid: user.uid.toString(),
+                                backURL: window.location.href.toString(),
+                                customerID: aUsers
+                                  .data()
+                                  .stripeCustomerID.toString(),
+                                userEmail: user.email,
+                              })
+                                .then((result) => {
+                                  // Read result of the Cloud Function.
+                                  var checkoutURL = result.data.returnURL;
+                                  console.log(checkoutURL);
+                                  window.location = checkoutURL;
+                                })
+                                .catch((er) => {
+                                  console.log(er);
+                                  document.getElementById("hint").innerText =
+                                    "Error. Please Refresh the Page.";
+                                });
+                            } else {
+                              console.log(
+                                `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
+                                  user.email
+                                }, ${window.location.href.toString()}`
+                              );
+                              newTransaction({
+                                userName: user.displayName.toString(),
+                                uid: user.uid.toString(),
+                                backURL: window.location.href.toString(),
+                                customerID: "null",
+                                userEmail: user.email,
+                              })
+                                .then((result) => {
+                                  // Read result of the Cloud Function.
+                                  var checkoutURL = result.data.returnURL;
+                                  console.log(checkoutURL);
+                                  window.location = checkoutURL;
+                                })
+                                .catch((er) => {
+                                  console.log(er);
+                                  document.getElementById("hint").innerText =
+                                    "Error. Please Refresh the Page.";
+                                });
+                            }
                           });
                       } else {
-                        db.collection("users")
+                        db.collection("archivedUsers")
                           .doc(user.uid.toString())
-                          .set({
-                            accountCreated: new Date(Date.now()),
-                            accountType: "standard",
-                            email: user.email.toString(),
-                            name: user.displayName.toString(),
+                          .get()
+                          .then((aUsers) => {
+                            if (aUsers.exists) {
+                              db.collection("users")
+                                .doc(user.uid.toString())
+                                .set(aUsers.data())
+                                .then((t) => {
+                                  db.collection("archivedUsers")
+                                    .doc(user.uid.toString())
+                                    .delete();
+                                });
+                            } else {
+                              db.collection("users")
+                                .doc(user.uid.toString())
+                                .set({
+                                  accountCreated: new Date(Date.now()),
+                                  accountType: "standard",
+                                  email: user.email.toString(),
+                                  name: user.displayName.toString(),
+                                });
+                            }
                           });
                       }
                     });

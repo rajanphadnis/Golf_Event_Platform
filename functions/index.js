@@ -829,3 +829,27 @@ exports.fetchUserPortal = functions.https.onCall(async (data, context) => {
     returnURL: session.url,
   };
 });
+
+const app3 = express();
+app3.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  (request, response) => {
+    const sig = request.headers["stripe-signature"];
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(
+        request.rawBody,
+        sig,
+        "whsec_iYJcbnIB2OlCkabsIKpdMxBk5FxtJpoN",
+      );
+    } catch (err) {
+      response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+    var userDocID;
+    if (event.type === "customer.subscription.updated") {
+      console.log(`${event}`);
+    }
+  }
+);
+exports.subscriptionUpdate = functions.https.onRequest(app3);

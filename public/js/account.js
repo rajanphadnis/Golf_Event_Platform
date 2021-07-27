@@ -13,7 +13,7 @@ initApp = function () {
           .then((userDoc) => {
             if (userDoc.exists) {
               console.log("logged in");
-              var par = `<p id="message">Hello, ${user.displayName}</p></br><a href='/sign-out'>Sign Out</a>`;
+              var par = `<p id="message">Hello, ${user.displayName}</p></br><a href='/sign-out'>Sign Out</a></br>`;
               // document.getElementById("firebaseui-auth-container").innerHTML =
               //   par;
               var newTransaction = firebase
