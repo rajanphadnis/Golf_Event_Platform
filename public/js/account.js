@@ -13,9 +13,9 @@ initApp = function () {
           .then((userDoc) => {
             if (userDoc.exists) {
               console.log("logged in");
-              var par = `<p id="message">Hello, ${user.displayName}</p>`;
-              document.getElementById("firebaseui-auth-container").innerHTML =
-                par;
+              var par = `<p id="message">Hello, ${user.displayName}</p></br><a href='/sign-out'>Sign Out</a>`;
+              // document.getElementById("firebaseui-auth-container").innerHTML =
+              //   par;
               var newTransaction = firebase
                 .functions()
                 .httpsCallable("fetchUserPortal");
