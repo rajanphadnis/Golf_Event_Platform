@@ -848,7 +848,7 @@ app3.post(
     }
     var userDocID;
     if (event.type === "customer.subscription.updated") {
-      console.log(`${event}`);
+      console.log(`${event.toString()}`);
     }
   }
 );

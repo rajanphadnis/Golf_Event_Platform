@@ -110,7 +110,9 @@ initApp = function () {
                                 .then((t) => {
                                   db.collection("archivedUsers")
                                     .doc(user.uid.toString())
-                                    .delete();
+                                    .delete().then((g) => {
+                                      window.location = returnTo;
+                                    });
                                 });
                             } else {
                               db.collection("users")
@@ -120,6 +122,8 @@ initApp = function () {
                                   accountType: "standard",
                                   email: user.email.toString(),
                                   name: user.displayName.toString(),
+                                }).then((g) => {
+                                  window.location = returnTo;
                                 });
                             }
                           });
