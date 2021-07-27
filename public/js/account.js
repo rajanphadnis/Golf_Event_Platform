@@ -13,31 +13,35 @@ initApp = function () {
           .then((userDoc) => {
             if (userDoc.exists) {
               console.log("logged in");
+              var par = `<p id="message">Hello, ${user.DisplayName}</p>`;
               document.getElementById("firebaseui-auth-container").innerHTML =
-                "Hello, " + user.displayName.toString();
+                par;
+              var newTransaction = firebase
+                .functions()
+                .httpsCallable("fetchUserPortal");
+              newTransaction({
+                customerID: userDoc.data().stripeCustomerID.toString(),
+                redir: window.location.href.toString(),
+              })
+                .then((result) => {
+                  // Read result of the Cloud Function.
+                  var redirURL = result.data.returnURL;
+                  var manageButton = `<button onclick="window.location = '${redirURL}'">Manage Payments and Subscriptions</button>`;
+                  console.log(redirURL);
+                  document.getElementById(
+                    "firebaseui-auth-container"
+                  ).innerHTML = par + manageButton;
+                  // window.location = redirURL;
+                })
+                .catch((er) => {
+                  console.log(er);
+                  document.getElementById("message").innerHTML =
+                    "Error. Please Refresh the Page.";
+                });
             } else {
               window.location = "/onboarding?l=account";
             }
           });
-        // .where("email", "==", user.email.toString())
-        // .get()
-        // .then((snap) => {
-        //   return snap.docs.length != 0 ? true : false;
-        // })
-        // .then((hasUser) => {
-        //   db.collection("charities")
-        //     .where("email", "==", user.email.toString())
-        //     .get()
-        //     .then((snap) => {
-        //       var hasCharity = snap.docs.length != 0 ? true : false;
-        //       if (hasUser || hasCharity) {
-        //         // window.location = returnTo;
-        //         console.log("logged in");
-        //       } else {
-        //         window.location = "/onboarding?l=account";
-        //       }
-        //     });
-        // });
       } else {
         signInButton.style.display = "block";
         signedInDropdown.style.display = "none";

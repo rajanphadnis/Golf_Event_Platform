@@ -799,3 +799,33 @@ exports.createNewStripeProductFromFirestore = functions.firestore
         });
       });
   });
+
+exports.fetchUserPortal = functions.https.onCall(async (data, context) => {
+  const redirURL = data.redir.toString();
+  const customerID = data.customerID.toString();
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError(
+      "failed-precondition",
+      "The function must be called " + "while authenticated."
+    );
+  }
+  // if (!(typeof customerID === "string") || customerID.length === 0) {
+  //   // Throwing an HttpsError so that the client gets the error details.
+  //   throw new functions.https.HttpsError(
+  //     "invalid-argument",
+  //     "The function must be called with " +
+  //       'one arguments "text" containing the message text to add.'
+  //   );
+  // }
+  const stripe = require("stripe")(
+    "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
+  );
+  const session = await stripe.billingPortal.sessions.create({
+    customer: customerID,
+    return_url: redirURL,
+  });
+  return {
+    returnURL: session.url,
+  };
+});
