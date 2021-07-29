@@ -64,3 +64,11 @@ initApp = function () {
 window.addEventListener("load", function () {
   initApp();
 });
+
+
+// Loading page templates:
+// - https://codepen.io/Izumenko/pen/KvrKqb
+// - https://codepen.io/hynden/pen/nyblr
+// - https://codepen.io/JeromeRenders/pen/YwRzVK
+// - https://codepen.io/_fbrz/pen/mpiFE
+// - https://codepen.io/eliortabeka/pen/EXJyPP
