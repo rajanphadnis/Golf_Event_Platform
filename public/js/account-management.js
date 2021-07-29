@@ -3,19 +3,18 @@ initApp = function () {
   firebase.auth().onAuthStateChanged(
     function (user) {
       if (user) {
-        var email = user.email;
         db.collection("users")
           .doc(user.uid)
           .get()
           .then((userDoc) => {
             if (userDoc.exists) {
-              console.log("logged in");
               var newTransaction = firebase
                 .functions()
                 .httpsCallable("fetchUserPortal");
               newTransaction({
                 customerID: userDoc.data().stripeCustomerID.toString(),
-                redir: window.location.href.toString(),
+                redir:
+                  "https://golf-event-platform--dev-u2suwtdi.web.app/account/",
               })
                 .then((result) => {
                   var redirURL = result.data.returnURL;
@@ -36,7 +35,8 @@ initApp = function () {
                       .httpsCallable("fetchUserPortal");
                     newTransaction({
                       customerID: aUsers.data().stripeCustomerID.toString(),
-                      redir: window.location.href.toString(),
+                      redir:
+                        "https://golf-event-platform--dev-u2suwtdi.web.app/account/",
                     })
                       .then((result) => {
                         var redirURL = result.data.returnURL;
