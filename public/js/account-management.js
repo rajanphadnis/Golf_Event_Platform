@@ -4,9 +4,6 @@ initApp = function () {
     function (user) {
       if (user) {
         var email = user.email;
-        signInButton.style.display = "none";
-        signedInDropdown.style.display = "flex";
-        document.getElementById("accountButton").textContent = email;
         db.collection("users")
           .doc(user.uid)
           .get()
@@ -56,9 +53,7 @@ initApp = function () {
             }
           });
       } else {
-        signInButton.style.display = "block";
-        signedInDropdown.style.display = "none";
-        window.location = "/sign-in?l=account";
+        window.location = "/sign-in?l=account-management";
       }
     },
     function (error) {
