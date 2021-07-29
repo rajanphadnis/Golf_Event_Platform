@@ -841,18 +841,51 @@ app3.post(
       event = stripe.webhooks.constructEvent(
         request.rawBody,
         sig,
-        "whsec_iYJcbnIB2OlCkabsIKpdMxBk5FxtJpoN",
+        "whsec_iYJcbnIB2OlCkabsIKpdMxBk5FxtJpoN"
       );
     } catch (err) {
       response.status(400).send(`Webhook Error: ${err.message}`);
     }
-    var userDocID;
+
     if (event.type === "customer.subscription.updated") {
       console.log(`data: ${event.data.object.pause_collection}`);
-      // if (event.data.object.pause_collection != null) {
-
-      // }
-      return response.status(200).send({ done: false }); 
+      var stripeCustomerID = event.data.object.customer.toString();
+      if (event.data.object.pause_collection != null) {
+        db.collection("users")
+          .where("stripeCustomerID", "==", stripeCustomerID)
+          .get()
+          .then((querySnapshot) => {
+            var userData = querySnapshot.docs[0];
+            db.collection("archivedUsers").doc(userData.id).set(userData.data()).then((f) => {
+              db.collection("users").doc(userData.id).delete().then((g) => {
+                return response.status(200).send({ done: true });
+              });
+            });
+            
+          })
+          .catch((error) => {
+            console.log("Error getting documents: ", error);
+            return response.status(500).send({ done: false });
+          });
+      } else {
+        db.collection("archivedUsers")
+          .where("stripeCustomerID", "==", stripeCustomerID)
+          .get()
+          .then((querySnapshot) => {
+            var userData = querySnapshot.docs[0];
+            db.collection("users").doc(userData.id).set(userData.data()).then((f) => {
+              db.collection("archivedUsers").doc(userData.id).delete().then((g) => {
+                return response.status(200).send({ done: true });
+              });
+            });
+            
+          })
+          .catch((error) => {
+            console.log("Error getting documents: ", error);
+            return response.status(500).send({ done: false });
+          });
+      }
+      return response.status(200).send({ done: false });
     }
   }
 );
