@@ -835,6 +835,7 @@ app3.post(
   "/webhook",
   express.raw({ type: "application/json" }),
   (request, response) => {
+    var db = admin.firestore();
     const sig = request.headers["stripe-signature"];
     let event;
     try {
