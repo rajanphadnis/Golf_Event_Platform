@@ -896,7 +896,7 @@ app3.post(
             return response.status(500).send({ done: false });
           });
       }
-      return response.status(200).send({ done: false });
+      // return response.status(200).send({ done: false });
     } else if (event.type === "customer.subscription.deleted") {
       var stripeCustomerID = event.data.object.customer.toString();
       db.collection("users")
