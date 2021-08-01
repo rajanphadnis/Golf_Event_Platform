@@ -82,6 +82,8 @@ window.addEventListener("load", function () {
 
 function agree(dID, uDocRef) {
   console.log("agreed");
+  document.getElementById("registerButton").innerText = "Processing...do not leave this page";
+  document.getElementById("registerButton").disabled = true;
   // console.log(`ID: ${dID}`);
   // console.log(`ID: ${uDocRef}`);
   var db = firebase.firestore();
