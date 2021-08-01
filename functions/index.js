@@ -635,7 +635,7 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
   //   .doc("general")
   //   .get()
   //   .then(async (adminDoc) => {
-  var trialLength = adminDoc.data().trialPeriod;
+  // var trialLength = adminDoc.data().trialPeriod;
   if (customerID == "null") {
     if (trialPeriod) {
       console.log("null customerID, yes trial");
