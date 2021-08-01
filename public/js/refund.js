@@ -82,8 +82,8 @@ window.addEventListener("load", function () {
 
 function agree(dID, uDocRef) {
   console.log("agreed");
-  console.log(`ID: ${dID}`);
-  console.log(`ID: ${uDocRef}`);
+  // console.log(`ID: ${dID}`);
+  // console.log(`ID: ${uDocRef}`);
   var db = firebase.firestore();
   db.collection(`upcomingEvents/${dID}/registeredUsers`)
     .doc(uDocRef)
@@ -100,6 +100,7 @@ function agree(dID, uDocRef) {
           })
           .then((result) => {
             // Read result of the Cloud Function.
+            console.log(result);
             var completedOrNot = result.data.completed;
             if (completedOrNot) {
               window.location = "/my-events";
