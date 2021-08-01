@@ -90,6 +90,7 @@ function agree(dID, uDocRef) {
     .get()
     .then((rUserDoc) => {
       if (rUserDoc.data().paidRegistration) {
+        console.log(`transmitting: paymentIntent: ${rUserDoc.data().paymentIntent}`);
         firebase
           .functions()
           .httpsCallable("refundSingleTransaction")({

@@ -1028,7 +1028,7 @@ exports.refundSingleTransaction = functions.https.onCall(
         ) {
           return stripe.refunds
             .create({
-              payment_intent: "pi_Aabcxyz01aDfoo",
+              payment_intent: pID,
             })
             .then((f) => {
               return db.collection(`upcomingEvents/${eventID}/registeredUsers`)
