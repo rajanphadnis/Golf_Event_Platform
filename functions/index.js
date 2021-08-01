@@ -852,27 +852,51 @@ app3.post(
       console.log(`data: ${event.data.object.pause_collection}`);
       var stripeCustomerID = event.data.object.customer.toString();
       if (event.data.object.pause_collection != null) {
-        db.collection("users")
-          .where("stripeCustomerID", "==", stripeCustomerID)
-          .get()
-          .then((querySnapshot) => {
-            var userData = querySnapshot.docs[0];
-            db.collection("archivedUsers")
-              .doc(userData.id)
-              .set(userData.data())
-              .then((f) => {
+        if (event.data.object.status == "canceled") {
+          var stripeCustomerID = event.data.object.customer.toString();
+          db.collection("users")
+            .where("stripeCustomerID", "==", stripeCustomerID)
+            .get()
+            .then((querySnapshot) => {
+              var userData = querySnapshot.docs[0];
+              try {
                 db.collection("users")
                   .doc(userData.id)
                   .delete()
-                  .then((g) => {
+                  .then((f) => {
                     return response.status(200).send({ done: true });
                   });
-              });
-          })
-          .catch((error) => {
-            console.log("Error getting documents: ", error);
-            return response.status(500).send({ done: false });
-          });
+              } catch (error) {
+                return response.status(200).send({ done: false });
+              }
+            })
+            .catch((error) => {
+              console.log("Error getting documents: ", error);
+              return response.status(500).send({ done: false });
+            });
+        } else {
+          db.collection("users")
+            .where("stripeCustomerID", "==", stripeCustomerID)
+            .get()
+            .then((querySnapshot) => {
+              var userData = querySnapshot.docs[0];
+              db.collection("archivedUsers")
+                .doc(userData.id)
+                .set(userData.data())
+                .then((f) => {
+                  db.collection("users")
+                    .doc(userData.id)
+                    .delete()
+                    .then((g) => {
+                      return response.status(200).send({ done: true });
+                    });
+                });
+            })
+            .catch((error) => {
+              console.log("Error getting documents: ", error);
+              return response.status(500).send({ done: false });
+            });
+        }
       } else {
         db.collection("archivedUsers")
           .where("stripeCustomerID", "==", stripeCustomerID)
