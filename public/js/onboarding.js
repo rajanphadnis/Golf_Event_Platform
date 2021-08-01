@@ -141,6 +141,7 @@ function createUserTransactionPage(user, returnTo) {
                 backURL: window.location.href.toString(),
                 customerID: aUsers.data().stripeCustomerID.toString(),
                 userEmail: user.email,
+                trial: false,
               })
                 .then((result) => {
                   // Read result of the Cloud Function.
@@ -170,6 +171,7 @@ function createUserTransactionPage(user, returnTo) {
                       backURL: window.location.href.toString(),
                       customerID: deleteDoc.data().stripeCustomerID.toString(),
                       userEmail: user.email,
+                      trial: false,
                     })
                       .then((result) => {
                         // Read result of the Cloud Function.
@@ -194,6 +196,7 @@ function createUserTransactionPage(user, returnTo) {
                       backURL: window.location.href.toString(),
                       customerID: "null",
                       userEmail: user.email,
+                      trial: true,
                     })
                       .then((result) => {
                         // Read result of the Cloud Function.
