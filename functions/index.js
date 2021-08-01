@@ -1016,7 +1016,8 @@ exports.refundSingleTransaction = functions.https.onCall(
     const stripe = require("stripe")(
       "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
     );
-    db.collection(`upcomingEvents/${eventID}/registeredUsers`)
+    return db
+      .collection(`upcomingEvents/${eventID}/registeredUsers`)
       .doc(regID)
       .get()
       .then((confirmDoc) => {
@@ -1025,12 +1026,17 @@ exports.refundSingleTransaction = functions.https.onCall(
           confirmDoc.data().paymentIntent == pID &&
           confirmDoc.data().uid == uid
         ) {
-          stripe.refunds
+          return stripe.refunds
             .create({
               payment_intent: "pi_Aabcxyz01aDfoo",
             })
             .then((f) => {
-              return { completed: true };
+              return db.collection(`upcomingEvents/${eventID}/registeredUsers`)
+                .doc(regID)
+                .delete()
+                .then((g) => {
+                  return { completed: true };
+                });
             });
         } else {
           throw new functions.https.HttpsError(
