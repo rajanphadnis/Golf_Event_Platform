@@ -4,7 +4,6 @@ initApp = function () {
   try {
     queryString = decodeURI(uri);
   } catch (e) {
-    // catches a malformed URI
     console.error(e);
     queryString = uri;
   }
@@ -27,63 +26,41 @@ initApp = function () {
   firebase.auth().onAuthStateChanged(
     function (user) {
       if (user) {
-        // User is signed in.
         var email = user.email;
         signInButton.style.display = "none";
         signedInDropdown.style.display = "flex";
         document.getElementById("accountButton").textContent = email;
-        // db.collection("users")
-        //   .where("email", "==", user.email.toString())
-        //   .get()
-        //   .then((snap) => {
-        //     var toReturn = snap.docs.length != 0 ? true : false;
-        //     return toReturn;
-        //   })
-        //   .then((hasUser) => {
-            db.collection("users")
-              .doc(user.uid)
-              .get()
-              .then((userDoc) => {
-                if (userDoc.exists) {
-                  db.collection(`upcomingEvents/${eventID}/registeredUsers`)
-                    .where("uid", "==", user.uid)
-                    .get()
-                    .then((docSnapshot) => {
-                      if (docSnapshot.docs.length != 0) {
-                        var button = document.createElement("button");
-                        button.id = "registerButton";
-                        button.innerText = "Refund Me";
-                        button.addEventListener("click", () => {
-                          agree(eventID, docSnapshot.docs[0].id);
-                        });
-                        document
-                          .getElementById("eventContentMainFlex")
-                          .appendChild(button);
-                      } else {
-                        window.location = "/";
-                      }
+        db.collection("users")
+          .doc(user.uid)
+          .get()
+          .then((userDoc) => {
+            if (userDoc.exists) {
+              db.collection(`upcomingEvents/${eventID}/registeredUsers`)
+                .where("uid", "==", user.uid)
+                .get()
+                .then((docSnapshot) => {
+                  if (docSnapshot.docs.length != 0) {
+                    var button = document.createElement("button");
+                    button.id = "registerButton";
+                    button.innerText = "Refund Me";
+                    button.addEventListener("click", () => {
+                      agree(eventID, docSnapshot.docs[0].id);
                     });
-                } else {
-                  var encodedURL = encodeURIComponent(
-                    `event/register/?e=${eventID}&i=${hash}&d=${hDim}`
-                  );
-                  window.location = `/onboarding?l=${encodedURL}`;
-                }
-              });
-            //     .where("email", "==", user.email.toString())
-            //     .get()
-            //     .then((snap) => {
-            //       var hasCharity = snap.docs.length != 0 ? true : false;
-            //       if (hasUser || hasCharity) {
-            //         // window.location = returnTo;
-
-            //       } else {
-
-            //       }
-            //     });
-          // });
+                    document
+                      .getElementById("eventContentMainFlex")
+                      .appendChild(button);
+                  } else {
+                    window.location = "/";
+                  }
+                });
+            } else {
+              var encodedURL = encodeURIComponent(
+                `event/register/?e=${eventID}&i=${hash}&d=${hDim}`
+              );
+              window.location = `/onboarding?l=${encodedURL}`;
+            }
+          });
       } else {
-        // User is signed out.
         signInButton.style.display = "block";
         signedInDropdown.style.display = "none";
         var encodedURL = encodeURIComponent(
@@ -107,16 +84,45 @@ function agree(dID, uDocRef) {
   console.log("agreed");
   console.log(`ID: ${dID}`);
   console.log(`ID: ${uDocRef}`);
-
-  // Future: redirect to stripe checkout url generated from server (generated on
-  // page load). Success URL is in then() of current
-  // Current: fullfill order with no payment.
   var db = firebase.firestore();
   db.collection(`upcomingEvents/${dID}/registeredUsers`)
     .doc(uDocRef)
-    .delete()
-    .then(() => {
-      window.location = "/";
+    .get()
+    .then((rUserDoc) => {
+      if (rUserDoc.data().paidRegistration) {
+        firebase
+          .functions()
+          .httpsCallable("addMessage")({
+            eventID: dID,
+            regID: uDocRef,
+            uid: rUserDoc.data().uid,
+            paymentID: rUserDoc.data().paymentIntent,
+          })
+          .then((result) => {
+            // Read result of the Cloud Function.
+            var completedOrNot = result.data.completed;
+            if (completedOrNot) {
+              window.location = "/my-events";
+            } else {
+              alert(
+                "whoops, something went wrong - try again in a few moments"
+              );
+            }
+          })
+          .catch((error) => {
+            var code = error.code;
+            var message = error.message;
+            var details = error.details;
+            alert(message.toString());
+          });
+      } else {
+        db.collection(`upcomingEvents/${dID}/registeredUsers`)
+          .doc(uDocRef)
+          .delete()
+          .then(() => {
+            window.location = "/";
+          });
+      }
     })
     .catch((er) => {
       alert(er);

@@ -239,6 +239,7 @@ function agree(
         db.collection(`upcomingEvents/${dID}/registeredUsers`).add({
           uid: uID.toString(),
           dt: new Date(Date.now()),
+          paidRegistration: false,
         }).then((f) => {
           window.location = `/event/?e=${encodeURIComponent(dID)}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(hDim)}`;
         });

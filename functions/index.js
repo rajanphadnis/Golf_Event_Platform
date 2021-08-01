@@ -736,6 +736,7 @@ app.post(
             paymentIntent: event.data.object.payment_intent.toString(),
             stripeID: event.data.object.id.toString(),
             customerID: event.data.object.customer.toString(),
+            paidRegistration: true,
           });
         const updateCustID = db.collection("users").doc(userID).set(
           {
@@ -997,3 +998,46 @@ app3.post(
   }
 );
 exports.subscriptionUpdate = functions.https.onRequest(app3);
+
+exports.refundSingleTransaction = functions.https.onCall(
+  async (data, context) => {
+    const eventID = data.eventID.toString();
+    const regID = data.regID.toString();
+    const uid = data.uid.toString();
+    const pID = data.paymentID.toString();
+    var db = admin.firestore();
+    if (!context.auth) {
+      // Throwing an HttpsError so that the client gets the error details.
+      throw new functions.https.HttpsError(
+        "failed-precondition",
+        "The function must be called " + "while authenticated."
+      );
+    }
+    const stripe = require("stripe")(
+      "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
+    );
+    db.collection(`upcomingEvents/${eventID}/registeredUsers`)
+      .doc(regID)
+      .get()
+      .then((confirmDoc) => {
+        if (
+          confirmDoc.data().paidRegistration &&
+          confirmDoc.data().paymentIntent == pID &&
+          confirmDoc.data().uid == uid
+        ) {
+          stripe.refunds
+            .create({
+              payment_intent: "pi_Aabcxyz01aDfoo",
+            })
+            .then((f) => {
+              return { completed: true };
+            });
+        } else {
+          throw new functions.https.HttpsError(
+            "failed-precondition",
+            "Arguments don't match up " + "with database entires."
+          );
+        }
+      });
+  }
+);
