@@ -41,12 +41,23 @@ initApp = function () {
                         if (delUser.exists) {
                           document.getElementById("mainParent").style.display =
                             "block";
-                          document.getElementById("options").style.display =
-                            "none";
+                          // document.getElementById("options").style.display =
+                          //   "none";
+                          document.getElementById("hint").innerText =
+                            "Press the above button to contnue to the payment screen to get view events";
                           document.getElementById(
                             "mainQuestion"
                           ).style.display = "none";
-                          createUserTransactionPage(user, returnTo);
+                          document.getElementById("charity").style.display =
+                            "none";
+                          document.getElementById("standard").innerHTML =
+                            "Confirm";
+                          document
+                            .getElementById("standard")
+                            .addEventListener("click", function () {
+                              createUserTransactionPage(user, returnTo);
+                            });
+                          // createUserTransactionPage(user, returnTo);
                         } else {
                           document.getElementById("mainParent").style.display =
                             "block";
