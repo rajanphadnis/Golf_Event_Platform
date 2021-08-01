@@ -92,7 +92,7 @@ function agree(dID, uDocRef) {
       if (rUserDoc.data().paidRegistration) {
         firebase
           .functions()
-          .httpsCallable("addMessage")({
+          .httpsCallable("refundSingleTransaction")({
             eventID: dID,
             regID: uDocRef,
             uid: rUserDoc.data().uid,
