@@ -201,6 +201,7 @@ function agree(
   document.getElementById("registerButton").innerText = "Processing...";
   console.log("agreed");
   // console.log(`ID: ${dID}`);
+  var db = firebase.firestore();
   db.collection("admin")
     .doc("general")
     .get()
