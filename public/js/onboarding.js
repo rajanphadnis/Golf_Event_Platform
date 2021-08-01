@@ -39,6 +39,8 @@ initApp = function () {
                       .get()
                       .then((delUser) => {
                         if (delUser.exists) {
+                          document.getElementById("mainParent").style.display =
+                            "block";
                           document.getElementById("options").style.display =
                             "none";
                           document.getElementById(
