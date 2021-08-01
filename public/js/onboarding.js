@@ -44,7 +44,7 @@ initApp = function () {
                           // document.getElementById("options").style.display =
                           //   "none";
                           document.getElementById("hint").innerText =
-                            "Press the above button to contnue to the payment screen to get view events";
+                            "Press the above button to contnue to the payment screen to subscribe and view events. You've already used your free trial.";
                           document.getElementById(
                             "mainQuestion"
                           ).style.display = "none";
