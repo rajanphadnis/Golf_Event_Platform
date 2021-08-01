@@ -908,12 +908,16 @@ app3.post(
         .get()
         .then((querySnapshot) => {
           var userData = querySnapshot.docs[0];
-          db.collection("users")
-            .doc(userData.id)
-            .delete()
-            .then((f) => {
-              return response.status(200).send({ done: true });
-            });
+          try {
+            db.collection("users")
+              .doc(userData.id)
+              .delete()
+              .then((f) => {
+                return response.status(200).send({ done: true });
+              });
+          } catch (error) {
+            return response.status(200).send({ done: false });
+          }
         })
         .catch((error) => {
           console.log("Error getting documents: ", error);
