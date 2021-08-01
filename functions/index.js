@@ -859,16 +859,17 @@ app3.post(
             .get()
             .then((querySnapshot) => {
               var userData = querySnapshot.docs[0];
-              try {
-                db.collection("users")
-                  .doc(userData.id)
-                  .delete()
-                  .then((f) => {
-                    return response.status(200).send({ done: true });
-                  });
-              } catch (error) {
-                return response.status(200).send({ done: false });
-              }
+              db.collection("deletedUsers")
+                .doc(userData.id)
+                .set(userData.data())
+                .then((f) => {
+                  db.collection("users")
+                    .doc(userData.id)
+                    .delete()
+                    .then((g) => {
+                      return response.status(200).send({ done: true });
+                    });
+                });
             })
             .catch((error) => {
               console.log("Error getting documents: ", error);
@@ -932,16 +933,17 @@ app3.post(
         .get()
         .then((querySnapshot) => {
           var userData = querySnapshot.docs[0];
-          try {
-            db.collection("users")
-              .doc(userData.id)
-              .delete()
-              .then((f) => {
-                return response.status(200).send({ done: true });
-              });
-          } catch (error) {
-            return response.status(200).send({ done: false });
-          }
+          db.collection("deletedUsers")
+            .doc(userData.id)
+            .set(userData.data())
+            .then((f) => {
+              db.collection("users")
+                .doc(userData.id)
+                .delete()
+                .then((g) => {
+                  return response.status(200).send({ done: true });
+                });
+            });
         })
         .catch((error) => {
           console.log("Error getting documents: ", error);
