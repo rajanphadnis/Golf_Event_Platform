@@ -76,6 +76,7 @@ initApp = function () {
                         doc.data().Name;
                       document.getElementById("eventImageMain").src =
                         doc.data().ImageURL;
+                        
                       var button = document.createElement("button");
                       button.id = "registerButton";
                       button.innerText = "I Agree";
@@ -121,6 +122,9 @@ initApp = function () {
                           .appendChild(button);
                         // return doc.data().stripeCustomerID.toString();
                       }
+                      db.collection("admin").doc("general").get().then((adminDoc) => {
+                        document.getElementById("agreement").innerHTML = adminDoc.data().eventRegistrationAgreement;
+                      });
                       // });
                     } else {
                       // doc.data() will be undefined in this case
