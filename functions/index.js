@@ -631,79 +631,73 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
   const stripe = require("stripe")(
     "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
   );
-  db.collection("admin")
-    .doc("general")
-    .get()
-    .then(async (adminDoc) => {
-      var trialLength = adminDoc.data().trialPeriod;
-      if (customerID == "null") {
-        if (trialPeriod) {
-          console.log("null customerID, yes trial");
-          const session = await stripe.checkout.sessions.create({
-            success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
-            cancel_url: backURL,
-            payment_method_types: ["card"],
-            customer_email: userEmail,
-            line_items: [
-              { price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 },
-            ],
-            mode: "subscription",
-            metadata: {
-              userEmail: userEmail.toString(),
-              uID: userUID.toString(),
-              userName: userName.toString(),
-            },
-            subscription_data: {
-              trial_period_days: trialLength,
-            },
-          });
-          console.log(`session generated: ${session.toString()}`);
-          return {
-            returnURL: session.url,
-          };
-        } else {
-          console.log("null customerID, no trial");
-          const session = await stripe.checkout.sessions.create({
-            success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
-            cancel_url: backURL,
-            payment_method_types: ["card"],
-            customer_email: userEmail,
-            line_items: [
-              { price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 },
-            ],
-            mode: "subscription",
-            metadata: {
-              userEmail: userEmail.toString(),
-              uID: userUID.toString(),
-              userName: userName.toString(),
-            },
-          });
-          console.log(`session generated: ${session.toString()}`);
-          return {
-            returnURL: session.url,
-          };
-        }
-      } else {
-        const session = await stripe.checkout.sessions.create({
-          success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
-          cancel_url: backURL,
-          payment_method_types: ["card"],
-          customer: customerID,
-          line_items: [
-            { price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 },
-          ],
-          mode: "subscription",
-          metadata: {
-            userEmail: userEmail.toString(),
-            uID: userUID.toString(),
-            userName: userName.toString(),
-          },
-        });
-        return {
-          returnURL: session.url,
-        };
-      }
+  // db.collection("admin")
+  //   .doc("general")
+  //   .get()
+  //   .then(async (adminDoc) => {
+  var trialLength = adminDoc.data().trialPeriod;
+  if (customerID == "null") {
+    if (trialPeriod) {
+      console.log("null customerID, yes trial");
+      const session = await stripe.checkout.sessions.create({
+        success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
+        cancel_url: backURL,
+        payment_method_types: ["card"],
+        customer_email: userEmail,
+        line_items: [{ price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 }],
+        mode: "subscription",
+        metadata: {
+          userEmail: userEmail.toString(),
+          uID: userUID.toString(),
+          userName: userName.toString(),
+        },
+        subscription_data: {
+          trial_period_days: 30,
+        },
+      });
+      console.log(`session generated: ${session.toString()}`);
+      return {
+        returnURL: session.url,
+      };
+    } else {
+      console.log("null customerID, no trial");
+      const session = await stripe.checkout.sessions.create({
+        success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
+        cancel_url: backURL,
+        payment_method_types: ["card"],
+        customer_email: userEmail,
+        line_items: [{ price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 }],
+        mode: "subscription",
+        metadata: {
+          userEmail: userEmail.toString(),
+          uID: userUID.toString(),
+          userName: userName.toString(),
+        },
+      });
+      console.log(`session generated: ${session.toString()}`);
+      return {
+        returnURL: session.url,
+      };
+    }
+  } else {
+    const session = await stripe.checkout.sessions.create({
+      success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
+      cancel_url: backURL,
+      payment_method_types: ["card"],
+      customer: customerID,
+      line_items: [{ price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 }],
+      mode: "subscription",
+      metadata: {
+        userEmail: userEmail.toString(),
+        uID: userUID.toString(),
+        userName: userName.toString(),
+      },
     });
+    return {
+      returnURL: session.url,
+    };
+  }
+  // });
 });
 
 const app = require("express")();
@@ -800,7 +794,10 @@ app2.post(
             email: userEmail.toString(),
             name: userName.toString(),
           });
-          const deleteee = db.collection("deletedUsers").doc(userID.toString()).delete();
+        const deleteee = db
+          .collection("deletedUsers")
+          .doc(userID.toString())
+          .delete();
         return Promise.all([fulfill, deleteee])
           .then((t) => {
             return response.status(200).send({ done: true });
@@ -814,8 +811,7 @@ app2.post(
       } else {
         return response.status(200).send({ done: false });
       }
-    }
-    else {
+    } else {
       return response.status(400).send({ done: false });
     }
   }
@@ -975,17 +971,21 @@ app3.post(
         .get()
         .then((querySnapshot) => {
           var userData = querySnapshot.docs[0];
-          db.collection("deletedUsers")
-            .doc(userData.id)
-            .set(userData.data())
-            .then((f) => {
-              db.collection("users")
-                .doc(userData.id)
-                .delete()
-                .then((g) => {
-                  return response.status(200).send({ done: true });
-                });
-            });
+          try {
+            db.collection("deletedUsers")
+              .doc(userData.id)
+              .set(userData.data())
+              .then((f) => {
+                db.collection("users")
+                  .doc(userData.id)
+                  .delete()
+                  .then((g) => {
+                    return response.status(200).send({ done: true });
+                  });
+              });
+          } catch (e) {
+            return response.status(200).send({ done: false });
+          }
         })
         .catch((error) => {
           console.log("Error getting documents: ", error);
