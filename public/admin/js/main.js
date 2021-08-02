@@ -10,10 +10,10 @@ initApp = function () {
             if (!adminDoc.data().emails.includes(user.email)) {
               document.getElementById("loadingMessage").innerHTML =
                 "not approved";
-              // window.location = "/sign-in";
-            } else {
-              document.getElementById("loadingMessage").innerHTML =
-                "not loading";
+            }
+            else {
+                document.getElementById("mainBody").style.display = "flex";
+                document.getElementById("loadingMessage").style.display = "none";
             }
           });
       } else {

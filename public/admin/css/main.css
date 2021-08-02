@@ -1,31 +1,36 @@
+html,
+body {
+  height: 100%;
+  margin: 0px;
+}
 #mainBody {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 1005;
-    justify-content: space-around;
+  display: none;
+  flex-direction: row;
+  width: 100%;
+  height: 1005;
+  justify-content: space-around;
 }
 
 #columnOne {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 30%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 30%;
+  height: 100%;
 }
 
 #columnTwo {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 30%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 30%;
+  height: 100%;
 }
 
 #columnThree {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 30%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 30%;
+  height: 100%;
 }
