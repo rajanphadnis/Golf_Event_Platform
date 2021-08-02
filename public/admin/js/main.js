@@ -59,6 +59,9 @@ function navigate(page) {
         case "cost":
             columnTwo.innerHTML = "COST SUMMARY";
             break;
+        case "stats":
+            columnTwo.innerHTML = "STATISTICS";
+            break;
         default:
             break;
     }

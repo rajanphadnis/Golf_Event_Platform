@@ -16,14 +16,15 @@
     <p id="loadingMessage"></p>
     <div id="mainBody">
         <div id="columnOne">
-            <button onclick="navigate('users')">Users</button>
-            <button onclick="navigate('events')">Events</button>
-            <button onclick="navigate('pay')">Payment Management</button>
-            <button onclick="navigate('legal')">Legal</button>
-            <button onclick="navigate('cost')">Total Cost</button>
-            <button onclick="window.location='golf-event-platform.web.app'">Open Site</button>
-            <button onclick=`window.location="https://dashboard.stripe.com/" `>Open Stripe Dashboard</button>
-            <button onclick="signOut()">Sign Out</button>
+            <button class="tabButton" onclick="navigate('users')">Users</button>
+            <button class="tabButton" onclick="navigate('events')">Events</button>
+            <button class="tabButton" onclick="navigate('pay')">Payment Management</button>
+            <button class="tabButton" onclick="navigate('legal')">Legal</button>
+            <button class="tabButton" onclick="navigate('cost')">Total Cost</button>
+            <button class="tabButton" onclick="navigate('stats')">Statistics</button>
+            <button class="tabButton" onclick=`window.location="https://golf-event-platform.web.app"`>Open Site</button>
+            <button class="tabButton" onclick=`window.location="https://dashboard.stripe.com/" `>Open Stripe Dashboard</button>
+            <button class="tabButton" onclick="signOut()">Sign Out</button>
         </div>
         <div id="columnTwo">Select a tab on the left to edit</div>
         <div id="columnThree"></div>

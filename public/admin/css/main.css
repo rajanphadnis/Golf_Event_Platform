@@ -26,6 +26,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  text-align: center;
+  justify-self: center;
   width: 40%;
   height: 100%;
   margin: 0px;
@@ -35,7 +37,16 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  text-align: center;
+  justify-self: center;
   width: 40%;
   height: 100%;
   margin: 0px;
+}
+
+.tabButton {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
