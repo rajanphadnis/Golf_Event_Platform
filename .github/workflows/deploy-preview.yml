@@ -17,3 +17,15 @@ jobs:
           projectId: golf-event-platform
           channelId: dev
           target: main
+  admin_hosting_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_GOLF_EVENT_PLATFORM }}"
+          expires: 30d
+          projectId: golf-event-platform
+          channelId: dev
+          target: admin
