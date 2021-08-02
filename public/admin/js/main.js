@@ -42,27 +42,62 @@ function signOut() {
 }
 
 function navigate(page) {
-    columnTwo = document.getElementById("columnTwo");
     switch (page) {
         case "users":
-            columnTwo.innerHTML = "USERS";
+            initUsers();
             break;
         case "events":
-            columnTwo.innerHTML = "EVENTS";
+            initEvents();
             break;
         case "pay":
-            columnTwo.innerHTML = "PAYMENT MANAGEMENT";
+            initPay();
             break;
         case "legal":
-            columnTwo.innerHTML = "LEGAL EDITOR";
+            initLegal();
             break;
         case "cost":
-            columnTwo.innerHTML = "COST SUMMARY";
+            initCost();
             break;
         case "stats":
-            columnTwo.innerHTML = "STATISTICS";
+            initStats();
+            break;
+        case "openStripe":
+            window.open("https://dashboard.stripe.com", "_blank");
+            break;
+        case "openSite":
+            window.open("https://golf-event-platform.web.app", "_blank");
             break;
         default:
             break;
     }
+}
+
+function initUsers() {
+    columnTwo = document.getElementById("columnTwo");
+    columnTwo.innerHTML = "USERS";
+}
+
+function initEvents() {
+    columnTwo = document.getElementById("columnTwo");
+    columnTwo.innerHTML = "EVENTS";
+}
+
+function initPay() {
+    columnTwo = document.getElementById("columnTwo");
+    columnTwo.innerHTML = "PAYMENT MANAGEMENT";
+}
+
+function initLegal() {
+    columnTwo = document.getElementById("columnTwo");
+    columnTwo.innerHTML = "LEGAL EDITOR";
+}
+
+function initCost() {
+    columnTwo = document.getElementById("columnTwo");
+    columnTwo.innerHTML = "COST SUMMARY";
+}
+
+function initStats() {
+    columnTwo = document.getElementById("columnTwo");
+    columnTwo.innerHTML = "STATISTICS";
 }
