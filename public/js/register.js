@@ -123,7 +123,7 @@ initApp = function () {
                         // return doc.data().stripeCustomerID.toString();
                       }
                       db.collection("admin").doc("general").get().then((adminDoc) => {
-                        document.getElementById("agreement").innerHTML = adminDoc.data().eventRegistrationAgreement;
+                        document.getElementById("agreement").srcdoc = adminDoc.data().eventRegistrationAgreement;
                       });
                       // });
                     } else {
