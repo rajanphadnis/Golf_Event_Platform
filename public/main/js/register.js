@@ -122,7 +122,7 @@ initApp = function () {
                           .appendChild(button);
                         // return doc.data().stripeCustomerID.toString();
                       }
-                      db.collection("admin").doc("general").get().then((adminDoc) => {
+                      db.collection("admin").doc("generalPageInfo").get().then((adminDoc) => {
                         document.getElementById("agreement").srcdoc = adminDoc.data().eventRegistrationAgreement;
                       });
                       // });
