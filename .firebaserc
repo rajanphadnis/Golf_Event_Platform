@@ -6,12 +6,10 @@
     "golf-event-platform": {
       "hosting": {
         "admin": [
-          "admin-golf-event-site.web.app",
-          "admin-golf-event-site.firebaseapp.com"
+          "admin-golf-event-site.web.app"
         ],
         "main": [
-          "golf-event-platform.web.app",
-          "golf-event-platform.firebaseapp.com"
+          "golf-event-platform.web.app"
         ]
       }
     }
