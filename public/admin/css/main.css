@@ -18,6 +18,7 @@ body {
   justify-content: space-evenly;
   width: 20%;
   height: 100%;
+  max-height: 100%;
   margin: 0px;
   padding: 20px;
 }
@@ -30,6 +31,7 @@ body {
   justify-self: center;
   width: 40%;
   height: 100%;
+  max-height: 100%;
   margin: 0px;
 }
 
@@ -41,12 +43,6 @@ body {
   justify-self: center;
   width: 40%;
   height: 100%;
+  max-height: 100%;
   margin: 0px;
-}
-
-.tabButton {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
 }
