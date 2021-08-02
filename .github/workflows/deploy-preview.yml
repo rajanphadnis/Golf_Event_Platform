@@ -16,4 +16,3 @@ jobs:
           expires: 30d
           projectId: golf-event-platform
           channelId: dev
-          target: main

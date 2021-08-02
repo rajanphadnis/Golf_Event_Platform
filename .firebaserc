@@ -2,16 +2,4 @@
   "projects": {
     "default": "golf-event-platform"
   },
-  "targets": {
-    "golf-event-platform": {
-      "hosting": {
-        "admin": [
-          "admin-golf-event-site.web.app"
-        ],
-        "main": [
-          "golf-event-site.web.app"
-        ]
-      }
-    }
-  }
 }
