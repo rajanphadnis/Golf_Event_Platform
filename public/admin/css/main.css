@@ -29,25 +29,56 @@ body {
   justify-content: space-evenly;
   text-align: center;
   justify-self: center;
-  width: 40%;
+  width: 90%;
   height: 100%;
   max-height: 100%;
   margin: 0px;
 }
 
-#columnThree {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  text-align: center;
-  justify-self: center;
-  width: 40%;
-  height: 100%;
-  max-height: 100%;
-  margin: 0px;
-}
 
 .tabButton {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+
+/* SLABS */
+
+@-webkit-keyframes slabMove {
+  0% { -webkit-transform: translateY(0) rotateX(30deg); opacity: 0; }
+  10% { -webkit-transform: translateY(-48%); opacity: 1; }
+  90% { -webkit-transform: translateY(-422%); opacity: 0.1; }
+  100% { -webkit-transform: translateY(-480%); opacity: 0; }
+}
+@keyframes slabMove {
+  0% { transform: translateY(0) rotateX(30deg); opacity: 0; }
+  10% { transform: translateY(-48%); opacity: 1; }
+  90% { transform: translateY(-422%); opacity: 0.1; }
+  100% { transform: translateY(-480%); opacity: 0; }
+}
+
+.spinner.slabs {
+  width: 4em;
+  height: 4em;
+  -webkit-transform: perspective(15em) rotateX(65deg) rotateZ(-30deg);
+  transform: perspective(15em) rotateX(65deg) rotateZ(-30deg);
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.spinner.slabs .slab {
+  position: absolute;
+  width: 4em;
+  height: 4em;
+  background: gray;
+  opacity: 0;
+  box-shadow: -0.08em 0.15em 0 rgb(55, 55, 55);
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+  -webkit-animation: slabMove 4s linear infinite;
+  animation: slabMove 4s linear infinite;
+}
+
+.spinner.slabs .slab:nth-child(1) { -webkit-animation-delay: 0s; animation-delay: 0s; }
+.spinner.slabs .slab:nth-child(2) { -webkit-animation-delay: 1s; animation-delay: 1s; }
+.spinner.slabs .slab:nth-child(3) { -webkit-animation-delay: 2s; animation-delay: 2s; }
+.spinner.slabs .slab:nth-child(4) { -webkit-animation-delay: 3s; animation-delay: 3s; }

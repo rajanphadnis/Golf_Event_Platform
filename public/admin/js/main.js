@@ -1,3 +1,4 @@
+var loader = `<div class="spinner slabs" id="slabs"><div class="slab"></div><div class="slab"></div><div class="slab"></div><div class="slab"></div></div>`;
 initApp = function () {
   firebase.auth().onAuthStateChanged(
     function (user) {
@@ -84,7 +85,12 @@ function initEvents() {
 
 function initPay() {
     columnTwo = document.getElementById("columnTwo");
-    columnTwo.innerHTML = "PAYMENT MANAGEMENT";
+    columnTwo.innerHTML = loader;
+    var db = firebase.firestore();
+    db.collection("admin").doc("general").get().then((adminDoc) => {
+      var boxes = `<div><p>Per-Event Payments and Registrations: ${adminDoc.data().enablePerEventRegistration ? "Enabled" : "Disabled"}</p></div>`;
+      columnTwo.innerHTML = boxes;
+    });
 }
 
 function initLegal() {
