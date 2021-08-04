@@ -88,7 +88,7 @@ body {
 
 
 
-button {
+button.learn-more {
   position: relative;
   display: inline-block;
   cursor: pointer;

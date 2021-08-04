@@ -88,7 +88,12 @@ function initPay() {
     columnTwo.innerHTML = loader;
     var db = firebase.firestore();
     db.collection("admin").doc("general").get().then((adminDoc) => {
-      var boxes = `<div><p>Per-Event Payments and Registrations: ${adminDoc.data().enablePerEventRegistration ? "Enabled" : "Disabled"}</p> <button>${adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"}</button></div>`;
+      var boxes = `<div><p>Per-Event Payments and Registrations: ${adminDoc.data().enablePerEventRegistration ? "Enabled" : "Disabled"}</p><button class="learn-more">
+      <span class="circle" aria-hidden="true">
+        <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">${adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"}</span>
+    </button></div>`;
       columnTwo.innerHTML = boxes;
     });
 }
