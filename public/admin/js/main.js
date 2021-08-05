@@ -104,7 +104,7 @@ function initPay() {
     //   <span class="button-text">${adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"}</span>
     // </button></div>`;
     //   columnTwo.innerHTML = boxes;
-    });
+    // });
 }
 
 function initLegal() {
