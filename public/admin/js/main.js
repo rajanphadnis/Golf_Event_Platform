@@ -91,13 +91,26 @@ function initPay() {
     .get()
     .then((adminDoc) => {
       columnTwo.innerHTML = "";
-      const instance = document.importNode(
+      const instance1 = document.importNode(
         document.getElementById("payTemplate").content,
         true
       );
-      instance.querySelector("#labelText").innerHTML = `Per Event Payment and Registration: ${adminDoc.data().enablePerEventRegistration ? "Enabled" : "Disabled"}`;
-      instance.querySelector("#buttonText").innerHTML = `${adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"}`;
-      columnTwo.appendChild(instance);
+      instance1.querySelector("#labelText").innerHTML = `Per Event Payment and Registration: ${adminDoc.data().enablePerEventRegistration ? "Enabled" : "Disabled"}`;
+      instance1.querySelector("#buttonText").innerHTML = `${adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"}`;
+      instance1.querySelector("#actionButton").onclick = function () {
+        console.log("per event");
+      }
+      columnTwo.appendChild(instance1);
+      const instance2 = document.importNode(
+        document.getElementById("payTemplate").content,
+        true
+      );
+      instance2.querySelector("#labelText").innerHTML = `Subscription: ${adminDoc.data().enableSubscription ? "Enabled" : "Disabled"}`;
+      instance2.querySelector("#buttonText").innerHTML = `${adminDoc.data().enableSubscription ? "Disable" : "Enable"}`;
+      instance2.querySelector("#actionButton").onclick = function () {
+        console.log("sub");
+      }
+      columnTwo.appendChild(instance2);
     });
 }
 
