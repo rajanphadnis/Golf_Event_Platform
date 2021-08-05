@@ -10,10 +10,17 @@
     <script src="/__/firebase/8.6.8/firebase-firestore.js"></script>
     <script src="/__/firebase/init.js?useEmulator=true"></script>
     <link rel="stylesheet" href="/css/main.css" />
-    <link id="payImport" rel="import" href="/pay.html"/>
 </head>
 
 <body>
+    <template id="payTemplate">
+        <div><p id="labelText"></p><button class="learn-more">
+            <span class="circle" aria-hidden="true">
+              <span class="icon arrow"></span>
+            </span>
+            <span class="button-text" id="buttonText"></span>
+          </button></div>
+    </template>
     <p id="loadingMessage"></p>
     <div id="mainBody">
         <div id="columnOne">
