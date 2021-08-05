@@ -86,15 +86,24 @@ function initEvents() {
 function initPay() {
     columnTwo = document.getElementById("columnTwo");
     columnTwo.innerHTML = loader;
-    var db = firebase.firestore();
-    db.collection("admin").doc("general").get().then((adminDoc) => {
-      var boxes = `<div><p>Per-Event Payments and Registrations: ${adminDoc.data().enablePerEventRegistration ? "Enabled" : "Disabled"}</p><button class="learn-more">
-      <span class="circle" aria-hidden="true">
-        <span class="icon arrow"></span>
-      </span>
-      <span class="button-text">${adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"}</span>
-    </button></div>`;
-      columnTwo.innerHTML = boxes;
+    var link = document.querySelector('link[rel="import"]');
+    var content = link.import;
+
+    // Grab DOM from warning.html's document.
+    var el = content.querySelector('#payDIV');
+
+    // document.body.appendChild();
+    columnTwo.innerHTML = "";
+    columnTwo.appendChild(el.cloneNode(true));
+    // var db = firebase.firestore();
+    // db.collection("admin").doc("general").get().then((adminDoc) => {
+    //   var boxes = `<div><p>Per-Event Payments and Registrations: ${adminDoc.data().enablePerEventRegistration ? "Enabled" : "Disabled"}</p><button class="learn-more">
+    //   <span class="circle" aria-hidden="true">
+    //     <span class="icon arrow"></span>
+    //   </span>
+    //   <span class="button-text">${adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"}</span>
+    // </button></div>`;
+    //   columnTwo.innerHTML = boxes;
     });
 }
 
