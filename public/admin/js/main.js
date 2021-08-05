@@ -84,6 +84,7 @@ function initEvents() {
 
 function initPay() {
   columnTwo = document.getElementById("columnTwo");
+  columnTwo.innerHTML = "";
   columnTwo.innerHTML = loader;
   var db = firebase.firestore();
   db.collection("admin")
@@ -99,6 +100,11 @@ function initPay() {
       instance1.querySelector("#buttonText").innerHTML = `${adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"}`;
       instance1.querySelector("#actionButton").onclick = function () {
         console.log("per event");
+        db.collection("admin").doc("general").update({
+          enablePerEventRegistration: adminDoc.data().enablePerEventRegistration ? false : true,
+        }).then(() => {
+          initPay();
+        });
       }
       columnTwo.appendChild(instance1);
       const instance2 = document.importNode(
@@ -109,6 +115,11 @@ function initPay() {
       instance2.querySelector("#buttonText").innerHTML = `${adminDoc.data().enableSubscription ? "Disable" : "Enable"}`;
       instance2.querySelector("#actionButton").onclick = function () {
         console.log("sub");
+        db.collection("admin").doc("general").update({
+          enableSubscription: adminDoc.data().enableSubscription ? false : true,
+        }).then(() => {
+          initPay();
+        });
       }
       columnTwo.appendChild(instance2);
     });
