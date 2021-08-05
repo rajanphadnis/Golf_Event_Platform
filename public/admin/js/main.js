@@ -86,11 +86,11 @@ function initEvents() {
 function initPay() {
     columnTwo = document.getElementById("columnTwo");
     columnTwo.innerHTML = loader;
-    var link = document.querySelector('link[rel="import"]');
-    var content = link.import;
+    var link = document.querySelector('#payImport');
+    var icontent = link.import;
 
     // Grab DOM from warning.html's document.
-    var el = content.querySelector('#payDIV');
+    var el = icontent.querySelector('#payDIV');
 
     // document.body.appendChild();
     columnTwo.innerHTML = "";
