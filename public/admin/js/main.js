@@ -90,7 +90,7 @@ function initPay() {
     // var icontent = link.import;
 
     // Grab DOM from warning.html's document.
-    var el = icontent.querySelector('#payDIV');
+    var el = link.querySelector('#payDIV');
 
     // document.body.appendChild();
     columnTwo.innerHTML = "";
