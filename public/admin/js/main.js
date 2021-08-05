@@ -96,31 +96,54 @@ function initPay() {
         document.getElementById("payTemplate").content,
         true
       );
-      instance1.querySelector("#labelText").innerHTML = `Per Event Payment and Registration: ${adminDoc.data().enablePerEventRegistration ? "Enabled" : "Disabled"}`;
-      instance1.querySelector("#buttonText").innerHTML = `${adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"}`;
+      instance1.querySelector(
+        "#labelText"
+      ).innerHTML = `Per Event Payment and Registration: ${
+        adminDoc.data().enablePerEventRegistration ? "Enabled" : "Disabled"
+      }`;
+      instance1.querySelector("#buttonText").innerHTML = `${
+        adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"
+      }`;
       instance1.querySelector("#actionButton").onclick = function () {
-        console.log("per event");
-        db.collection("admin").doc("general").update({
-          enablePerEventRegistration: adminDoc.data().enablePerEventRegistration ? false : true,
-        }).then(() => {
-          initPay();
-        });
-      }
+        columnTwo.innerHTML = "";
+        columnTwo.innerHTML = loader;
+        db.collection("admin")
+          .doc("general")
+          .update({
+            enablePerEventRegistration: adminDoc.data()
+              .enablePerEventRegistration
+              ? false
+              : true,
+          })
+          .then(() => {
+            initPay();
+          });
+      };
       columnTwo.appendChild(instance1);
       const instance2 = document.importNode(
         document.getElementById("payTemplate").content,
         true
       );
-      instance2.querySelector("#labelText").innerHTML = `Subscription: ${adminDoc.data().enableSubscription ? "Enabled" : "Disabled"}`;
-      instance2.querySelector("#buttonText").innerHTML = `${adminDoc.data().enableSubscription ? "Disable" : "Enable"}`;
+      instance2.querySelector("#labelText").innerHTML = `Subscription: ${
+        adminDoc.data().enableSubscription ? "Enabled" : "Disabled"
+      }`;
+      instance2.querySelector("#buttonText").innerHTML = `${
+        adminDoc.data().enableSubscription ? "Disable" : "Enable"
+      }`;
       instance2.querySelector("#actionButton").onclick = function () {
-        console.log("sub");
-        db.collection("admin").doc("general").update({
-          enableSubscription: adminDoc.data().enableSubscription ? false : true,
-        }).then(() => {
-          initPay();
-        });
-      }
+        columnTwo.innerHTML = "";
+        columnTwo.innerHTML = loader;
+        db.collection("admin")
+          .doc("general")
+          .update({
+            enableSubscription: adminDoc.data().enableSubscription
+              ? false
+              : true,
+          })
+          .then(() => {
+            initPay();
+          });
+      };
       columnTwo.appendChild(instance2);
     });
 }
