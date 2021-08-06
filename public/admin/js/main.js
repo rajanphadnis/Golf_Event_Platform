@@ -92,6 +92,9 @@ function initPay() {
     .get()
     .then((adminDoc) => {
       columnTwo.innerHTML = "";
+      var note = document.createElement("p");
+      note.innerHTML =
+        "Note: Changing these settings will only apply to NEW transactions and users.</br>Example: Subscriptions are diabled when a user signs up.</br>You then turn on Subscriptions. That user will not have to pay a subscription fee to continue to view the site.</br>Any new user will have to pay for a subscription to access the site.";
       const instance1 = document.importNode(
         document.getElementById("payTemplate").content,
         true
