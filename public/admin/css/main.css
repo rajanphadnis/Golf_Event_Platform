@@ -166,3 +166,8 @@ button:hover .circle .icon.arrow {
 button:hover .button-text {
   color: #fff;
 }
+
+#columnTwoOne {
+  max-height: 50%;
+  width: 100%;
+}
