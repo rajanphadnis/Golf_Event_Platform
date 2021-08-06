@@ -79,7 +79,7 @@ function initUsers() {
 
 function initEvents() {
   columnTwo = document.getElementById("columnTwo");
-  columnTwo.innerHTML = "EVENTS";
+  // columnTwo.innerHTML = "EVENTS";
 }
 
 function initPay() {
