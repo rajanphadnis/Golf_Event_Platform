@@ -79,7 +79,8 @@ function initUsers() {
 
 function initEvents() {
   columnTwo = document.getElementById("columnTwo");
-  // columnTwo.innerHTML = "EVENTS";
+  columnTwo.innerHTML = "";
+  columnTwo.innerHTML = loader;
 }
 
 function initPay() {
