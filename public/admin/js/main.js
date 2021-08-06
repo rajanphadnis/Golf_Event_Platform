@@ -203,9 +203,9 @@ function showEditRowEvents(data, id) {
   instance.getElementById("editCostP").innerHTML = `Cost Per Person: $${data.Cost/100}`;
   instance.getElementById("editImageURLP").innerHTML = `ImageURL: ${data.ImageURL}`;
   instance.getElementById("editLocationP").innerHTML = `Location: ${data.Location}`;
-  instance.getElementById("editLastUpdatedP").innerHTML = `Last Updated: ${new Date(data.LastUpdated.seconds).toLocaleString()}`;
+  instance.getElementById("editLastUpdatedP").innerHTML = `Last Updated: ${data.LastUpdated.toDate().toLocaleString()}`;
   instance.getElementById("editMaxParticipantsP").innerHTML = `Max Participants: ${data.MaxParticipants.toString()}`;
-  instance.getElementById("editOrganizerP").innerHTML = `Organizer: ${data.Organizer}`;
+  instance.getElementById("editOrganizerP").innerHTML = `Organizer: ${data.OrganizerName}`;
   instance.getElementById("editBlurbP").innerHTML = `Blurb: ${data.Blurb}`;
   document.getElementById("columnTwoTwo").appendChild(instance);
 }
