@@ -98,7 +98,7 @@ function initEvents() {
         instance.querySelector(".eventTitle").innerHTML = doc.data().Name;
         instance.querySelector(".eventDate").innerHTML = new Date(doc.data().DateTime.seconds).toLocaleString();
         instance.querySelector(".eventTemplateButton").onclick = function () {
-          console.log(doc.id);
+          showEditRowEvents(doc.data(), doc.id);
         }
         div1.appendChild(instance);
       });
@@ -190,4 +190,22 @@ function initCost() {
 function initStats() {
   columnTwo = document.getElementById("columnTwo");
   columnTwo.innerHTML = "STATISTICS";
+}
+
+function showEditRowEvents(data, id) {
+  document.getElementById("columnTwoTwo").innerHTML = "";
+  const instance = document.importNode(
+    document.getElementById("eventEdit").content,
+    true
+  );
+  instance.getElementById("editNameP").innerHTML = `Event Name: ${data.Name}`;
+  instance.getElementById("editDateP").innerHTML = `Event Date and Time: ${new Date(data.DateTime.seconds).toLocaleString()}`;
+  instance.getElementById("editCostP").innerHTML = `Cost Per Person: $${data.Cost}`;
+  instance.getElementById("editImageURLP").innerHTML = `ImageURL: ${data.ImageURL}`;
+  instance.getElementById("editLocationP").innerHTML = `Location: ${data.Location}`;
+  instance.getElementById("editLastUpdatedP").innerHTML = `Last Updated: ${new Date(data.LastUpdated.seconds).toLocaleString()}`;
+  instance.getElementById("editMaxParticipantsP").innerHTML = `Max Participants: ${data.MaxParticipants.toString()}`;
+  instance.getElementById("editOrganizerP").innerHTML = `Organizer: ${data.Organizer}`;
+  instance.getElementById("editBlurbP").innerHTML = `Blurb: ${data.Blurb}`;
+  document.getElementById("columnTwoTwo").appendChild(instance);
 }
