@@ -81,6 +81,26 @@ function initEvents() {
   columnTwo = document.getElementById("columnTwo");
   columnTwo.innerHTML = "";
   columnTwo.innerHTML = loader;
+  const instance1 = document.importNode(
+    document.getElementById("twoColumnTemplate").content,
+    true
+  );
+  instance1.querySelector(".columnTwoOne").innerHTML = "LOADING...";
+  columnTwo.appendChild(instance1);
+  var db = firebase.firestore();
+  db.collection("upcomingEvents")
+    .get()
+    .then((snap) => {
+      snap.docs.forEach(doc => {
+        const instance = document.importNode(
+          document.getElementById("eventCookieCutter").content,
+          true
+        );
+        instance.querySelector(".eventTitle").innerHTML = doc.data().Name;
+        instance.querySelector(".eventDate").innerHTML = doc.data().DateTime.toString();
+        columnTwo.appendChild(instance);
+      });
+    });
 }
 
 function initPay() {
