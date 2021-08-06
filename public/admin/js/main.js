@@ -86,6 +86,7 @@ function initEvents() {
     true
   );
   instance1.querySelector(".columnTwoOne").innerHTML = "LOADING...";
+  columnTwo.innerHTML = "";
   columnTwo.appendChild(instance1);
   var db = firebase.firestore();
   db.collection("upcomingEvents")
@@ -98,7 +99,7 @@ function initEvents() {
         );
         instance.querySelector(".eventTitle").innerHTML = doc.data().Name;
         instance.querySelector(".eventDate").innerHTML = doc.data().DateTime.toString();
-        columnTwo.appendChild(instance);
+        document.querySelector(".columnTwoOne").appendChild(instance);
       });
     });
 }
