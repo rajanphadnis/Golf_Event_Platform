@@ -199,8 +199,8 @@ function showEditRowEvents(data, id) {
     true
   );
   instance.getElementById("editNameP").innerHTML = `Event Name: ${data.Name}`;
-  instance.getElementById("editDateP").innerHTML = `Event Date and Time: ${new Date(data.DateTime.seconds).toLocaleString()}`;
-  instance.getElementById("editCostP").innerHTML = `Cost Per Person: $${data.Cost}`;
+  instance.getElementById("editDateP").innerHTML = `Event Date and Time: ${data.DateTime.toDate().toLocaleString()}`;
+  instance.getElementById("editCostP").innerHTML = `Cost Per Person: $${data.Cost/100}`;
   instance.getElementById("editImageURLP").innerHTML = `ImageURL: ${data.ImageURL}`;
   instance.getElementById("editLocationP").innerHTML = `Location: ${data.Location}`;
   instance.getElementById("editLastUpdatedP").innerHTML = `Last Updated: ${new Date(data.LastUpdated.seconds).toLocaleString()}`;
