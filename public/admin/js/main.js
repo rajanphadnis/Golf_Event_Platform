@@ -85,7 +85,7 @@ function initEvents() {
     document.getElementById("twoColumnTemplate").content,
     true
   );
-  instance1.querySelector("#columnTwoOne").innerHTML = "LOADING...";
+  instance1.getElementById("columnTwoOne").innerHTML = "LOADING...";
   columnTwo.innerHTML = "";
   columnTwo.appendChild(instance1);
   var db = firebase.firestore();
@@ -103,7 +103,7 @@ function initEvents() {
         instance.querySelector(".eventTemplateButton").onclick = function () {
           console.log(doc.id);
         }
-        document.querySelector("#columnTwoOne").appendChild(instance);
+        document.getElementById("columnTwoOne").appendChild(instance);
       });
     });
 }
