@@ -79,20 +79,17 @@ function initUsers() {
 
 function initEvents() {
   columnTwo = document.getElementById("columnTwo");
-  columnTwo.innerHTML = "";
-  columnTwo.innerHTML = loader;
-  const instance1 = document.importNode(
-    document.getElementById("twoColumnTemplate").content,
-    true
-  );
-  instance1.getElementById("columnTwoOne").innerHTML = "LOADING...";
-  columnTwo.innerHTML = "";
-  columnTwo.appendChild(instance1);
+  columnTwo.innerHTML = "LOADING...";
   var db = firebase.firestore();
   db.collection("upcomingEvents")
     .get()
     .then((snap) => {
       columnTwo.innerHTML = "";
+      const div1 = document.createElement("div");
+      div1.id = "columnTwoOne";
+      var div2 = document.createElement("div");
+      div2.id = "columnTwoTwo";
+      div2.innerHTML = "TWOOO";
       snap.docs.forEach(doc => {
         const instance = document.importNode(
           document.getElementById("eventCookieCutter").content,
@@ -103,8 +100,10 @@ function initEvents() {
         instance.querySelector(".eventTemplateButton").onclick = function () {
           console.log(doc.id);
         }
-        document.getElementById("columnTwoOne").appendChild(instance);
+        div1.appendChild(instance);
       });
+      columnTwo.appendChild(div1);
+      columnTwo.appendChild(div2);
     });
 }
 
