@@ -92,13 +92,17 @@ function initEvents() {
   db.collection("upcomingEvents")
     .get()
     .then((snap) => {
+      columnTwo.innerHTML = "";
       snap.docs.forEach(doc => {
         const instance = document.importNode(
           document.getElementById("eventCookieCutter").content,
           true
         );
         instance.querySelector(".eventTitle").innerHTML = doc.data().Name;
-        instance.querySelector(".eventDate").innerHTML = doc.data().DateTime.toString();
+        instance.querySelector(".eventDate").innerHTML = new Date(doc.data().DateTime.seconds).toLocaleString();
+        instance.querySelector(".eventTemplateButton").onclick = function () {
+          console.log(doc.id);
+        }
         document.querySelector(".columnTwoOne").appendChild(instance);
       });
     });
