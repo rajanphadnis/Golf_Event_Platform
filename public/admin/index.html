@@ -10,10 +10,16 @@
     <script src="/__/firebase/8.6.8/firebase-firestore.js"></script>
     <script src="/__/firebase/init.js?useEmulator=true"></script>
     <link rel="stylesheet" href="/css/main.css" />
+    <script src="/js/tinymce/js/tinymce/tinymce.min.js"></script>
+    <!-- <script type="text/javascript">
+        tinymce.init({
+            selector: '#htmeditor'
+        });
+    </script> -->
 </head>
 
 <body>
-    <template id="eventEdit">
+    <!-- <template id="eventEdit">
         <p id="editNameP"></p>
         <p id="editDateP"></p>
         <p id="editCostP"></p>
@@ -23,7 +29,7 @@
         <p id="editImageURLP"></p>
         <p id="editOrganizerP"></p>
         <p id="editLastUpdatedP"></p>
-    </template>
+    </template> -->
     <template id="eventCookieCutter">
         <button class="eventTemplateButton">
             <p class="eventTitle"></p>
@@ -41,6 +47,53 @@
                 <span class="button-text" id="buttonText"></span>
             </button>
         </div>
+    </template>
+    <template id="eventInfo">
+            <label for="title">Event Title:</label>
+            <input type="text" id="title" name="title">
+            <br />
+            <br />
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location">
+            <br />
+            <br />
+            <p id="editImageURLP"></p>
+            <label for="files">Upload Poster:</label>
+            <input type="file" id="files" accept=".jpg" />
+            <div id="loadingFile">Loading...</div><br/>
+            <br />
+            <label for="dt">Event Date and Time:</label>
+            <input type="datetime-local" id="dt" name="dt">
+            <br />
+            <br />
+            <label for="cost">Cost in Cents per person:</label>
+            <input type="number" id="cost" name="cost" min="1">
+            <br />
+            <br />
+            <label for="maxParticipants">Maximum number of participants:</label>
+            <input type="number" id="maxParticipants" name="maxParticipants" min="1">
+            <br />
+            <br />
+            
+            <!-- <br />
+            <br /> -->
+            <label for="htmeditor">Event Blurb/Description:</label>
+            <textarea id="htmeditor"></textarea>
+            <!-- <script src="https://htmeditor.com/js/htmeditor.min.js" htmeditor_textarea="htmeditor" full_screen="no"
+            editor_height="400" run_local="no"> </script> -->
+            <br />
+            <br />
+            <br />
+            <br />
+            <p id="editOrganizerP"></p>
+            <p id="editLastUpdatedP"></p>
+
+            <button id="send">Save Changes</button>
+            <p id="uploading"></p>
+            <progress value="0" max="100" id="progress"></progress>
+            <br />
+            <br />
+            <img id="preIMG" />
     </template>
     <p id="loadingMessage"></p>
     <div id="mainBody">

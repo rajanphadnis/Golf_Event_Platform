@@ -44,21 +44,51 @@ function signOut() {
 function navigate(page) {
   switch (page) {
     case "users":
+      try {
+        tinymce.activeEditor.destroy();
+      } catch (e) {
+        console.log("tiny destroy no object");
+      }
       initUsers();
       break;
     case "events":
+      try {
+        tinymce.activeEditor.destroy();
+      } catch (e) {
+        console.log("tiny destroy no object");
+      }
       initEvents();
       break;
     case "pay":
+      try {
+        tinymce.activeEditor.destroy();
+      } catch (e) {
+        console.log("tiny destroy no object");
+      }
       initPay();
       break;
     case "legal":
+      try {
+        tinymce.activeEditor.destroy();
+      } catch (e) {
+        console.log("tiny destroy no object");
+      }
       initLegal();
       break;
     case "cost":
+      try {
+        tinymce.activeEditor.destroy();
+      } catch (e) {
+        console.log("tiny destroy no object");
+      }
       initCost();
       break;
     case "stats":
+      try {
+        tinymce.activeEditor.destroy();
+      } catch (e) {
+        console.log("tiny destroy no object");
+      }
       initStats();
       break;
     case "openStripe":
@@ -90,16 +120,19 @@ function initEvents() {
       var div2 = document.createElement("div");
       div2.id = "columnTwoTwo";
       div2.innerHTML = "TWOOO";
-      snap.docs.forEach(doc => {
+      snap.docs.forEach((doc) => {
         const instance = document.importNode(
           document.getElementById("eventCookieCutter").content,
           true
         );
         instance.querySelector(".eventTitle").innerHTML = doc.data().Name;
-        instance.querySelector(".eventDate").innerHTML = new Date(doc.data().DateTime.seconds).toLocaleString();
+        instance.querySelector(".eventDate").innerHTML = doc
+          .data()
+          .DateTime.toDate()
+          .toLocaleString();
         instance.querySelector(".eventTemplateButton").onclick = function () {
           showEditRowEvents(doc.data(), doc.id);
-        }
+        };
         div1.appendChild(instance);
       });
       columnTwo.appendChild(div1);
@@ -193,19 +226,93 @@ function initStats() {
 }
 
 function showEditRowEvents(data, id) {
+  try {
+    tinymce.activeEditor.destroy();
+  } catch (e) {
+    console.log("tiny destroy no object");
+  }
   document.getElementById("columnTwoTwo").innerHTML = "";
   const instance = document.importNode(
-    document.getElementById("eventEdit").content,
+    document.getElementById("eventInfo").content,
     true
   );
-  instance.getElementById("editNameP").innerHTML = `Event Name: ${data.Name}`;
-  instance.getElementById("editDateP").innerHTML = `Event Date and Time: ${data.DateTime.toDate().toLocaleString()}`;
-  instance.getElementById("editCostP").innerHTML = `Cost Per Person: $${data.Cost/100}`;
-  instance.getElementById("editImageURLP").innerHTML = `ImageURL: ${data.ImageURL}`;
-  instance.getElementById("editLocationP").innerHTML = `Location: ${data.Location}`;
-  instance.getElementById("editLastUpdatedP").innerHTML = `Last Updated: ${data.LastUpdated.toDate().toLocaleString()}`;
-  instance.getElementById("editMaxParticipantsP").innerHTML = `Max Participants: ${data.MaxParticipants.toString()}`;
-  instance.getElementById("editOrganizerP").innerHTML = `Organizer: ${data.OrganizerName}`;
-  instance.getElementById("editBlurbP").innerHTML = `Blurb: ${data.Blurb}`;
+  instance.getElementById("title").value = data.Name;
+  instance.getElementById("dt").value = convertFBDateToJS(data.DateTime);
+  instance.getElementById("cost").value = data.Cost;
+  instance.getElementById(
+    "editImageURLP"
+  ).innerHTML = `Image: <a href="${data.ImageURL}">View</a>`;
+  instance.getElementById("location").value = data.Location;
+  instance.getElementById(
+    "editLastUpdatedP"
+  ).innerHTML = `Last Updated: ${data.LastUpdated.toDate().toLocaleString()}`;
+  instance.getElementById("maxParticipants").value = data.MaxParticipants;
+  instance.getElementById(
+    "editOrganizerP"
+  ).value = `Organizer: ${data.OrganizerName}`;
+
+  instance.getElementById("htmeditor").innerHTML = data.Blurb;
   document.getElementById("columnTwoTwo").appendChild(instance);
+  tinymce.init({
+    selector: "#htmeditor",
+  });
+  // tinymce.get("htmeditor").setContent(data.Blurb);
+}
+
+function convertFBDateToJS(date) {
+  var date = new Date(date.seconds * 1000);
+  var day = date.getDate(),
+    month = date.getMonth() + 1,
+    year = date.getFullYear(),
+    hour = date.getHours(),
+    min = date.getMinutes();
+
+  month = (month < 10 ? "0" : "") + month;
+  day = (day < 10 ? "0" : "") + day;
+  hour = (hour < 10 ? "0" : "") + hour;
+  min = (min < 10 ? "0" : "") + min;
+
+  var today = year + "-" + month + "-" + day + "T" + hour + ":" + min;
+  return today;
+}
+
+function addEvent(
+  did,
+  title,
+  loc,
+  dt,
+  cost,
+  max,
+  blurb,
+  poster,
+  uid,
+  charityName,
+  dim
+  // hash
+) {
+  // console.log(hash);
+  firebase
+    .firestore()
+    .collection("upcomingEvents")
+    .doc(did)
+    .set({
+      Name: title,
+      MaxParticipants: parseInt(max),
+      Blurb: blurb.toString(),
+      Cost: parseInt(cost),
+      DateTime: new Date(Date.parse(dt)),
+      Location: loc.toString(),
+      LastUpdated: new Date(Date.now()),
+      OrganizerID: uid.toString(),
+      OrganizerName: charityName.toString(),
+      ImageDim: parseFloat(dim),
+      // MainHash: hash.toString(),
+    }, {merge: true})
+    .then((docRef) => {
+      console.log("Document written with ID: ", did);
+      uploadFile(poster, did);
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+    });
 }

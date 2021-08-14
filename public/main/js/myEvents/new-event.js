@@ -12,100 +12,114 @@ var initApp = function () {
     function (user) {
       if (user) {
         var email = user.email;
-        db.collection("charities")
+        db.collection("users")
           .doc(user.uid)
           .get()
-          .then((doc) => {
-            if (doc.exists) {
-              var files = [];
-              document
-                .getElementById("files")
-                .addEventListener("change", function (e) {
-                  document.getElementById("loadingFile").style.display =
-                    "block";
-                  loading = true;
-                  files = e.target.files;
-                  if (files.length != 0) {
-                    var fr = new FileReader();
-                    fr.onload = () => showImage(fr);
-                    fr.readAsDataURL(files[0]);
-                  } else {
+          .then((userDoc) => {
+            if (userDoc.exists) {
+              if (userDoc.data().accountType == "standard") {
+                window.location = "/my-events";
+              } else {
+                document
+                  .getElementById("files")
+                  .addEventListener("change", function (e) {
                     document.getElementById("loadingFile").style.display =
-                      "none";
-                    loading = false;
-                  }
-                  function showImage(fileReader) {
-                    var img = document.getElementById("preIMG");
-                    img.onload = () => getImageData(img);
-                    img.src = fileReader.result;
-                  }
-
-                  function getImageData(img) {
-                    ctx.drawImage(img, 0, 0);
-                    imageData = ctx.getImageData(
-                      0,
-                      0,
-                      img.width,
-                      img.height
-                    ).data;
-                    console.log("image data:", imageData);
-                    imgDim = img.height / img.width;
-                    // ihash = blurhash.encode(
-                    //   imageData,
-                    //   img.width,
-                    //   img.height,
-                    //   4,
-                    //   3
-                    // );
-                    // console.log(ihash);
-                    document.getElementById("loadingFile").style.display =
-                      "none";
-                    loading = false;
-                  }
-                });
-              document
-                .getElementById("send")
-                .addEventListener("click", function () {
-                  var blurb = tinymce.get("htmeditor").getContent();
-                  var title = document.getElementById("title").value;
-                  var loc = document.getElementById("location").value;
-                  var dt = document.getElementById("dt").value;
-                  var cost = document.getElementById("cost").value;
-                  var max = document.getElementById("maxParticipants").value;
-                  //   console.log(blurb);
-                  //   console.log(title);
-                  //   console.log(loc);
-                  //   console.log(Date(dt));
-                  //   console.log(cost);
-                  // console.log(ihash);
-                  if (files.length != 0) {
-                    if (loading == false) {
-                      addEvent(
-                        title,
-                        loc,
-                        dt,
-                        cost,
-                        max,
-                        blurb,
-                        files[0],
-                        user.uid,
-                        doc.data().name,
-                        imgDim
-                        // ihash
-                      );
+                      "block";
+                    loading = true;
+                    files = e.target.files;
+                    if (files.length != 0) {
+                      var fr = new FileReader();
+                      fr.onload = () => showImage(fr);
+                      fr.readAsDataURL(files[0]);
                     } else {
-                      alert(
-                        "Please wait for the image to finish loading, then try again."
-                      );
+                      document.getElementById("loadingFile").style.display =
+                        "none";
+                      loading = false;
                     }
-                  } else {
-                    alert("No file chosen");
-                  }
-                });
+                    function showImage(fileReader) {
+                      var img = document.getElementById("preIMG");
+                      img.onload = () => getImageData(img);
+                      img.src = fileReader.result;
+                    }
+
+                    function getImageData(img) {
+                      ctx.drawImage(img, 0, 0);
+                      imageData = ctx.getImageData(
+                        0,
+                        0,
+                        img.width,
+                        img.height
+                      ).data;
+                      console.log("image data:", imageData);
+                      imgDim = img.height / img.width;
+                      // ihash = blurhash.encode(
+                      //   imageData,
+                      //   img.width,
+                      //   img.height,
+                      //   4,
+                      //   3
+                      // );
+                      // console.log(ihash);
+                      document.getElementById("loadingFile").style.display =
+                        "none";
+                      loading = false;
+                    }
+                  });
+                document
+                  .getElementById("send")
+                  .addEventListener("click", function () {
+                    var blurb = tinymce.get("htmeditor").getContent();
+                    var title = document.getElementById("title").value;
+                    var loc = document.getElementById("location").value;
+                    var dt = document.getElementById("dt").value;
+                    var cost = document.getElementById("cost").value;
+                    var max = document.getElementById("maxParticipants").value;
+                    //   console.log(blurb);
+                    //   console.log(title);
+                    //   console.log(loc);
+                    //   console.log(Date(dt));
+                    //   console.log(cost);
+                    // console.log(ihash);
+                    if (files.length != 0) {
+                      if (loading == false) {
+                        addEvent(
+                          title,
+                          loc,
+                          dt,
+                          cost,
+                          max,
+                          blurb,
+                          files[0],
+                          user.uid,
+                          userDoc.data().name,
+                          imgDim
+                          // ihash
+                        );
+                      } else {
+                        alert(
+                          "Please wait for the image to finish loading, then try again."
+                        );
+                      }
+                    } else {
+                      alert("No file chosen");
+                    }
+                  });
+              }
             } else {
-              window.location = "/my-events";
+              window.location = "/onboarding?l=my-events";
             }
           });
+        // db.collection("charities")
+        //   .doc(user.uid)
+        //   .get()
+        //   .then((doc) => {
+        //     if (doc.exists) {
+        //       var files = [];
+
+        //     } else {
+        //       window.location = "/my-events";
+        //     }
+        //   });
       } else {
         // User is signed out.
         window.location = "/sign-in?l=my-events%2Fnew-event%2F";
