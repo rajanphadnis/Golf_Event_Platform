@@ -1031,7 +1031,8 @@ exports.refundSingleTransaction = functions.https.onCall(
               payment_intent: pID,
             })
             .then((f) => {
-              return db.collection(`upcomingEvents/${eventID}/registeredUsers`)
+              return db
+                .collection(`upcomingEvents/${eventID}/registeredUsers`)
                 .doc(regID)
                 .delete()
                 .then((g) => {
@@ -1047,3 +1048,22 @@ exports.refundSingleTransaction = functions.https.onCall(
       });
   }
 );
+
+export const documentWriteListener = functions.firestore
+  .document("upcomingEvents/{documentUid}")
+  .onWrite((change, context) => {
+    var docRef = "admin/counters";
+    if (!change.before.exists) {
+      // New document Created : add one to count
+
+      db.doc(docRef).update({ upcomingEvents: FieldValue.increment(1) });
+    } else if (change.before.exists && change.after.exists) {
+      // Updating existing document : Do nothing
+    } else if (!change.after.exists) {
+      // Deleting document : subtract one from count
+
+      db.doc(docRef).update({ upcomingEvents: FieldValue.increment(-1) });
+    }
+
+    return;
+  });

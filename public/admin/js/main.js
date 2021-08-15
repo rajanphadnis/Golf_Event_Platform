@@ -112,6 +112,8 @@ function initEvents() {
   columnTwo.innerHTML = "LOADING...";
   var db = firebase.firestore();
   db.collection("upcomingEvents")
+    .orderBy("DateTime")
+    .limit(10)
     .get()
     .then((snap) => {
       columnTwo.innerHTML = "";
@@ -120,23 +122,39 @@ function initEvents() {
       var div2 = document.createElement("div");
       div2.id = "columnTwoTwo";
       div2.innerHTML = "TWOOO";
-      snap.docs.forEach((doc) => {
-        const instance = document.importNode(
-          document.getElementById("eventCookieCutter").content,
-          true
-        );
-        instance.querySelector(".eventTitle").innerHTML = doc.data().Name;
-        instance.querySelector(".eventDate").innerHTML = doc
-          .data()
-          .DateTime.toDate()
-          .toLocaleString();
-        instance.querySelector(".eventTemplateButton").onclick = function () {
-          showEditRowEvents(doc.data(), doc.id);
-        };
-        div1.appendChild(instance);
-      });
-      columnTwo.appendChild(div1);
-      columnTwo.appendChild(div2);
+      db.collection("admin")
+        .doc("counters")
+        .get()
+        .then((counterDoc) => {
+          const headerInstance = document.importNode(
+            document.getElementById("eventHeader").content,
+            true
+          );
+          headerInstance.getElementById(
+            "eventListHeaderH1"
+          ).innerHTML = `Total # of Events: ${
+            counterDoc.data().upcomingEvents
+          }`;
+          div1.appendChild(headerInstance);
+          snap.docs.forEach((doc) => {
+            const instance = document.importNode(
+              document.getElementById("eventCookieCutter").content,
+              true
+            );
+            instance.querySelector(".eventTitle").innerHTML = doc.data().Name;
+            instance.querySelector(".eventDate").innerHTML = doc
+              .data()
+              .DateTime.toDate()
+              .toLocaleString();
+            instance.querySelector(".eventTemplateButton").onclick =
+              function () {
+                showEditRowEvents(doc.data(), doc.id);
+              };
+            div1.appendChild(instance);
+          });
+          columnTwo.appendChild(div1);
+          columnTwo.appendChild(div2);
+        });
     });
 }
 
@@ -247,12 +265,11 @@ function showEditRowEvents(data, id) {
     "editLastUpdatedP"
   ).innerHTML = `Last Updated: ${data.LastUpdated.toDate().toLocaleString()}`;
   instance.getElementById("maxParticipants").value = data.MaxParticipants;
-  instance.getElementById(
-    "editOrganizerP"
-  ).value = data.OrganizerName;
+  instance.getElementById("editOrganizerP").value = data.OrganizerName;
 
   instance.getElementById("htmeditor").innerHTML = data.Blurb;
   instance.getElementById("send").addEventListener("click", () => {
+    document.getElementById("progress").style.display = "block";
     addEvent(
       id,
       document.getElementById("title").value,
@@ -261,7 +278,7 @@ function showEditRowEvents(data, id) {
       document.getElementById("cost").value,
       document.getElementById("maxParticipants").value,
       tinymce.activeEditor.getContent(),
-      document.getElementById("editOrganizerP").value,
+      document.getElementById("editOrganizerP").value
     );
   });
   document.getElementById("columnTwoTwo").appendChild(instance);
@@ -320,6 +337,8 @@ function addEvent(
     )
     .then((docRef) => {
       document.getElementById("progress").value = 100;
+      document.getElementById("uploading").innerHTML =
+        "Changes Saved. Refresh page to see updated information.";
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
