@@ -249,9 +249,21 @@ function showEditRowEvents(data, id) {
   instance.getElementById("maxParticipants").value = data.MaxParticipants;
   instance.getElementById(
     "editOrganizerP"
-  ).value = `Organizer: ${data.OrganizerName}`;
+  ).value = data.OrganizerName;
 
   instance.getElementById("htmeditor").innerHTML = data.Blurb;
+  instance.getElementById("send").addEventListener("click", () => {
+    addEvent(
+      id,
+      document.getElementById("title").value,
+      document.getElementById("location").value,
+      document.getElementById("dt").value,
+      document.getElementById("cost").value,
+      document.getElementById("maxParticipants").value,
+      tinymce.activeEditor.getContent(),
+      document.getElementById("editOrganizerP").value,
+    );
+  });
   document.getElementById("columnTwoTwo").appendChild(instance);
   tinymce.init({
     selector: "#htmeditor",
@@ -284,8 +296,7 @@ function addEvent(
   cost,
   max,
   blurb,
-  poster,
-  charityName,
+  charityName
   // hash
 ) {
   // console.log(hash);
@@ -293,17 +304,20 @@ function addEvent(
     .firestore()
     .collection("upcomingEvents")
     .doc(did)
-    .set({
-      Name: title,
-      MaxParticipants: parseInt(max),
-      Blurb: blurb.toString(),
-      Cost: parseInt(cost),
-      DateTime: new Date(Date.parse(dt)),
-      Location: loc.toString(),
-      LastUpdated: new Date(Date.now()),
-      OrganizerName: charityName.toString(),
-      // MainHash: hash.toString(),
-    }, {merge: true})
+    .set(
+      {
+        Name: title,
+        MaxParticipants: parseInt(max),
+        Blurb: blurb.toString(),
+        Cost: parseInt(cost),
+        DateTime: new Date(Date.parse(dt)),
+        Location: loc.toString(),
+        LastUpdated: new Date(Date.now()),
+        OrganizerName: charityName.toString(),
+        // MainHash: hash.toString(),
+      },
+      { merge: true }
+    )
     .then((docRef) => {
       document.getElementById("progress").value = 100;
     })
