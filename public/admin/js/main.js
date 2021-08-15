@@ -285,9 +285,7 @@ function addEvent(
   max,
   blurb,
   poster,
-  uid,
   charityName,
-  dim
   // hash
 ) {
   // console.log(hash);
@@ -303,14 +301,11 @@ function addEvent(
       DateTime: new Date(Date.parse(dt)),
       Location: loc.toString(),
       LastUpdated: new Date(Date.now()),
-      OrganizerID: uid.toString(),
       OrganizerName: charityName.toString(),
-      ImageDim: parseFloat(dim),
       // MainHash: hash.toString(),
     }, {merge: true})
     .then((docRef) => {
-      console.log("Document written with ID: ", did);
-      uploadFile(poster, did);
+      document.getElementById("progress").value = 100;
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
