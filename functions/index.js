@@ -1052,6 +1052,7 @@ exports.refundSingleTransaction = functions.https.onCall(
 exports.documentWriteListener = functions.firestore
   .document("upcomingEvents/{documentUid}")
   .onWrite((change, context) => {
+    var db = admin.firestore();
     var docRef = "admin/counters";
     if (!change.before.exists) {
       // New document Created : add one to count
