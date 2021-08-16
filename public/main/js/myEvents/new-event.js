@@ -68,6 +68,7 @@ var initApp = function () {
                 document
                   .getElementById("send")
                   .addEventListener("click", function () {
+                    document.getElementById("send").disabled = true;
                     var blurb = tinymce.get("htmeditor").getContent();
                     var title = document.getElementById("title").value;
                     var loc = document.getElementById("location").value;
@@ -99,9 +100,13 @@ var initApp = function () {
                         alert(
                           "Please wait for the image to finish loading, then try again."
                         );
+                        document.getElementById("send").disabled = false;
+      document.getElementById("progress").value = 0;
                       }
                     } else {
                       alert("No file chosen");
+                      document.getElementById("send").disabled = false;
+      document.getElementById("progress").value = 0;
                     }
                   });
               }
@@ -170,6 +175,8 @@ function addEvent(
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
+      document.getElementById("send").disabled = false;
+      document.getElementById("progress").value = 0;
     });
 }
 
@@ -192,7 +199,9 @@ function uploadFile(file, name) {
     },
 
     function error() {
-      alert("error uploading file");
+      alert("error uploading file. Please refresh the page and try again.");
+      document.getElementById("send").disabled = false;
+      document.getElementById("progress").value = 0;
     },
 
     function complete() {
@@ -235,5 +244,8 @@ function getDownloadURLOfImg(docID) {
     })
     .catch((error) => {
       // Handle any errors
+      alert("Whoops, something came up. Relaod the page and try again in a few minutes.");
+      document.getElementById("send").disabled = false;
+      document.getElementById("progress").value = 0;
     });
 }
