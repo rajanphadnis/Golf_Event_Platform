@@ -50,56 +50,58 @@
     </template>
     <template id="eventHeader">
         <h1 id="eventListHeaderH1"></h1>
-        <input type="text" id="eventSearchInput" name="eventSearchInput">
-        <button id="eventHeaderSearch">Search By Name</button>
+        <div style="display: flex;flex-direction: row;justify-content: center;">
+            <input style="width:50%" type="text" id="eventSearchInput" name="eventSearchInput">
+            <button style="width:25%" id="eventHeaderSearch">Search By Name</button>
+        </div>
     </template>
     <template id="eventInfo">
-            <label for="title">Event Title:</label>
-            <input type="text" id="title" name="title">
-            <br />
-            <br />
-            <label for="location">Location</label>
-            <input type="text" id="location" name="location">
-            <br />
-            <br />
-            <p id="editImageURLP"></p>
-            <!-- <label for="files">Upload Poster:</label>
+        <label for="title">Event Title:</label>
+        <input type="text" id="title" name="title">
+        <br />
+        <br />
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location">
+        <br />
+        <br />
+        <p id="editImageURLP"></p>
+        <!-- <label for="files">Upload Poster:</label>
             <input type="file" id="files" accept=".jpg" />
             <div id="loadingFile">Loading...</div><br/> -->
-            <br />
-            <label for="dt">Event Date and Time:</label>
-            <input type="datetime-local" id="dt" name="dt">
-            <br />
-            <br />
-            <label for="cost">Cost in Cents per person:</label>
-            <input type="number" id="cost" name="cost" min="1">
-            <br />
-            <br />
-            <label for="maxParticipants">Maximum number of participants:</label>
-            <input type="number" id="maxParticipants" name="maxParticipants" min="1">
-            <br />
-            <br />
-            
-            <!-- <br />
-            <br /> -->
-            <label for="htmeditor">Event Blurb/Description:</label>
-            <textarea id="htmeditor"></textarea>
-            <!-- <script src="https://htmeditor.com/js/htmeditor.min.js" htmeditor_textarea="htmeditor" full_screen="no"
-            editor_height="400" run_local="no"> </script> -->
-            <br />
-            <br />
-            <br />
-            <br />
-            <label for="editOrganizerP">Organizer:</label>
-            <input type="text" id="editOrganizerP" name="editOrganizerP" min="1">
-            <p id="editLastUpdatedP"></p>
+        <br />
+        <label for="dt">Event Date and Time:</label>
+        <input type="datetime-local" id="dt" name="dt">
+        <br />
+        <br />
+        <label for="cost">Cost in Cents per person:</label>
+        <input type="number" id="cost" name="cost" min="1">
+        <br />
+        <br />
+        <label for="maxParticipants">Maximum number of participants:</label>
+        <input type="number" id="maxParticipants" name="maxParticipants" min="1">
+        <br />
+        <br />
 
-            <button id="send">Save Changes</button>
-            <p id="uploading"></p>
-            <progress value="0" max="100" id="progress"></progress>
-            <br />
-            <br />
-            <img id="preIMG" />
+        <!-- <br />
+            <br /> -->
+        <label for="htmeditor">Event Blurb/Description:</label>
+        <textarea id="htmeditor"></textarea>
+        <!-- <script src="https://htmeditor.com/js/htmeditor.min.js" htmeditor_textarea="htmeditor" full_screen="no"
+            editor_height="400" run_local="no"> </script> -->
+        <br />
+        <br />
+        <br />
+        <br />
+        <label for="editOrganizerP">Organizer:</label>
+        <input type="text" id="editOrganizerP" name="editOrganizerP" min="1">
+        <p id="editLastUpdatedP"></p>
+
+        <button id="send">Save Changes</button>
+        <p id="uploading"></p>
+        <progress value="0" max="100" id="progress"></progress>
+        <br />
+        <br />
+        <img id="preIMG" />
     </template>
     <p id="loadingMessage"></p>
     <div id="mainBody">
