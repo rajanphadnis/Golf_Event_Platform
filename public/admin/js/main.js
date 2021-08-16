@@ -137,6 +137,36 @@ function initEvents() {
           ).innerHTML = `Total # of Events: ${
             counterDoc.data().upcomingEvents
           }`;
+          headerInstance
+            .getElementById("eventHeaderSearch")
+            .addEventListener("click", () => {
+              var searchQ = document.getElementById("eventSearchInput").value;
+              var db = firebase.firestore();
+              db.collection("upcomingEvents")
+                .where("Name", "==", searchQ)
+                .get()
+                .then((searchDocs) => {
+                  document.getElementById("listColumn").innerHTML = "";
+                  document.getElementById("cancelSearch").style.display = "block";
+                  searchDocs.forEach((doc) => {
+                    const instance = document.importNode(
+                      document.getElementById("eventCookieCutter").content,
+                      true
+                    );
+                    instance.querySelector(".eventTitle").innerHTML =
+                      doc.data().Name;
+                    instance.querySelector(".eventDate").innerHTML = doc
+                      .data()
+                      .DateTime.toDate()
+                      .toLocaleString();
+                    instance.querySelector(".eventTemplateButton").onclick =
+                      function () {
+                        showEditRowEvents(doc.data(), doc.id);
+                      };
+                    document.getElementById("listColumn").appendChild(instance);
+                  });
+                });
+            });
           div1.appendChild(headerInstance);
           snap.docs.forEach((doc) => {
             const instance = document.importNode(
