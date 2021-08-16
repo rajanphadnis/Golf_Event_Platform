@@ -1057,13 +1057,13 @@ exports.documentWriteListener = functions.firestore
     if (!change.before.exists) {
       // New document Created : add one to count
 
-      db.doc(docRef).update({ upcomingEvents: FieldValue.increment(1) });
+      db.doc(docRef).update({ upcomingEvents: admin.firestore.FieldValue.increment(1) });
     } else if (change.before.exists && change.after.exists) {
       // Updating existing document : Do nothing
     } else if (!change.after.exists) {
       // Deleting document : subtract one from count
 
-      db.doc(docRef).update({ upcomingEvents: FieldValue.increment(-1) });
+      db.doc(docRef).update({ upcomingEvents: admin.firestore.FieldValue.increment(-1) });
     }
 
     return true;
