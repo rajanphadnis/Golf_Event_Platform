@@ -252,17 +252,17 @@ function initLegal() {
         document.getElementById("legalTemplate").content,
         true
       );
-      document.getElementById("legalAgreement").innerHTML =
+      instance1.getElementById("legalAgreement").innerHTML =
         adminDoc.data().eventRegistrationAgreement;
       tinymce.init({
-        selector: "#htmeditor",
+        selector: "#legalAgreement",
       });
-      columnTwo.appendChild(instance1);
-      document.getElementById("legalSave").addEventListener("click", () => {
+      instance1.getElementById("legalSave").addEventListener("click", () => {
         db.collection("admin").doc("generalPageInfo").update({
           eventRegistrationAgreement: tinymce.activeEditor.getContent(),
         });
       });
+      columnTwo.appendChild(instance1);
     });
 }
 
