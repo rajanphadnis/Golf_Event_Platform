@@ -181,7 +181,7 @@ function initPay() {
       var note = document.createElement("p");
       note.innerHTML =
         "Note: Changing these settings will only apply to NEW transactions and users.</br>Example: Subscriptions are diabled when a user signs up.</br>You then turn on Subscriptions. That user will not have to pay a subscription fee to continue to view the site.</br>Any new user will have to pay for a subscription to access the site.";
-        mainCol.appendChild(note);
+      mainCol.appendChild(note);
       const instance1 = document.importNode(
         document.getElementById("payTemplate").content,
         true
@@ -241,19 +241,28 @@ function initPay() {
 
 function initLegal() {
   columnTwo = document.getElementById("columnTwo");
-  columnTwo.innerHTML = "LEGAL EDITOR";
+  columnTwo.innerHTML = "";
   var db = firebase.firestore();
   document.getElementById("legalSave").addEventListener("click", () => {
     db.collection("admin").doc("generalPageInfo").update({
       eventRegistrationAgreement: tinymce.activeEditor.getContent(),
     });
   });
-  db.collection("admin").doc("generalPageInfo").get().then((adminDoc) => {
-    document.getElementById("legalAgreement").innerHTML = adminDoc.data().eventRegistrationAgreement;
-    tinymce.init({
-      selector: "#htmeditor",
+  db.collection("admin")
+    .doc("generalPageInfo")
+    .get()
+    .then((adminDoc) => {
+      const instance1 = document.importNode(
+        document.getElementById("legalTemplate").content,
+        true
+      );
+      document.getElementById("legalAgreement").innerHTML =
+        adminDoc.data().eventRegistrationAgreement;
+      tinymce.init({
+        selector: "#htmeditor",
+      });
+      columnTwo.appendChild(instance1);
     });
-  });
 }
 
 function initCost() {
