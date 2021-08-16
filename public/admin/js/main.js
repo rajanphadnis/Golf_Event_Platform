@@ -257,9 +257,16 @@ function initLegal() {
         adminDoc.data().eventRegistrationAgreement;
 
       instance1.getElementById("legalSave").addEventListener("click", () => {
-        db.collection("admin").doc("generalPageInfo").update({
-          eventRegistrationAgreement: tinymce.activeEditor.getContent(),
-        });
+        db.collection("admin")
+          .doc("generalPageInfo")
+          .update({
+            eventRegistrationAgreement: tinymce.activeEditor.getContent(),
+          })
+          .then((f) => {
+            document.getElementById(
+              "saveStatus"
+            ).innerHTML = `Last Saved at ${formatCurrentTime()}`;
+          });
       });
       mainCol.appendChild(instance1);
       columnTwo.appendChild(mainCol);
@@ -424,4 +431,13 @@ function handle(e) {
     e.preventDefault(); // Ensure it is only this code that runs
     searchFxn();
   }
+}
+
+function formatCurrentTime() {
+  var hours = new Date().getHours();
+  var mins = new Date().getMinutes().toString().padStart(2, "0");
+  var seconds = new Date().getSeconds().toString().padStart(2, "0");
+  var actualHrs = hours > 12 ? hours - 12 : hours;
+  var ending = hours > 12 ? "PM" : "AM";
+  return `${actualHrs}:${mins}:${seconds} ${ending}`;
 }
