@@ -243,7 +243,8 @@ function initLegal() {
   columnTwo = document.getElementById("columnTwo");
   columnTwo.innerHTML = "";
   var db = firebase.firestore();
-
+  var mainCol = document.createElement("div");
+  mainCol.id = "listColumn";
   db.collection("admin")
     .doc("generalPageInfo")
     .get()
@@ -254,15 +255,17 @@ function initLegal() {
       );
       instance1.getElementById("legalAgreement").innerHTML =
         adminDoc.data().eventRegistrationAgreement;
-      tinymce.init({
-        selector: "#legalAgreement",
-      });
+
       instance1.getElementById("legalSave").addEventListener("click", () => {
         db.collection("admin").doc("generalPageInfo").update({
           eventRegistrationAgreement: tinymce.activeEditor.getContent(),
         });
       });
-      columnTwo.appendChild(instance1);
+      mainCol.appendChild(instance1);
+      columnTwo.appendChild(mainCol);
+      tinymce.init({
+        selector: "#legalAgreement",
+      });
     });
 }
 
