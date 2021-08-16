@@ -119,6 +119,8 @@ function initEvents() {
       columnTwo.innerHTML = "";
       const div1 = document.createElement("div");
       div1.id = "columnTwoOne";
+      const div3 = document.createElement("div");
+      div3.id = "listColumn";
       var div2 = document.createElement("div");
       div2.id = "columnTwoTwo";
       div2.innerHTML = "TWOOO";
@@ -150,8 +152,9 @@ function initEvents() {
               function () {
                 showEditRowEvents(doc.data(), doc.id);
               };
-            div1.appendChild(instance);
+            div3.appendChild(instance);
           });
+          div1.appendChild(div3);
           columnTwo.appendChild(div1);
           columnTwo.appendChild(div2);
         });

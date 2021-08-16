@@ -137,6 +137,16 @@ button:hover .button-text {
   justify-content: flex-start;
 }
 
+#listColumn {
+  max-width: 100%;
+  width: 100%;
+  min-width: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
 #columnTwoTwo {
   max-width: 50%;
   width: 50%;
