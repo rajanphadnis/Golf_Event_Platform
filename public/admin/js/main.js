@@ -242,6 +242,18 @@ function initPay() {
 function initLegal() {
   columnTwo = document.getElementById("columnTwo");
   columnTwo.innerHTML = "LEGAL EDITOR";
+  var db = firebase.firestore();
+  document.getElementById("legalSave").addEventListener("click", () => {
+    db.collection("admin").doc("generalPageInfo").update({
+      eventRegistrationAgreement: tinymce.activeEditor.getContent(),
+    });
+  });
+  db.collection("admin").doc("generalPageInfo").get().then((adminDoc) => {
+    document.getElementById("legalAgreement").innerHTML = adminDoc.data().eventRegistrationAgreement;
+    tinymce.init({
+      selector: "#htmeditor",
+    });
+  });
 }
 
 function initCost() {
