@@ -123,7 +123,7 @@ function initEvents() {
       div3.id = "listColumn";
       var div2 = document.createElement("div");
       div2.id = "columnTwoTwo";
-      div2.innerHTML = "TWOOO";
+      div2.innerHTML = "Select or search for an event on the left.";
       db.collection("admin")
         .doc("counters")
         .get()
