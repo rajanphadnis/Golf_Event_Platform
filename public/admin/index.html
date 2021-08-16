@@ -11,25 +11,9 @@
     <script src="/__/firebase/init.js?useEmulator=true"></script>
     <link rel="stylesheet" href="/css/main.css" />
     <script src="/js/tinymce/js/tinymce/tinymce.min.js"></script>
-    <!-- <script type="text/javascript">
-        tinymce.init({
-            selector: '#htmeditor'
-        });
-    </script> -->
 </head>
 
 <body>
-    <!-- <template id="eventEdit">
-        <p id="editNameP"></p>
-        <p id="editDateP"></p>
-        <p id="editCostP"></p>
-        <p id="editLocationP"></p>
-        <p id="editMaxParticipantsP"></p>
-        <p id="editBlurbP"></p>
-        <p id="editImageURLP"></p>
-        <p id="editOrganizerP"></p>
-        <p id="editLastUpdatedP"></p>
-    </template> -->
     <template id="eventCookieCutter">
         <button class="eventTemplateButton">
             <p class="eventTitle"></p>
@@ -50,11 +34,11 @@
     </template>
     <template id="eventHeader">
         <h1 id="eventListHeaderH1"></h1>
-        <div style="display: flex;flex-direction: row;justify-content: center;margin-bottom: 30px;">
-            <input style="width:50%" type="text" id="eventSearchInput" name="eventSearchInput">
-            <button style="width:25%" id="eventHeaderSearch">Search By Name</button>
+        <div style="display: flex;flex-direction: row;justify-content: center;">
+            <input style="width:50%" type="text" id="eventSearchInput" name="eventSearchInput" onkeypress="handle(event)">
+            <button style="width:fit-content;" id="eventHeaderSearch">Search By Name</button>
         </div>
-        <button style="display: none;width: 10%;" id="cancelSearch" onclick="navigate('events')">Close Search</button>
+        <button style="display: none;width: 10%;margin-bottom: 30px;" id="cancelSearch" onclick="navigate('events')">Close Search</button>
     </template>
     <template id="eventInfo">
         <label for="title">Event Title:</label>
@@ -79,13 +63,8 @@
         <input type="number" id="maxParticipants" name="maxParticipants" min="1">
         <br />
         <br />
-
-        <!-- <br />
-            <br /> -->
         <label for="htmeditor">Event Blurb/Description:</label>
         <textarea id="htmeditor"></textarea>
-        <!-- <script src="https://htmeditor.com/js/htmeditor.min.js" htmeditor_textarea="htmeditor" full_screen="no"
-            editor_height="400" run_local="no"> </script> -->
         <br />
         <br />
         <br />
@@ -93,7 +72,6 @@
         <label for="editOrganizerP">Organizer:</label>
         <input type="text" id="editOrganizerP" name="editOrganizerP" min="1">
         <p id="editLastUpdatedP"></p>
-
         <button id="send">Save Changes</button>
         <p id="uploading"></p>
         <progress value="0" max="100" id="progress"></progress>

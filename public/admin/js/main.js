@@ -140,32 +140,7 @@ function initEvents() {
           headerInstance
             .getElementById("eventHeaderSearch")
             .addEventListener("click", () => {
-              var searchQ = document.getElementById("eventSearchInput").value;
-              var db = firebase.firestore();
-              db.collection("upcomingEvents")
-                .where("Name", "==", searchQ)
-                .get()
-                .then((searchDocs) => {
-                  document.getElementById("listColumn").innerHTML = "";
-                  document.getElementById("cancelSearch").style.display = "block";
-                  searchDocs.forEach((doc) => {
-                    const instance = document.importNode(
-                      document.getElementById("eventCookieCutter").content,
-                      true
-                    );
-                    instance.querySelector(".eventTitle").innerHTML =
-                      doc.data().Name;
-                    instance.querySelector(".eventDate").innerHTML = doc
-                      .data()
-                      .DateTime.toDate()
-                      .toLocaleString();
-                    instance.querySelector(".eventTemplateButton").onclick =
-                      function () {
-                        showEditRowEvents(doc.data(), doc.id);
-                      };
-                    document.getElementById("listColumn").appendChild(instance);
-                  });
-                });
+              searchFxn();
             });
           div1.appendChild(headerInstance);
           snap.docs.forEach((doc) => {
@@ -376,4 +351,49 @@ function addEvent(
     .catch((error) => {
       console.error("Error adding document: ", error);
     });
+}
+
+function searchFxn() {
+  var searchQ = document.getElementById("eventSearchInput").value;
+  var db = firebase.firestore();
+  db.collection("upcomingEvents")
+    .where("Name", "==", searchQ)
+    .get()
+    .then((searchDocs) => {
+      var dLengths = 0;
+      document.getElementById("listColumn").innerHTML = "";
+      document.getElementById("cancelSearch").style.display = "block";
+      searchDocs.forEach((doc) => {
+        dLengths += 1;
+        const instance = document.importNode(
+          document.getElementById("eventCookieCutter").content,
+          true
+        );
+        instance.querySelector(".eventTitle").innerHTML = doc.data().Name;
+        instance.querySelector(".eventDate").innerHTML = doc
+          .data()
+          .DateTime.toDate()
+          .toLocaleString();
+        instance.querySelector(".eventTemplateButton").onclick = function () {
+          showEditRowEvents(doc.data(), doc.id);
+        };
+        document.getElementById("listColumn").appendChild(instance);
+      });
+      if (dLengths == 0) {
+        document.getElementById("listColumn").innerHTML =
+          "No Results Found. Only Exact Matches Will Be Shown.";
+      }
+      try {
+        document.getElementById("listColumn").childNodes[0].click();
+      } catch (e) {
+        console.log("no search results");
+      }
+    });
+}
+
+function handle(e) {
+  if (e.keyCode === 13) {
+    e.preventDefault(); // Ensure it is only this code that runs
+    searchFxn();
+  }
 }
