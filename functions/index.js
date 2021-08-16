@@ -1049,7 +1049,7 @@ exports.refundSingleTransaction = functions.https.onCall(
   }
 );
 
-export const documentWriteListener = functions.firestore
+exports.documentWriteListener = functions.firestore
   .document("upcomingEvents/{documentUid}")
   .onWrite((change, context) => {
     var docRef = "admin/counters";
@@ -1065,5 +1065,5 @@ export const documentWriteListener = functions.firestore
       db.doc(docRef).update({ upcomingEvents: FieldValue.increment(-1) });
     }
 
-    return;
+    return true;
   });
