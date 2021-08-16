@@ -384,9 +384,9 @@ function searchFxn() {
           "No Results Found. Only Exact Matches Will Be Shown.";
       }
       try {
-        document.getElementById("listColumn").childNodes[0].click();
+        document.getElementById("listColumn").firstElementChild.click();
       } catch (e) {
-        console.log("no search results");
+        console.log(e);
       }
     });
 }
