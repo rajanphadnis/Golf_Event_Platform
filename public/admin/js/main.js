@@ -243,11 +243,7 @@ function initLegal() {
   columnTwo = document.getElementById("columnTwo");
   columnTwo.innerHTML = "";
   var db = firebase.firestore();
-  document.getElementById("legalSave").addEventListener("click", () => {
-    db.collection("admin").doc("generalPageInfo").update({
-      eventRegistrationAgreement: tinymce.activeEditor.getContent(),
-    });
-  });
+
   db.collection("admin")
     .doc("generalPageInfo")
     .get()
@@ -262,6 +258,11 @@ function initLegal() {
         selector: "#htmeditor",
       });
       columnTwo.appendChild(instance1);
+      document.getElementById("legalSave").addEventListener("click", () => {
+        db.collection("admin").doc("generalPageInfo").update({
+          eventRegistrationAgreement: tinymce.activeEditor.getContent(),
+        });
+      });
     });
 }
 
