@@ -143,7 +143,7 @@ function initUsers() {
             );
             instance.querySelector(".userTitle").innerHTML = doc.data().name;
             instance.querySelector(".userType").innerHTML =
-              doc.data().accountType;
+              doc.data().accountType.toUpperCase();
             instance.querySelector(".userTemplateButton").onclick =
               function () {
                 showEditRowUsers(doc.data(), doc.id);
