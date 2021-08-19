@@ -104,7 +104,57 @@ function navigate(page) {
 
 function initUsers() {
   columnTwo = document.getElementById("columnTwo");
-  columnTwo.innerHTML = "USERS";
+  columnTwo.innerHTML = "LOADING...";
+  var db = firebase.firestore();
+  db.collection("users")
+    .orderBy("accountCreated")
+    .limit(10)
+    .get()
+    .then((snap) => {
+      columnTwo.innerHTML = "";
+      const div1 = document.createElement("div");
+      div1.id = "columnTwoOne";
+      const div3 = document.createElement("div");
+      div3.id = "listColumn";
+      var div2 = document.createElement("div");
+      div2.id = "columnTwoTwo";
+      div2.innerHTML = "Select or search for a user on the left.";
+      db.collection("admin")
+        .doc("counters")
+        .get()
+        .then((counterDoc) => {
+          const headerInstance = document.importNode(
+            document.getElementById("userHeader").content,
+            true
+          );
+          headerInstance.getElementById(
+            "userListHeaderH1"
+          ).innerHTML = `Total # of Users: ${counterDoc.data().users}`;
+          headerInstance
+            .getElementById("userHeaderSearch")
+            .addEventListener("click", () => {
+              searchUsers();
+            });
+          div1.appendChild(headerInstance);
+          snap.docs.forEach((doc) => {
+            const instance = document.importNode(
+              document.getElementById("userCookieCutter").content,
+              true
+            );
+            instance.querySelector(".userTitle").innerHTML = doc.data().name;
+            instance.querySelector(".userType").innerHTML =
+              doc.data().accountType;
+            instance.querySelector(".userTemplateButton").onclick =
+              function () {
+                showEditRowUsers(doc.data(), doc.id);
+              };
+            div3.appendChild(instance);
+          });
+          div1.appendChild(div3);
+          columnTwo.appendChild(div1);
+          columnTwo.appendChild(div2);
+        });
+    });
 }
 
 function initEvents() {
@@ -140,7 +190,7 @@ function initEvents() {
           headerInstance
             .getElementById("eventHeaderSearch")
             .addEventListener("click", () => {
-              searchFxn();
+              searchUsers();
             });
           div1.appendChild(headerInstance);
           snap.docs.forEach((doc) => {
@@ -331,6 +381,39 @@ function showEditRowEvents(data, id) {
   // tinymce.get("htmeditor").setContent(data.Blurb);
 }
 
+function showEditRowUsers(data, id) {
+  try {
+    tinymce.activeEditor.destroy();
+  } catch (e) {
+    console.log("tiny destroy no object");
+  }
+  document.getElementById("columnTwoTwo").innerHTML = "";
+  const instance = document.importNode(
+    document.getElementById("userInfo").content,
+    true
+  );
+  instance.getElementById("name").value = data.name;
+  instance.getElementById("dt").value = convertFBDateToJS(data.accountCreated);
+  instance.getElementById("email").value = data.email;
+  instance.getElementById("acctType").value = data.accountType;
+  instance.getElementById(
+    "stripe"
+  ).innerHTML = `Stripe Customer ID: <a target="_blank" href="https://dashboard.stripe.com/customers/${data.stripeCustomerID}">${data.stripeCustomerID}</a>`;
+  instance.getElementById("id").innerHTML = `User ID: ${id}`;
+  instance.getElementById("send").addEventListener("click", () => {
+    document.getElementById("progress").style.display = "block";
+    updateUser(
+      id,
+      document.getElementById("name").value,
+      document.getElementById("dt").value,
+      document.getElementById("email").value,
+      document.getElementById("acctType").value,
+      data.stripeCustomerID
+    );
+  });
+  document.getElementById("columnTwoTwo").appendChild(instance);
+}
+
 function convertFBDateToJS(date) {
   var date = new Date(date.seconds * 1000);
   var day = date.getDate(),
@@ -388,6 +471,28 @@ function addEvent(
     });
 }
 
+function updateUser(id, name, date, email, acctType, stripe) {
+  firebase
+    .firestore()
+    .collection("users")
+    .doc(id)
+    .update({
+      name: name,
+      accountCreated: new Date(Date.parse(date)),
+      email: email,
+      accountType: acctType,
+      stripeCustomerID: stripe,
+    })
+    .then((docRef) => {
+      document.getElementById("progress").value = 100;
+      document.getElementById("uploading").innerHTML =
+        "Changes Saved. Refresh page to see updated information.";
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+    });
+}
+
 function searchFxn() {
   var searchQ = document.getElementById("eventSearchInput").value;
   var db = firebase.firestore();
@@ -426,10 +531,52 @@ function searchFxn() {
     });
 }
 
+function searchUsers() {
+  var searchQ = document.getElementById("userSearchInput").value;
+  var db = firebase.firestore();
+  db.collection("users")
+    .where("name", "==", searchQ)
+    .get()
+    .then((searchDocs) => {
+      var dLengths = 0;
+      document.getElementById("listColumn").innerHTML = "";
+      document.getElementById("cancelSearch").style.display = "block";
+      searchDocs.forEach((doc) => {
+        dLengths += 1;
+        const instance = document.importNode(
+          document.getElementById("userCookieCutter").content,
+          true
+        );
+        instance.querySelector(".userTitle").innerHTML = doc.data().name;
+        instance.querySelector(".userType").innerHTML = doc.data().accountType;
+        instance.querySelector(".userTemplateButton").onclick = function () {
+          showEditRowUsers(doc.data(), doc.id);
+        };
+        document.getElementById("listColumn").appendChild(instance);
+      });
+      if (dLengths == 0) {
+        document.getElementById("listColumn").innerHTML =
+          "No Results Found. Only Exact Matches Will Be Shown.";
+      }
+      try {
+        document.getElementById("listColumn").firstElementChild.click();
+      } catch (e) {
+        console.log(e);
+      }
+    });
+}
+
 function handle(e) {
   if (e.keyCode === 13) {
     e.preventDefault(); // Ensure it is only this code that runs
     searchFxn();
+  }
+}
+
+function userHandle(e) {
+  if (e.keyCode === 13) {
+    e.preventDefault(); // Ensure it is only this code that runs
+    searchUsers();
   }
 }
 

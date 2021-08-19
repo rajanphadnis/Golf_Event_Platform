@@ -174,3 +174,8 @@ button:hover .button-text {
   margin: 5px auto 5px auto;
   width: fit-content;
 }
+
+.userTemplateButton {
+  margin: 5px auto 5px auto;
+  width: fit-content;
+}
