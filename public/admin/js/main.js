@@ -407,8 +407,7 @@ function showEditRowUsers(data, id) {
       document.getElementById("name").value,
       document.getElementById("dt").value,
       document.getElementById("email").value,
-      document.getElementById("acctType").value,
-      data.stripeCustomerID
+      document.getElementById("acctType").value
     );
   });
   document.getElementById("columnTwoTwo").appendChild(instance);
@@ -471,7 +470,7 @@ function addEvent(
     });
 }
 
-function updateUser(id, name, date, email, acctType, stripe) {
+function updateUser(id, name, date, email, acctType) {
   firebase
     .firestore()
     .collection("users")
@@ -481,7 +480,6 @@ function updateUser(id, name, date, email, acctType, stripe) {
       accountCreated: new Date(Date.parse(date)),
       email: email,
       accountType: acctType,
-      stripeCustomerID: stripe,
     })
     .then((docRef) => {
       document.getElementById("progress").value = 100;

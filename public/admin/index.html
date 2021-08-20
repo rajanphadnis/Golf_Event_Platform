@@ -48,7 +48,7 @@
         <h1 id="eventListHeaderH1"></h1>
         <div style="display: flex;flex-direction: row;justify-content: center;">
             <input style="width:50%" type="text" id="eventSearchInput" name="eventSearchInput"
-                onkeypress="handle(event)">
+                onkeypress="handle(event)" autocomplete="off">
             <button style="width:fit-content;" id="eventHeaderSearch">Search By Name</button>
         </div>
         <button style="display: none;width: 10%;margin-top:10px;margin-left: auto;margin-right: auto;" id="cancelSearch"
@@ -57,7 +57,7 @@
     <template id="userHeader">
         <h1 id="userListHeaderH1"></h1>
         <div style="display: flex;flex-direction: row;justify-content: center;">
-            <input style="width:50%" type="text" id="userSearchInput" name="userSearchInput" onkeypress="userHandle(event)">
+            <input style="width:50%" type="text" id="userSearchInput" name="userSearchInput" onkeypress="userHandle(event)" autocomplete="off">
             <button style="width:fit-content;" id="userHeaderSearch">Search By Name</button>
         </div>
         <button style="display: none;width: 10%;margin-top:10px;margin-left: auto;margin-right: auto;" id="cancelSearch"
@@ -65,25 +65,25 @@
     </template>
     <template id="eventInfo">
         <label for="title">Event Title:</label>
-        <input type="text" id="title" name="title">
+        <input type="text" id="title" name="title" autocomplete="off">
         <br />
         <br />
         <label for="location">Location</label>
-        <input type="text" id="location" name="location">
+        <input type="text" id="location" name="location" autocomplete="off">
         <br />
         <br />
         <p id="editImageURLP"></p>
         <br />
         <label for="dt">Event Date and Time:</label>
-        <input type="datetime-local" id="dt" name="dt">
+        <input type="datetime-local" id="dt" name="dt" autocomplete="off">
         <br />
         <br />
         <label for="cost">Cost in Cents per person:</label>
-        <input type="number" id="cost" name="cost" min="1">
+        <input type="number" id="cost" name="cost" min="1" autocomplete="off">
         <br />
         <br />
         <label for="maxParticipants">Maximum number of participants:</label>
-        <input type="number" id="maxParticipants" name="maxParticipants" min="1">
+        <input type="number" id="maxParticipants" name="maxParticipants" min="1" autocomplete="off">
         <br />
         <br />
         <label for="htmeditor">Event Blurb/Description:</label>
@@ -93,7 +93,7 @@
         <br />
         <br />
         <label for="editOrganizerP">Organizer:</label>
-        <input type="text" id="editOrganizerP" name="editOrganizerP" min="1">
+        <input type="text" id="editOrganizerP" name="editOrganizerP" min="1" autocomplete="off">
         <p id="editLastUpdatedP"></p>
         <button id="send">Save Changes</button>
         <p id="uploading"></p>
@@ -104,15 +104,15 @@
     </template>
     <template id="userInfo">
         <label for="name">Full Name:</label>
-        <input type="text" id="name" name="name">
+        <input type="text" id="name" name="name" autocomplete="off">
         <br />
         <br />
         <label for="dt">Account Created:</label>
-        <input type="datetime-local" id="dt" name="dt">
+        <input type="datetime-local" id="dt" name="dt" autocomplete="off">
         <br />
         <br />
         <label for="email">Email Address:</label>
-        <input type="text" id="email" name="email">
+        <input type="text" id="email" name="email" autocomplete="off">
         <br />
         <br />
         <label for="acctType">Account Type:</label>
@@ -141,7 +141,7 @@
             <button class="tabButton" onclick="navigate('events');">Events</button>
             <button class="tabButton" onclick="navigate('pay');">Payment Management</button>
             <button class="tabButton" onclick="navigate('legal');">Legal</button>
-            <button class="tabButton" onclick="navigate('cost');">Total Cost</button>
+            <!-- <button class="tabButton" onclick="navigate('cost');">Total Cost</button> -->
             <button class="tabButton" onclick="navigate('stats');">Statistics</button>
             <button class="tabButton" onclick="navigate('openSite')">Open Site</button>
             <button class="tabButton" onclick="navigate('openStripe')">Open Stripe Dashboard</button>
