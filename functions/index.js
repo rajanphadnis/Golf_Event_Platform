@@ -631,14 +631,16 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
   const stripe = require("stripe")(
     "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
   );
-
-  if (customerID == "null") {
-    if (trialPeriod) {
-      db.collection("admin")
-        .doc("general")
-        .get()
-        .then(async (adminDoc) => {
-          var trialLength = adminDoc.data().trialPeriod;
+  db.collection("admin")
+    .doc("general")
+    .get()
+    .then(async (adminDoc) => {
+      return adminDoc.data().trialPeriod;
+    })
+    .then((trialLength) => {
+      if (customerID == "null") {
+        if (trialPeriod) {
+          // var trialLength = adminDoc.data().trialPeriod;
           console.log("null customerID, yes trial");
           const session = await stripe.checkout.sessions.create({
             success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
@@ -662,45 +664,49 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
           return {
             returnURL: session.url,
           };
+        } else {
+          console.log("null customerID, no trial");
+          const session = await stripe.checkout.sessions.create({
+            success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
+            cancel_url: backURL,
+            payment_method_types: ["card"],
+            customer_email: userEmail,
+            line_items: [
+              { price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 },
+            ],
+            mode: "subscription",
+            metadata: {
+              userEmail: userEmail.toString(),
+              uID: userUID.toString(),
+              userName: userName.toString(),
+            },
+          });
+          console.log(`session generated: ${session.toString()}`);
+          return {
+            returnURL: session.url,
+          };
+        }
+      } else {
+        const session = await stripe.checkout.sessions.create({
+          success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
+          cancel_url: backURL,
+          payment_method_types: ["card"],
+          customer: customerID,
+          line_items: [
+            { price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 },
+          ],
+          mode: "subscription",
+          metadata: {
+            userEmail: userEmail.toString(),
+            uID: userUID.toString(),
+            userName: userName.toString(),
+          },
         });
-    } else {
-      console.log("null customerID, no trial");
-      const session = await stripe.checkout.sessions.create({
-        success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
-        cancel_url: backURL,
-        payment_method_types: ["card"],
-        customer_email: userEmail,
-        line_items: [{ price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 }],
-        mode: "subscription",
-        metadata: {
-          userEmail: userEmail.toString(),
-          uID: userUID.toString(),
-          userName: userName.toString(),
-        },
-      });
-      console.log(`session generated: ${session.toString()}`);
-      return {
-        returnURL: session.url,
-      };
-    }
-  } else {
-    const session = await stripe.checkout.sessions.create({
-      success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
-      cancel_url: backURL,
-      payment_method_types: ["card"],
-      customer: customerID,
-      line_items: [{ price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 }],
-      mode: "subscription",
-      metadata: {
-        userEmail: userEmail.toString(),
-        uID: userUID.toString(),
-        userName: userName.toString(),
-      },
+        return {
+          returnURL: session.url,
+        };
+      }
     });
-    return {
-      returnURL: session.url,
-    };
-  }
 });
 
 const app = require("express")();
