@@ -631,13 +631,13 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
   const stripe = require("stripe")(
     "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
   );
-  db.collection("admin")
+  return db.collection("admin")
     .doc("general")
     .get()
     .then(async (adminDoc) => {
       return adminDoc.data().trialPeriod;
     })
-    .then((trialLength) => {
+    .then(async (trialLength) => {
       if (customerID == "null") {
         if (trialPeriod) {
           // var trialLength = adminDoc.data().trialPeriod;
