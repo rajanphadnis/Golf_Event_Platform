@@ -631,34 +631,38 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
   const stripe = require("stripe")(
     "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
   );
-  // db.collection("admin")
-  //   .doc("general")
-  //   .get()
-  //   .then(async (adminDoc) => {
-  // var trialLength = adminDoc.data().trialPeriod;
+
   if (customerID == "null") {
     if (trialPeriod) {
-      console.log("null customerID, yes trial");
-      const session = await stripe.checkout.sessions.create({
-        success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
-        cancel_url: backURL,
-        payment_method_types: ["card"],
-        customer_email: userEmail,
-        line_items: [{ price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 }],
-        mode: "subscription",
-        metadata: {
-          userEmail: userEmail.toString(),
-          uID: userUID.toString(),
-          userName: userName.toString(),
-        },
-        subscription_data: {
-          trial_period_days: 30,
-        },
-      });
-      console.log(`session generated: ${session.toString()}`);
-      return {
-        returnURL: session.url,
-      };
+      db.collection("admin")
+        .doc("general")
+        .get()
+        .then(async (adminDoc) => {
+          var trialLength = adminDoc.data().trialPeriod;
+          console.log("null customerID, yes trial");
+          const session = await stripe.checkout.sessions.create({
+            success_url: "https://golf-event-platform--dev-u2suwtdi.web.app/",
+            cancel_url: backURL,
+            payment_method_types: ["card"],
+            customer_email: userEmail,
+            line_items: [
+              { price: "price_1JHGlbB26mRwp60OMAeOZOnb", quantity: 1 },
+            ],
+            mode: "subscription",
+            metadata: {
+              userEmail: userEmail.toString(),
+              uID: userUID.toString(),
+              userName: userName.toString(),
+            },
+            subscription_data: {
+              trial_period_days: trialLength,
+            },
+          });
+          console.log(`session generated: ${session.toString()}`);
+          return {
+            returnURL: session.url,
+          };
+        });
     } else {
       console.log("null customerID, no trial");
       const session = await stripe.checkout.sessions.create({
@@ -697,7 +701,6 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
       returnURL: session.url,
     };
   }
-  // });
 });
 
 const app = require("express")();
@@ -1057,19 +1060,23 @@ exports.documentWriteListener = functions.firestore
     if (!change.before.exists) {
       // New document Created : add one to count
 
-      db.doc(docRef).update({ upcomingEvents: admin.firestore.FieldValue.increment(1) });
+      db.doc(docRef).update({
+        upcomingEvents: admin.firestore.FieldValue.increment(1),
+      });
     } else if (change.before.exists && change.after.exists) {
       // Updating existing document : Do nothing
     } else if (!change.after.exists) {
       // Deleting document : subtract one from count
 
-      db.doc(docRef).update({ upcomingEvents: admin.firestore.FieldValue.increment(-1) });
+      db.doc(docRef).update({
+        upcomingEvents: admin.firestore.FieldValue.increment(-1),
+      });
     }
 
     return true;
   });
 
-  exports.userWriteListener = functions.firestore
+exports.userWriteListener = functions.firestore
   .document("users/{documentUid}")
   .onWrite((change, context) => {
     var db = admin.firestore();
@@ -1083,7 +1090,9 @@ exports.documentWriteListener = functions.firestore
     } else if (!change.after.exists) {
       // Deleting document : subtract one from count
 
-      db.doc(docRef).update({ users: admin.firestore.FieldValue.increment(-1) });
+      db.doc(docRef).update({
+        users: admin.firestore.FieldValue.increment(-1),
+      });
     }
 
     return true;
