@@ -142,8 +142,9 @@ function initUsers() {
               true
             );
             instance.querySelector(".userTitle").innerHTML = doc.data().name;
-            instance.querySelector(".userType").innerHTML =
-              doc.data().accountType.toUpperCase();
+            instance.querySelector(".userType").innerHTML = doc
+              .data()
+              .accountType.toUpperCase();
             instance.querySelector(".userTemplateButton").onclick =
               function () {
                 showEditRowUsers(doc.data(), doc.id);
@@ -228,23 +229,39 @@ function initPay() {
       var mainCol = document.createElement("div");
       mainCol.id = "listColumn";
       columnTwo.innerHTML = "";
-      var note = document.createElement("p");
-      note.innerHTML =
-        "Note: Changing these settings will only apply to NEW transactions and users.</br>Example: Subscriptions are diabled when a user signs up.</br>You then turn on Subscriptions. That user will not have to pay a subscription fee to continue to view the site.</br>Any new user will have to pay for a subscription to access the site.";
-      mainCol.appendChild(note);
       const instance1 = document.importNode(
-        document.getElementById("payTemplate").content,
+        document.getElementById("paymentPage").content,
         true
       );
-      instance1.querySelector(
-        "#labelText"
-      ).innerHTML = `Per Event Payment and Registration: ${
+      mainCol.appendChild(instance1);
+      columnTwo.appendChild(mainCol);
+      document.getElementById("labelTextSub").innerHTML = `Subscription: ${
+        adminDoc.data().enableSubscription ? "Enabled" : "Disabled"
+      }`;
+      document.getElementById("buttonTextSub").innerHTML = `${
+        adminDoc.data().enableSubscription ? "Disable" : "Enable"
+      }`;
+      document.getElementById("actionButtonSub").onclick = function () {
+        columnTwo.innerHTML = "";
+        columnTwo.innerHTML = loader;
+        db.collection("admin")
+          .doc("general")
+          .update({
+            enableSubscription: adminDoc.data().enableSubscription
+              ? false
+              : true,
+          })
+          .then(() => {
+            initPay();
+          });
+      };
+      document.getElementById("labelText").innerHTML = `Per-Event Registration: ${
         adminDoc.data().enablePerEventRegistration ? "Enabled" : "Disabled"
       }`;
-      instance1.querySelector("#buttonText").innerHTML = `${
+      document.getElementById("buttonText").innerHTML = `${
         adminDoc.data().enablePerEventRegistration ? "Disable" : "Enable"
       }`;
-      instance1.querySelector("#actionButton").onclick = function () {
+      document.getElementById("actionButton").onclick = function () {
         columnTwo.innerHTML = "";
         columnTwo.innerHTML = loader;
         db.collection("admin")
@@ -259,33 +276,6 @@ function initPay() {
             initPay();
           });
       };
-      mainCol.appendChild(instance1);
-      const instance2 = document.importNode(
-        document.getElementById("payTemplate").content,
-        true
-      );
-      instance2.querySelector("#labelText").innerHTML = `Subscription: ${
-        adminDoc.data().enableSubscription ? "Enabled" : "Disabled"
-      }`;
-      instance2.querySelector("#buttonText").innerHTML = `${
-        adminDoc.data().enableSubscription ? "Disable" : "Enable"
-      }`;
-      instance2.querySelector("#actionButton").onclick = function () {
-        columnTwo.innerHTML = "";
-        columnTwo.innerHTML = loader;
-        db.collection("admin")
-          .doc("general")
-          .update({
-            enableSubscription: adminDoc.data().enableSubscription
-              ? false
-              : true,
-          })
-          .then(() => {
-            initPay();
-          });
-      };
-      mainCol.appendChild(instance2);
-      columnTwo.appendChild(mainCol);
     });
 }
 

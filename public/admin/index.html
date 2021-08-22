@@ -34,16 +34,6 @@
         <p id="saveStatus"></p>
         <textarea style="height: 100%;" id="legalAgreement"></textarea>
     </template>
-    <template id="payTemplate">
-        <div>
-            <p id="labelText"></p><button id="actionButton" class="learn-more">
-                <span class="circle" aria-hidden="true">
-                    <span class="icon arrow"></span>
-                </span>
-                <span class="button-text" id="buttonText"></span>
-            </button>
-        </div>
-    </template>
     <template id="eventHeader">
         <h1 id="eventListHeaderH1"></h1>
         <a href="/newevent.html">Create New Event</a>
@@ -59,7 +49,8 @@
         <h1 id="userListHeaderH1"></h1>
         <a href="/newUser.html">Create User</a>
         <div style="display: flex;flex-direction: row;justify-content: center;">
-            <input style="width:50%" type="text" id="userSearchInput" name="userSearchInput" onkeypress="userHandle(event)" autocomplete="off">
+            <input style="width:50%" type="text" id="userSearchInput" name="userSearchInput"
+                onkeypress="userHandle(event)" autocomplete="off">
             <button style="width:fit-content;" id="userHeaderSearch">Search By Name</button>
         </div>
         <button style="display: none;width: 10%;margin-top:10px;margin-left: auto;margin-right: auto;" id="cancelSearch"
@@ -135,6 +126,49 @@
         <progress style="display: none;" value="0" max="100" id="progress"></progress>
         <br />
         <br />
+    </template>
+    <template id="paymentPage">
+        <p>Note: Changing these settings will only apply to NEW transactions and users.</br>Example: Subscriptions are
+            diabled when a user signs up.</br>You then turn on Subscriptions. That user will not have to pay a
+            subscription fee to continue to view the site.</br>Any new user will have to pay for a subscription to
+            access the site.</p>
+        <table>
+            <tbody>
+                <tr>
+                    <td>User Authentication</td>
+                    <td style="font-size: xxx-large;">&rarr;</td>
+                    <td>
+                        <div>
+                            <p id="labelTextSub"></p><button id="actionButtonSub" class="learn-more">
+                                <span class="circle" aria-hidden="true">
+                                    <span class="icon arrow"></span>
+                                </span>
+                                <span class="button-text" id="buttonTextSub"></span>
+                            </button>
+                        </div>
+                    </td>
+                    <td style="font-size: xxx-large;">&rarr;</td>
+                    <td>User can view all events</td>
+
+                </tr>
+                <tr>
+                    <td>User opens Event to view</td>
+                    <td style="font-size: xxx-large;">&rarr;</td>
+                    <td>
+                        <div>
+                            <p id="labelText"></p><button id="actionButton" class="learn-more">
+                                <span class="circle" aria-hidden="true">
+                                    <span class="icon arrow"></span>
+                                </span>
+                                <span class="button-text" id="buttonText"></span>
+                            </button>
+                        </div>
+                    </td>
+                    <td style="font-size: xxx-large;">&rarr;</td>
+                    <td>User is registeres for Event</td>
+                </tr>
+            </tbody>
+        </table>
     </template>
     <p id="loadingMessage"></p>
     <div id="mainBody">
