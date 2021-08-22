@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Platform</title>
+
+    <script defer src="/__/firebase/8.6.8/firebase-app.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-firestore.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-functions.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-storage.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-analytics.js"></script>
+    <script defer src="/__/firebase/8.6.8/firebase-performance.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script src="/js/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#htmeditor'
+        });
+    </script>
+    <link rel="stylesheet" href="/css/new-event.css" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <script src="/js/blurhash_min.js"></script>
+</head>
+
+<body>
+    <p>WARNING: Creating a new user from this page will automatically bypass any payments or subscriptions a user needs to enter the website.</br>If you still want to reigsiter a user (and have them go through the onboarding process), instruct them to navigate to the website and create an account.</p>
+    <div id="mainContent">
+        <label for="acctType">Account Type:</label>
+        <select id="acctType">
+            <option value="standard">Standard</option>
+            <option value="charity">Charity</option>
+        </select>
+        <br />
+        <br />
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" autocomplete="off">
+        <br />
+        <br />
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" autocomplete="off">
+        <br />
+        <br />
+        <label for="stripe">Stripe ID:</label>
+        <input type="text" id="stripe" name="stripe" autocomplete="off">
+        <br />
+        <br />
+        <br />
+        <br />
+        <button id="send">Add Event</button>
+        <p id="uploading"></p>
+        <progress value="0" max="100" id="progress"></progress>
+    </div>
+</body>
+<script src="/js/new-user.js"></script>
+<!-- <script src="/js/main.js"></script> -->
+
+</html>
