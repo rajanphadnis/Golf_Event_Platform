@@ -1,61 +1,61 @@
-
-
 initApp = function () {
   const uri = window.location.search;
-var queryString;
-var hash;
-var hDim;
-try {
-  console.log(uri);
-  queryString = decodeURI(uri);
-} catch (e) {
-  // catches a malformed URI
-  console.error(e);
-  queryString = uri;
-}
-var searchParams = new URLSearchParams(queryString);
-var eventID;
-if (searchParams.has("e") && searchParams.has("i") && searchParams.has("d")) {
-  eventID = searchParams.get("e").toString();
-  if (eventID == "") {
-    window.location = "/";
+  var queryString;
+  var hash;
+  var hDim;
+  try {
+    console.log(uri);
+    queryString = decodeURI(uri);
+  } catch (e) {
+    // catches a malformed URI
+    console.error(e);
+    queryString = uri;
   }
-  hash = searchParams.get("i").toString();
-  if (hash == "") {
-    window.location = "/";
-  }
-  hDim = searchParams.get("d").toString();
-  if (hDim == "") {
-    window.location = "/";
-  }
-} else {
-  window.location = "/";
-}
-// var img = new Image()
-var width =
-  (document.body.offsetWidth ? document.body.offsetWidth : document.width) *
-  0.3;
-var height = width * hDim;
-
-console.log(hash);
-console.log(width);
-console.log(height);
-blurhash.decodePromise(hash, width, height, 1).then((blurhashImgData) => {
-  // console.log(blurhashImgData.length / 4);
-  // as image object with onload callback
-  var imgObject = blurhash.getImageDataAsImage(
-    blurhashImgData,
-    width,
-    height,
-    (event, imgObject) => {
-      document.getElementById("eventImageMain").src = imgObject.src;
+  var searchParams = new URLSearchParams(queryString);
+  var eventID;
+  if (searchParams.has("e") && searchParams.has("i") && searchParams.has("d")) {
+    eventID = searchParams.get("e").toString();
+    if (eventID == "") {
+      window.location = "/";
     }
-  );
-});
-var signInButton = document.getElementById("signInButton");
-var signedInDropdown = document.getElementById("signedInDropdown");
-var eventTitleBlock = document.getElementById("eventTitle");
-var db = firebase.firestore();
+    hash = searchParams.get("i").toString();
+    if (hash == "") {
+      window.location = "/";
+    }
+    hDim = searchParams.get("d").toString();
+    if (hDim == "") {
+      window.location = "/";
+    }
+  } else {
+    window.location = "/";
+  }
+  // var img = new Image()
+  var width =
+    (document.body.offsetWidth ? document.body.offsetWidth : document.width) *
+    0.3;
+  var height = width * hDim;
+
+  console.log(hash);
+  console.log(width);
+  console.log(height);
+  blurhash.decodePromise(hash, width, height, 1).then((blurhashImgData) => {
+    // console.log(blurhashImgData.length / 4);
+    // as image object with onload callback
+    var imgObject = blurhash.getImageDataAsImage(
+      blurhashImgData,
+      width,
+      height,
+      (event, imgObject) => {
+        document.getElementById("eventImageMain").src = imgObject.src;
+      }
+    );
+  });
+  var signInButton = document.getElementById("signInButton");
+  var signedInDropdown = document.getElementById("signedInDropdown");
+  var eventTitleBlock = document.getElementById("eventTitle");
+  var db = firebase.firestore();
+  var visits = new sharded.Counter(db.doc(`upcomingEvents/${eventID}`), "pageVisits");
+  visits.incrementBy(1);
   firebase.auth().onAuthStateChanged(
     function (user) {
       if (user) {

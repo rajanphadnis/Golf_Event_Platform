@@ -1,0 +1,68 @@
+:root {
+  --eventCardHeight: 300px;
+  --eventCardwidth: 300px;
+}
+#upcomingEvents {
+  display: flex;
+  overflow-x: auto;
+  height: fit-content;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+#upcomingEvents a {
+  white-space: normal;
+  min-width: var(--eventCardwidth);
+  /* max-width: 200px; */
+  height: var(--eventCardHeight);
+  border: none;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-decoration: none;
+  border-radius: 10px;
+  overflow: hidden
+}
+.eventDivImg img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: var(--eventCardHeight);
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden
+}
+.eventDiv {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  flex: 0 0 auto;
+}
+.eventDivImg {
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+}
+.eventDivInfo {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #000000;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+h2 {
+  margin: 0px;
+}
+h3 {
+  margin: 0px;
+}

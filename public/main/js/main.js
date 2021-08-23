@@ -40,21 +40,48 @@ initApp = function () {
                   .get()
                   .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
-                      // doc.data() is never undefined for query doc snapshots
-                      // console.log(doc.id, " => ", doc.data());
-                      parentList.innerHTML =
-                        parentList.innerHTML +
-                        addEventCard(
-                          doc.data().Name,
-                          doc.data().Location,
-                          doc.data().Cost,
-                          doc.data().DateTime,
-                          doc.data().ImageURL,
-                          doc.data().OrganizerName,
-                          doc.id,
-                          doc.data().MainHash,
-                          doc.data().ImageDim
-                        );
+                      var imageURL = doc.data().ImageURL.toString();
+                      var id = doc.id.toString();
+                      var title = convertFirstCharacterToUppercase(
+                        doc.data().Name
+                      );
+                      var dateString = dateToString(
+                        doc.data().DateTime.seconds * 1000
+                      );
+                      var timeString = dateToTime(
+                        doc.data().DateTime.seconds * 1000
+                      );
+                      var location = doc.data().Location.toString();
+                      var organizer = doc.data().OrganizerName.toString();
+                      var cost = (doc.data().Cost / 100).toFixed(2).toString();
+                      var blurHash = encodeURIComponent(doc.data().MainHash);
+                      var imgElement = `<img src="${imageURL}" alt="Event Brochure" width="100">`;
+
+                      const eventTemplate = document.importNode(
+                        document.getElementById("eventTemplate").content,
+                        true
+                      );
+                      eventTemplate.querySelector(
+                        "a"
+                      ).href = `/event/?e=${id}&i=${blurHash}&d=${
+                        doc.data().ImageDim
+                      }`;
+                      eventTemplate.querySelector(".eventDivImg").innerHTML =
+                        imgElement;
+                      eventTemplate.querySelector(".titleElement").innerHTML =
+                        title;
+                      eventTemplate.querySelector(".dateElement").innerHTML =
+                        dateString;
+                      eventTemplate.querySelector(".timeElement").innerHTML =
+                        timeString;
+                      eventTemplate.querySelector(".locElement").innerHTML =
+                        location;
+                      eventTemplate.querySelector(".orgElement").innerHTML =
+                        organizer;
+                      eventTemplate.querySelector(
+                        ".costElement"
+                      ).innerHTML = `$${cost}/person`;
+                      parentList.appendChild(eventTemplate);
                     });
                   });
               } else {
@@ -64,50 +91,9 @@ initApp = function () {
               window.location = "/onboarding";
             }
           });
-        // db.collection("users")
-        //   .where("email", "==", user.email.toString())
-        //   .get()
-        //   .then((snap) => {
-        //     return snap.docs.length != 0 ? true : false;
-        //   })
-        //   .then((hasUser) => {
-        //     db.collection("charities")
-        //       .where("email", "==", user.email.toString())
-        //       .get()
-        //       .then((snap) => {
-        //         var hasCharity = snap.docs.length != 0 ? true : false;
-        //         if (hasUser || hasCharity) {
-        //           // window.location = returnTo;
-        //           // console.log("logged in");
-        //         } else {
-        //           window.location = "/onboarding";
-        //         }
-        //       });
-        //   });
       } else {
         // User is signed out.
         window.location = "/landing";
-        // signInButton.style.display = "block";
-        // signedInDropdown.style.display = "none";
-        // db.collection("upcomingEvents")
-        //   .get()
-        //   .then((querySnapshot) => {
-        //     querySnapshot.forEach((doc) => {
-        //       parentList.innerHTML =
-        //         parentList.innerHTML +
-        //         addEventCard(
-        //           doc.data().Name,
-        //           doc.data().Location,
-        //           doc.data().Cost,
-        //           doc.data().DateTime,
-        //           doc.data().ImageURL,
-        //           doc.data().OrganizerName,
-        //           doc.id,
-        //           doc.data().MainHash,
-        //           doc.data().ImageDim
-        //         );
-        //     });
-        //   });
       }
     },
     function (error) {
@@ -119,64 +105,29 @@ window.addEventListener("load", function () {
   initApp();
 });
 
-addEventCard = function (
-  dbtitle,
-  dblocation,
-  dbcost,
-  dbdatetime,
-  dbimageURL,
-  dborganizer,
-  dbid,
-  dbhash,
-  dbDim
-) {
-  var imageURL;
-  // if (dbimageURL.toString() == "client") {
-  //   firebase
-  //     .app()
-  //     .storage("gs://golf-event-platform")
-  //     .ref(dbid.toString() + ".jpg")
-  //     .getDownloadURL()
-  //     .then((url) => {
-  //       imageURL = url;
-  //       return firebase
-  //         .firestore()
-  //         .collection("upcomingEvents")
-  //         .doc(dbid.toString())
-  //         .set(
-  //           {
-  //             ImageURL: url,
-  //           },
-  //           { merge: true }
-  //         );
-  //     });
-  // } else {
-  imageURL = dbimageURL.toString();
-  // }
-  var id = dbid.toString();
-  var title = convertFirstCharacterToUppercase(dbtitle);
-  var dateTime = new Date(dbdatetime.seconds * 1000).toString();
-  var location = dblocation.toString();
-  var organizer = dborganizer.toString();
-  var cost = (dbcost / 100).toFixed(2).toString();
-  var blurHash = encodeURIComponent(dbhash);
-
-  var imgElement = new String(
-    `<img src="${imageURL}" alt="Event Brochure" width="100">`
-  );
-  var titleElement = new String(`<h2>${title}</h2>`);
-  var subtextElement = new String(`<h3>${dateTime}, ${location}<h3>`);
-  var otherSubtextElement = new String(
-    `<p>By ${organizer}. $${cost}/person</p>`
-  );
-  var element = new String(
-    `<a href="/event/?e=${id}&i=${blurHash}&d=${dbDim}"><div id="${id}">${imgElement}${titleElement}${subtextElement}${otherSubtextElement}</div></a>`
-  );
-  return element;
-};
 const convertFirstCharacterToUppercase = (stringToConvert) => {
   var firstCharacter = stringToConvert.substring(0, 1);
   var restString = stringToConvert.substring(1);
-
   return firstCharacter.toUpperCase() + restString;
 };
+
+function dateToString(d) {
+  var date = new Date(d);
+  var month = date.getMonth();
+  var day = date.getDate();
+  var year = date.getFullYear();
+  var s = `${month}/${day}/${year}`;
+  return s;
+}
+
+function dateToTime(d) {
+  var date = new Date(d);
+  var hour =
+    date.getHours() <= 12
+      ? date.getHours().toString().padStart(2, "0")
+      : (date.getHours() - 12).toString().padStart(2, "0");
+  var minute = date.getMinutes().toString().padStart(2, "0");
+  var isPM = date.getHours() < 12 ? "AM" : "PM";
+  var s = `${hour}:${minute} ${isPM}`;
+  return s;
+}
