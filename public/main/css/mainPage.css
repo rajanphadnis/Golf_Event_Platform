@@ -2,6 +2,12 @@
   --eventCardHeight: 300px;
   --eventCardwidth: 300px;
 }
+h2 {
+  margin: 0px;
+}
+h3 {
+  margin: 0px;
+}
 #upcomingEvents {
   display: flex;
   overflow-x: auto;
@@ -9,7 +15,14 @@
   flex-wrap: nowrap;
   -webkit-overflow-scrolling: touch;
 }
-#upcomingEvents a {
+#popularEvents {
+  display: flex;
+  overflow-x: auto;
+  height: fit-content;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+.eventA {
   white-space: normal;
   min-width: var(--eventCardwidth);
   /* max-width: 200px; */
@@ -22,7 +35,7 @@
   margin-bottom: 20px;
   text-decoration: none;
   border-radius: 10px;
-  overflow: hidden
+  overflow: hidden;
 }
 .eventDivImg img {
   width: auto;
@@ -31,7 +44,7 @@
   max-height: var(--eventCardHeight);
   margin-left: auto;
   margin-right: auto;
-  overflow: hidden
+  overflow: hidden;
 }
 .eventDiv {
   display: flex;
@@ -58,11 +71,4 @@
   color: #000000;
   padding-left: 10px;
   padding-right: 10px;
-}
-
-h2 {
-  margin: 0px;
-}
-h3 {
-  margin: 0px;
 }
