@@ -37,21 +37,21 @@ initApp = function () {
             if (userDoc.exists) {
               if (userDoc.data().accountType == "standard") {
                 db.collection("upcomingEvents")
+                  .orderBy("visits", "desc")
+                  .limit(10)
+                  .get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      addEventCard(doc, "popularEvents");
+                    });
+                  });
+                db.collection("upcomingEvents")
                   .orderBy("DateTime")
                   .limit(10)
                   .get()
                   .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                       addEventCard(doc, "upcomingEvents");
-                    });
-                  });
-                db.collection("upcomingEvents")
-                  .orderBy("visits")
-                  .limit(10)
-                  .get()
-                  .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                      addEventCard(doc, "popularEvents");
                     });
                   });
               } else {
