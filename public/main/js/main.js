@@ -1,7 +1,7 @@
 var signInButton = document.getElementById("signInButton");
 var signedInDropdown = document.getElementById("signedInDropdown");
 
-var parentList = document.getElementById("upcomingEvents");
+var popularEventsList = document.getElementById("upcomingEvents");
 // var signedInDropdown = document.getElementById("signedInDropdown");
 initApp = function () {
   var db = firebase.firestore();
@@ -37,51 +37,21 @@ initApp = function () {
             if (userDoc.exists) {
               if (userDoc.data().accountType == "standard") {
                 db.collection("upcomingEvents")
+                  .orderBy("DateTime")
+                  .limit(10)
                   .get()
                   .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
-                      var imageURL = doc.data().ImageURL.toString();
-                      var id = doc.id.toString();
-                      var title = convertFirstCharacterToUppercase(
-                        doc.data().Name
-                      );
-                      var dateString = dateToString(
-                        doc.data().DateTime.seconds * 1000
-                      );
-                      var timeString = dateToTime(
-                        doc.data().DateTime.seconds * 1000
-                      );
-                      var location = doc.data().Location.toString();
-                      var organizer = doc.data().OrganizerName.toString();
-                      var cost = (doc.data().Cost / 100).toFixed(2).toString();
-                      var blurHash = encodeURIComponent(doc.data().MainHash);
-                      var imgElement = `<img src="${imageURL}" alt="Event Brochure" width="100">`;
-
-                      const eventTemplate = document.importNode(
-                        document.getElementById("eventTemplate").content,
-                        true
-                      );
-                      eventTemplate.querySelector(
-                        "a"
-                      ).href = `/event/?e=${id}&i=${blurHash}&d=${
-                        doc.data().ImageDim
-                      }`;
-                      eventTemplate.querySelector(".eventDivImg").innerHTML =
-                        imgElement;
-                      eventTemplate.querySelector(".titleElement").innerHTML =
-                        title;
-                      eventTemplate.querySelector(".dateElement").innerHTML =
-                        dateString;
-                      eventTemplate.querySelector(".timeElement").innerHTML =
-                        timeString;
-                      eventTemplate.querySelector(".locElement").innerHTML =
-                        location;
-                      eventTemplate.querySelector(".orgElement").innerHTML =
-                        organizer;
-                      eventTemplate.querySelector(
-                        ".costElement"
-                      ).innerHTML = `$${cost}/person`;
-                      parentList.appendChild(eventTemplate);
+                      addEventCard(doc, "upcomingEvents");
+                    });
+                  });
+                db.collection("upcomingEvents")
+                  .orderBy("visits")
+                  .limit(10)
+                  .get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      addEventCard(doc, "popularEvents");
                     });
                   });
               } else {
@@ -130,4 +100,34 @@ function dateToTime(d) {
   var isPM = date.getHours() < 12 ? "AM" : "PM";
   var s = `${hour}:${minute} ${isPM}`;
   return s;
+}
+
+function addEventCard(doc, parent) {
+  var parentList = document.getElementById(parent);
+  var imageURL = doc.data().ImageURL.toString();
+  var id = doc.id.toString();
+  var title = convertFirstCharacterToUppercase(doc.data().Name);
+  var dateString = dateToString(doc.data().DateTime.seconds * 1000);
+  var timeString = dateToTime(doc.data().DateTime.seconds * 1000);
+  var location = doc.data().Location.toString();
+  var organizer = doc.data().OrganizerName.toString();
+  var cost = (doc.data().Cost / 100).toFixed(2).toString();
+  var blurHash = encodeURIComponent(doc.data().MainHash);
+  var imgElement = `<img src="${imageURL}" alt="Event Brochure" width="100">`;
+
+  const eventTemplate = document.importNode(
+    document.getElementById("eventTemplate").content,
+    true
+  );
+  eventTemplate.querySelector("a").href = `/event/?e=${id}&i=${blurHash}&d=${
+    doc.data().ImageDim
+  }`;
+  eventTemplate.querySelector(".eventDivImg").innerHTML = imgElement;
+  eventTemplate.querySelector(".titleElement").innerHTML = title;
+  eventTemplate.querySelector(".dateElement").innerHTML = dateString;
+  eventTemplate.querySelector(".timeElement").innerHTML = timeString;
+  eventTemplate.querySelector(".locElement").innerHTML = location;
+  eventTemplate.querySelector(".orgElement").innerHTML = organizer;
+  eventTemplate.querySelector(".costElement").innerHTML = `$${cost}/person`;
+  parentList.appendChild(eventTemplate);
 }
