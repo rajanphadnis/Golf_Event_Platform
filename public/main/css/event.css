@@ -1,24 +1,56 @@
 #eventDetails {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    height: 100%;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  height: 90%;
 }
 
-#eventDetails div {
-    width: 50%;
-    height: 100%;
-    display: block;
-    
-    /* justify-content: center;
-    align-items: center;
-    align-content: center; */
+#eventImage {
+  width: 60%;
+  max-height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+}
+#eventImageMain {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+#eventInfo {
+  width: 40%;
+  height: 90%;
+  min-height: 90%;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 #register {
-    display: none;
+  cursor: pointer;
+  outline: 0;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  color: #0d6efd;
+  border-color: #0d6efd;
 }
-
-#eventImageMain {
-    width: 30%;
-    height: auto;
+#register:hover {
+  color: #fff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+#register {
+  display: none;
 }

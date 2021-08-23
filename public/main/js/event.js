@@ -39,7 +39,6 @@ initApp = function () {
   console.log(width);
   console.log(height);
   blurhash.decodePromise(hash, width, height, 1).then((blurhashImgData) => {
-    // console.log(blurhashImgData.length / 4);
     // as image object with onload callback
     var imgObject = blurhash.getImageDataAsImage(
       blurhashImgData,
@@ -54,7 +53,10 @@ initApp = function () {
   var signedInDropdown = document.getElementById("signedInDropdown");
   var eventTitleBlock = document.getElementById("eventTitle");
   var db = firebase.firestore();
-  var visits = new sharded.Counter(db.doc(`upcomingEvents/${eventID}`), "visits");
+  var visits = new sharded.Counter(
+    db.doc(`upcomingEvents/${eventID}`),
+    "visits"
+  );
   visits.incrementBy(1);
   firebase.auth().onAuthStateChanged(
     function (user) {
@@ -106,45 +108,12 @@ initApp = function () {
               window.location = `/onboarding?l=${encodedURL}`;
             }
           });
-        // .where("email", "==", user.email.toString())
-        // .get()
-        // .then((snap) => {
-        //   return snap.docs.length != 0 ? true : false;
-        // })
-        // .then((hasUser) => {
-        //   db.collection("charities")
-        //     .where("email", "==", user.email.toString())
-        //     .get()
-        //     .then((snap) => {
-        //       var hasCharity = snap.docs.length != 0 ? true : false;
-        //       if (hasUser || hasCharity) {
-
-        //         // window.location = returnTo;
-        //         // console.log("logged in");
-        //       } else {
-
-        //       }
-        //     });
-        // });
       } else {
         // User is signed out.
-        // signInButton.style.display = "block";
-        // signedInDropdown.style.display = "none";
         var encodedURL = encodeURIComponent(
           `event?e=${eventID}&i=${hash}&d=${hDim}`
         );
         window.location = `/sign-in?l=${encodedURL}`;
-        // document.getElementById(
-        //   "signInButton"
-        // ).href = `/sign-in?l=${encodedURL}`;
-        // document
-        //   .getElementById("register")
-        //   .addEventListener("click", function () {
-        //     var toEncode = `event/register?e=${eventID}&i=${hash}&d=${hDim}`;
-        //     var laterLocation = encodeURIComponent(toEncode);
-        //     // console.log(laterLocation);
-        //     window.location = `/sign-in/?l=${laterLocation}`;
-        //   });
       }
     },
     function (error) {
@@ -157,36 +126,14 @@ initApp = function () {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        // if (doc.data().ImageURL.toString() == "client") {
-        //   firebase
-        //     .app()
-        //     .storage("gs://golf-event-platform")
-        //     .ref(doc.id.toString() + ".jpg")
-        //     .getDownloadURL()
-        //     .then((url) => {
-        //       document.getElementById("eventImageMain").src = url;
-        //       return firebase
-        //         .firestore()
-        //         .collection("upcomingEvents")
-        //         .doc(doc.id.toString())
-        //         .set(
-        //           {
-        //             ImageURL: url,
-        //           },
-        //           { merge: true }
-        //         );
-        //     });
-        // } else {
         document.getElementById("eventImageMain").src = doc.data().ImageURL;
-        // }
-        // console.log("Document data:", doc.data());
         document.getElementById("eventTitle").innerText = doc.data().Name;
         document.title = doc.data().Name.toString() + " | Golf4Bob";
         document.getElementById("eventLocation").innerHTML =
           '<span class="material-icons">place</span>' + doc.data().Location;
-        document.getElementById("eventDateTime").innerText = new Date(
+        document.getElementById("eventDateTime").innerText = dateToString(
           doc.data().DateTime.seconds * 1000
-        ).toString();
+        );
         document.getElementById("eventCost").innerText = `$${
           doc.data().Cost / 100
         }`;
@@ -209,3 +156,18 @@ initApp = function () {
 window.addEventListener("load", function () {
   initApp();
 });
+
+function dateToString(d) {
+  var date = new Date(d);
+  var month = date.getMonth();
+  var day = date.getDate();
+  var year = date.getFullYear();
+  var hour =
+    date.getHours() <= 12
+      ? date.getHours().toString().padStart(2, "0")
+      : (date.getHours() - 12).toString().padStart(2, "0");
+  var minute = date.getMinutes().toString().padStart(2, "0");
+  var isPM = date.getHours() < 12 ? "AM" : "PM";
+  var s = `${month}/${day}/${year} - ${hour}:${minute} ${isPM}`;
+  return s;
+}
