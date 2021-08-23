@@ -351,6 +351,18 @@ function showEditRowEvents(data, id) {
   instance.getElementById("editOrganizerP").value = data.OrganizerName;
 
   instance.getElementById("htmeditor").innerHTML = data.Blurb;
+  instance.getElementById("visits").value = data.visits;
+  instance.getElementById("visitsReset").addEventListener("click", () => {
+    var db = firebase.firestore();
+    db.collection("upcomingEvents").doc(id).update({
+      visits: 0
+    }).then((f) => {
+      alert("Page Visit Counter reset. Refresh page to see changes");
+    }).catch((d) => {
+      alert("something went wrong. Try again in a few moments");
+      console.log(d);
+    });
+  });
   instance.getElementById("send").addEventListener("click", () => {
     document.getElementById("progress").style.display = "block";
     addEvent(

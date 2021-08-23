@@ -155,6 +155,7 @@ function addEvent(
       OrganizerID: uid.toString(),
       OrganizerName: charityName.toString(),
       ImageDim: parseFloat(dim),
+      visits: 0,
       // MainHash: hash.toString(),
     })
     .then((docRef) => {

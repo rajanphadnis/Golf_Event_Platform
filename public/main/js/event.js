@@ -54,7 +54,7 @@ initApp = function () {
   var signedInDropdown = document.getElementById("signedInDropdown");
   var eventTitleBlock = document.getElementById("eventTitle");
   var db = firebase.firestore();
-  var visits = new sharded.Counter(db.doc(`upcomingEvents/${eventID}`), "pageVisits");
+  var visits = new sharded.Counter(db.doc(`upcomingEvents/${eventID}`), "visits");
   visits.incrementBy(1);
   firebase.auth().onAuthStateChanged(
     function (user) {
