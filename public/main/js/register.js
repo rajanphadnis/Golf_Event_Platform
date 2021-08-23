@@ -71,7 +71,7 @@ initApp = function () {
                       document.title =
                         "Register - " +
                         doc.data().Name.toString() +
-                        " | Golf_Event_Platform";
+                        " | Golf4Bob";
                       document.getElementById("eventTitle").innerText =
                         doc.data().Name;
                       document.getElementById("eventImageMain").src =

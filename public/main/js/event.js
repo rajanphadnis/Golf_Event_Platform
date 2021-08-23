@@ -181,7 +181,7 @@ initApp = function () {
         // }
         // console.log("Document data:", doc.data());
         document.getElementById("eventTitle").innerText = doc.data().Name;
-        document.title = doc.data().Name.toString() + " | Golf_Event_Platform";
+        document.title = doc.data().Name.toString() + " | Golf4Bob";
         document.getElementById("eventLocation").innerHTML =
           '<span class="material-icons">place</span>' + doc.data().Location;
         document.getElementById("eventDateTime").innerText = new Date(
