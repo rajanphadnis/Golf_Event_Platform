@@ -130,13 +130,15 @@ initApp = function () {
         document.getElementById("eventTitle").innerText = doc.data().Name;
         document.title = doc.data().Name.toString() + " | Golf4Bob";
         document.getElementById("eventLocation").innerHTML =
-          '<span class="material-icons">place</span>' + doc.data().Location;
-        document.getElementById("eventDateTime").innerText = dateToString(
+          `<span class="material-icons">place</span><h3>${doc.data().Location}</h3>`;
+        document.getElementById("eventDateTime").innerHTML = `<span class="material-icons">
+        event
+        </span><h3>${dateToString(
           doc.data().DateTime.seconds * 1000
-        );
+        )}</h3>`;
         document.getElementById("eventCost").innerText = `$${
           doc.data().Cost / 100
-        }`;
+        }/Person`;
         document.getElementById("eventOrganizer").innerText =
           doc.data().OrganizerName;
         document.getElementById("eventBlurb").innerHTML = doc.data().Blurb;
