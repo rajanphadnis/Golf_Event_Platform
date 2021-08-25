@@ -1,5 +1,5 @@
 console.log("charity");
-document.getElementById("charityPage").style.display = "block";
+document.getElementById("charityPage").style.display = "flex";
 var db = firebase.firestore();
 firebase.auth().onAuthStateChanged(
   function (user) {

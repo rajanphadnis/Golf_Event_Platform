@@ -1,5 +1,5 @@
 console.log("standard");
-document.getElementById("standardPage").style.display = "block";
+document.getElementById("standardPage").style.display = "flex";
 var db = firebase.firestore();
 firebase.auth().onAuthStateChanged(
   function (user) {
