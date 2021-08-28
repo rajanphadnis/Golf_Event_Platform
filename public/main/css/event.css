@@ -64,4 +64,9 @@
   flex-direction: row;
   align-items: center;
   margin-right: 10px;
+  text-decoration: none;
+}
+.subtitleText a {
+  /* text-decoration: none; */
+  color: #000000;
 }

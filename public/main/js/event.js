@@ -130,7 +130,7 @@ initApp = function () {
         document.getElementById("eventTitle").innerText = doc.data().Name;
         document.title = doc.data().Name.toString() + " | Golf4Bob";
         document.getElementById("eventLocation").innerHTML =
-          `<span class="material-icons">place</span><h3>${doc.data().Location}</h3>`;
+          `<span class="material-icons">place</span><a target="_blank" href="https://www.google.com/maps/place/${doc.data().plusCode}"><h3>${doc.data().Location}</h3></a>`;
         document.getElementById("eventDateTime").innerHTML = `<span class="material-icons">
         event
         </span><h3>${dateToString(

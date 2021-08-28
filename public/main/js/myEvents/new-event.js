@@ -75,6 +75,7 @@ var initApp = function () {
                     var dt = document.getElementById("dt").value;
                     var cost = document.getElementById("cost").value;
                     var max = document.getElementById("maxParticipants").value;
+                    var plusCode = encodeURIComponent(document.getElementById("plusCode").value.toString());
                     //   console.log(blurb);
                     //   console.log(title);
                     //   console.log(loc);
@@ -93,7 +94,8 @@ var initApp = function () {
                           files[0],
                           user.uid,
                           userDoc.data().name,
-                          imgDim
+                          imgDim,
+                          plusCode,
                           // ihash
                         );
                       } else {
@@ -149,7 +151,8 @@ function addEvent(
   poster,
   uid,
   charityName,
-  dim
+  dim,
+  plus,
   // hash
 ) {
   // console.log(hash);
@@ -168,6 +171,7 @@ function addEvent(
       OrganizerName: charityName.toString(),
       ImageDim: parseFloat(dim),
       visits: 0,
+      plusCode: plus,
       // MainHash: hash.toString(),
     })
     .then((docRef) => {
