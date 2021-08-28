@@ -1105,7 +1105,7 @@ exports.userWriteListener = functions.firestore
   });
 
   // 1 of jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec 00:00
-exports.monthlyDelete = functions.pubsub.schedule("every 2 minutes").onRun(async(context) => {
+exports.monthlyDelete = functions.pubsub.schedule("0 3 * * *").timeZone('America/New_York').onRun(async(context) => {
   const db = admin.firestore();
   const currentDate = new Date();
   const upcomingRef = db.collection("upcomingEvents");
@@ -1118,9 +1118,6 @@ exports.monthlyDelete = functions.pubsub.schedule("every 2 minutes").onRun(async
           deleteOps.push(doc.ref.delete());
           console.log(`Tee: ${doc.id} - ${date}`);
       }
-      // else {
-      //     console.log(`DND Tee: ${doc.id} - ${month}/${year}`);
-      // }
   });
   return Promise.all(deleteOps);
 });
