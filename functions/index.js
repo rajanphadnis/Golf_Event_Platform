@@ -1103,3 +1103,24 @@ exports.userWriteListener = functions.firestore
 
     return true;
   });
+
+  // 1 of jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec 00:00
+exports.monthlyDelete = functions.pubsub.schedule("every 2 minutes").onRun(async(context) => {
+  const db = admin.firestore();
+  const currentDate = new Date();
+  const upcomingRef = db.collection("upcomingEvents");
+  var uGet = await upcomingRef.get();
+  const deleteOps = [];
+  uGet.forEach(async (doc) => {
+      const date = new Date(doc.data().DateTime.seconds * 1000);
+      if (date < currentDate) {
+          deleteOps.push(admin.firestore().collection("pastEvents").doc(doc.id).set(doc.data()));
+          // deleteOps.push(doc.ref.delete());
+          console.log(`Tee: ${doc.id} - ${month}/${year}`);
+      }
+      // else {
+      //     console.log(`DND Tee: ${doc.id} - ${month}/${year}`);
+      // }
+  });
+  return Promise.all(deleteOps);
+});
