@@ -25,6 +25,13 @@ h1 {
   flex-wrap: nowrap;
   -webkit-overflow-scrolling: touch;
 }
+#recEvents {
+  display: flex;
+  overflow-x: auto;
+  height: fit-content;
+  flex-wrap: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
 .eventA {
   white-space: normal;
   min-width: var(--eventCardwidth);

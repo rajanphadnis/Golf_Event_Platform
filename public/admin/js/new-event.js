@@ -159,7 +159,8 @@ function addEvent(
       OrganizerName: charityName.toString(),
       ImageDim: parseFloat(dim),
       visits: 0,
-      plusCode: plus
+      plusCode: plus,
+      adScale: 0
       // MainHash: hash.toString(),
     })
     .then((docRef) => {

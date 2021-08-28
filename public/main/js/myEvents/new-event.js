@@ -172,6 +172,7 @@ function addEvent(
       ImageDim: parseFloat(dim),
       visits: 0,
       plusCode: plus,
+      adScale: 0
       // MainHash: hash.toString(),
     })
     .then((docRef) => {
