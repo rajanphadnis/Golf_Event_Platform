@@ -56,7 +56,7 @@ initApp = function() {
                                     });
                                 db.collection("upcomingEvents")
                                     .orderBy("adScale", "desc")
-                                    .orderBy("DateTime")
+                                    .orderBy("visits", "desc")
                                     .limit(10)
                                     .get()
                                     .then((querySnapshot) => {
