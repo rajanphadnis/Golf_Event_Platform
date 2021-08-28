@@ -344,6 +344,7 @@ function showEditRowEvents(data, id) {
     "editImageURLP"
   ).innerHTML = `Image: <a href="${data.ImageURL}">View</a>`;
   instance.getElementById("location").value = data.Location;
+  instance.getElementById("plusCode").value = decodeURIComponent(data.plusCode);
   instance.getElementById(
     "editLastUpdatedP"
   ).innerHTML = `Last Updated: ${data.LastUpdated.toDate().toLocaleString()}`;
@@ -373,7 +374,8 @@ function showEditRowEvents(data, id) {
       document.getElementById("cost").value,
       document.getElementById("maxParticipants").value,
       tinymce.activeEditor.getContent(),
-      document.getElementById("editOrganizerP").value
+      document.getElementById("editOrganizerP").value,
+      encodeURIComponent(document.getElementById("plusCode").value.toString()),
     );
   });
   document.getElementById("columnTwoTwo").appendChild(instance);
@@ -440,7 +442,8 @@ function addEvent(
   cost,
   max,
   blurb,
-  charityName
+  charityName,
+  plusCode
   // hash
 ) {
   // console.log(hash);
@@ -458,6 +461,7 @@ function addEvent(
         Location: loc.toString(),
         LastUpdated: new Date(Date.now()),
         OrganizerName: charityName.toString(),
+        plusCode: plusCode,
         // MainHash: hash.toString(),
       },
       { merge: true }
