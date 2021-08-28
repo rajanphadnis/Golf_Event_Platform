@@ -35,9 +35,9 @@ initApp = function () {
     0.3;
   var height = width * hDim;
 
-  console.log(hash);
-  console.log(width);
-  console.log(height);
+  // console.log(hash);
+  // console.log(width);
+  // console.log(height);
   blurhash.decodePromise(hash, width, height, 1).then((blurhashImgData) => {
     // as image object with onload callback
     var imgObject = blurhash.getImageDataAsImage(
