@@ -1115,7 +1115,7 @@ exports.monthlyDelete = functions.pubsub.schedule("every 2 minutes").onRun(async
       const date = new Date(doc.data().DateTime.seconds * 1000);
       if (date < currentDate) {
           deleteOps.push(admin.firestore().collection("pastEvents").doc(doc.id).set(doc.data()));
-          // deleteOps.push(doc.ref.delete());
+          deleteOps.push(doc.ref.delete());
           console.log(`Tee: ${doc.id} - ${date}`);
       }
       // else {
