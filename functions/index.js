@@ -1128,6 +1128,7 @@ exports.createConnectPortalLink = functions.https.onCall(async(data, context) =>
 
 exports.resumeConnectPortalCreation = functions.https.onCall(async(data, context) => {
   const uid = data.uid.toString();
+  const userID = data.userID.toString();
   const stripe = require("stripe")(
       "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
   );
@@ -1137,7 +1138,7 @@ exports.resumeConnectPortalCreation = functions.https.onCall(async(data, context
       return_url: 'https://golf-event-platform--dev-u2suwtdi.web.app/account/',
       type: 'account_onboarding',
   });
-  const dbUpdate = await admin.firestore().collection(`users/${uid}/stripeConnect`).add(accountLink);
+  const dbUpdate = await admin.firestore().collection(`users/${userID}/stripeConnect`).add(accountLink);
   return {
       URLCreated: accountLink.created,
       URLExpiration: accountLink.expires_at,
@@ -1148,6 +1149,7 @@ exports.resumeConnectPortalCreation = functions.https.onCall(async(data, context
 
 exports.connectPortalUpdateLink = functions.https.onCall(async(data, context) => {
     const uid = data.uid.toString();
+    const userID = data.userID.toString();
     const stripe = require("stripe")(
         "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
     );
@@ -1157,7 +1159,7 @@ exports.connectPortalUpdateLink = functions.https.onCall(async(data, context) =>
       return_url: 'https://golf-event-platform--dev-u2suwtdi.web.app/account/',
       type: 'account_update',
   });
-  const dbUpdate = await admin.firestore().collection(`users/${uid}/stripeConnect`).add(accountLink);
+  const dbUpdate = await admin.firestore().collection(`users/${userID}/stripeConnect`).add(accountLink);
   return {
       URLCreated: accountLink.created,
       URLExpiration: accountLink.expires_at,

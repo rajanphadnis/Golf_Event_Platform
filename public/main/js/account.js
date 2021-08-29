@@ -62,7 +62,7 @@ function registerCharityWithStripe(userID) {
         .then((result) => {
             // Read result of the Cloud Function.
             var returnID = result.data.returnID;
-            createLink({ uid: returnID }).then((res) => {
+            createLink({ uid: returnID, userID: userID }).then((res) => {
                 var returnURL = result.data.returnURL;
                 var connectButton = `<a href="${returnURL}" class="stripe-connect slate"><span>Link with</span></a>`;
                 document.getElementById("charityStripeData").innerHTML = connectButton;
@@ -72,7 +72,7 @@ function registerCharityWithStripe(userID) {
 
 function openStripePortal(uid) {
     var createLink = firebase.functions().httpsCallable('resumeConnectPortalCreation');
-    createLink({ uid: uid }).then((res) => {
+    createLink({ uid: uid, userID: userID }).then((res) => {
         var returnURL = result.data.returnURL;
         var connectButton = `<a href="${returnURL}" class="stripe-connect slate"><span>Open</span></a>`;
         document.getElementById("charityStripeData").innerHTML = connectButton;
