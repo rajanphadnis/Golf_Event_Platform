@@ -21,98 +21,114 @@ var initApp = function () {
               window.location = "/sign-out";
             } else {
               document
-                  .getElementById("files")
-                  .addEventListener("change", function (e) {
+                .getElementById("files")
+                .addEventListener("change", function (e) {
+                  document.getElementById("loadingFile").style.display =
+                    "block";
+                  loading = true;
+                  files = e.target.files;
+                  if (files.length != 0) {
+                    var fr = new FileReader();
+                    fr.onload = () => showImage(fr);
+                    fr.readAsDataURL(files[0]);
+                  } else {
                     document.getElementById("loadingFile").style.display =
-                      "block";
-                    loading = true;
-                    files = e.target.files;
-                    if (files.length != 0) {
-                      var fr = new FileReader();
-                      fr.onload = () => showImage(fr);
-                      fr.readAsDataURL(files[0]);
-                    } else {
-                      document.getElementById("loadingFile").style.display =
-                        "none";
-                      loading = false;
-                    }
-                    function showImage(fileReader) {
-                      var img = document.getElementById("preIMG");
-                      img.onload = () => getImageData(img);
-                      img.src = fileReader.result;
-                    }
+                      "none";
+                    loading = false;
+                  }
 
-                    function getImageData(img) {
-                      ctx.drawImage(img, 0, 0);
-                      imageData = ctx.getImageData(
-                        0,
-                        0,
-                        img.width,
-                        img.height
-                      ).data;
-                      console.log("image data:", imageData);
-                      imgDim = img.height / img.width;
-                      // ihash = blurhash.encode(
-                      //   imageData,
-                      //   img.width,
-                      //   img.height,
-                      //   4,
-                      //   3
-                      // );
-                      // console.log(ihash);
-                      document.getElementById("loadingFile").style.display =
-                        "none";
-                      loading = false;
-                    }
-                  });
-                document
-                  .getElementById("send")
-                  .addEventListener("click", function () {
-                    document.getElementById("send").disabled = true;
-                    var blurb = tinymce.get("htmeditor").getContent();
-                    var title = document.getElementById("title").value;
-                    var loc = document.getElementById("location").value;
-                    var dt = document.getElementById("dt").value;
-                    var cost = document.getElementById("cost").value;
-                    var max = document.getElementById("maxParticipants").value;
-                    var org = document.getElementById("org").value;
-                    var orgID = document.getElementById("orgID").value;
-                    var plusCode = encodeURIComponent(document.getElementById("plusCode").value.toString());
-                    //   console.log(blurb);
-                    //   console.log(title);
-                    //   console.log(loc);
-                    //   console.log(Date(dt));
-                    //   console.log(cost);
+                  function showImage(fileReader) {
+                    var img = document.getElementById("preIMG");
+                    img.onload = () => getImageData(img);
+                    img.src = fileReader.result;
+                  }
+
+                  function getImageData(img) {
+                    ctx.drawImage(img, 0, 0);
+                    imageData = ctx.getImageData(
+                      0,
+                      0,
+                      img.width,
+                      img.height
+                    ).data;
+                    console.log("image data:", imageData);
+                    imgDim = img.height / img.width;
+                    // ihash = blurhash.encode(
+                    //   imageData,
+                    //   img.width,
+                    //   img.height,
+                    //   4,
+                    //   3
+                    // );
                     // console.log(ihash);
-                    if (files.length != 0) {
-                      if (loading == false) {
-                        addEvent(
-                          title,
-                          loc,
-                          dt,
-                          cost,
-                          max,
-                          blurb,
-                          files[0],
-                          orgID,
-                          org,
-                          imgDim,
-                          plusCode
-                          // ihash
-                        );
-                      } else {
-                        alert(
-                          "Please wait for the image to finish loading, then try again."
-                        );
-                        document.getElementById("send").disabled = false;
-                        document.getElementById("progress").value = 0;
-                      }
+                    document.getElementById("loadingFile").style.display =
+                      "none";
+                    loading = false;
+                  }
+                });
+              document
+                .getElementById("send")
+                .addEventListener("click", function () {
+                  document.getElementById("send").disabled = true;
+                  var blurb = tinymce.get("htmeditor").getContent();
+                  var title = document.getElementById("title").value;
+                  var loc = document.getElementById("location").value;
+                  var dt = document.getElementById("dt").value;
+                  var cost = document.getElementById("cost").value;
+                  var max = document.getElementById("maxParticipants").value;
+                  var org = document.getElementById("org").value;
+                  var orgID = document.getElementById("orgID").value;
+                  var plusCode = encodeURIComponent(
+                    document.getElementById("plusCode").value.toString()
+                  );
+                  //   console.log(blurb);
+                  //   console.log(title);
+                  //   console.log(loc);
+                  //   console.log(Date(dt));
+                  //   console.log(cost);
+                  // console.log(ihash);
+                  if (files.length != 0) {
+                    if (loading == false) {
+                      db.collection(`users/${user.uid}/stripeConnect`)
+                        .doc("accountCreation")
+                        .get()
+                        .then((adminDoc) => {
+                          document.getElementById("progress").value = 10;
+                          if (adminDoc.data().charges_enabled && adminDoc.exists) {
+                            addEvent(
+                              title,
+                              loc,
+                              dt,
+                              cost,
+                              max,
+                              blurb,
+                              files[0],
+                              orgID,
+                              org,
+                              imgDim,
+                              plusCode,
+                              adminDoc.data().id
+                              // ihash
+                            );
+                          } else {
+                            alert(
+                              "Cannot save event. You must link your bank account. To link your account, go to the Account section and click 'Link with Stripe'"
+                            );
+                          }
+                        });
                     } else {
-                      alert("No file chosen");
+                      alert(
+                        "Please wait for the image to finish loading, then try again."
+                      );
                       document.getElementById("send").disabled = false;
                       document.getElementById("progress").value = 0;
                     }
-                  });
+                  } else {
+                    alert("No file chosen");
+                    document.getElementById("send").disabled = false;
+                    document.getElementById("progress").value = 0;
+                  }
+                });
             }
           });
       } else {
@@ -140,7 +156,8 @@ function addEvent(
   uid,
   charityName,
   dim,
-  plus
+  plus,
+  stripeOrgID
   // hash
 ) {
   // console.log(hash);
@@ -160,7 +177,8 @@ function addEvent(
       ImageDim: parseFloat(dim),
       visits: 0,
       plusCode: plus,
-      adScale: 0
+      adScale: 0,
+      stripeOrgID: stripeOrgID,
       // MainHash: hash.toString(),
     })
     .then((docRef) => {
@@ -252,6 +270,7 @@ function orgHandle(e) {
     searchOrg();
   }
 }
+
 function searchOrg() {
   var searchQ = document.getElementById("org").value;
   var db = firebase.firestore();

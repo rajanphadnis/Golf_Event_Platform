@@ -36,6 +36,7 @@ var initApp = function () {
                         "none";
                       loading = false;
                     }
+
                     function showImage(fileReader) {
                       var img = document.getElementById("preIMG");
                       img.onload = () => getImageData(img);
@@ -75,7 +76,9 @@ var initApp = function () {
                     var dt = document.getElementById("dt").value;
                     var cost = document.getElementById("cost").value;
                     var max = document.getElementById("maxParticipants").value;
-                    var plusCode = encodeURIComponent(document.getElementById("plusCode").value.toString());
+                    var plusCode = encodeURIComponent(
+                      document.getElementById("plusCode").value.toString()
+                    );
                     //   console.log(blurb);
                     //   console.log(title);
                     //   console.log(loc);
@@ -84,31 +87,43 @@ var initApp = function () {
                     // console.log(ihash);
                     if (files.length != 0) {
                       if (loading == false) {
-                        addEvent(
-                          title,
-                          loc,
-                          dt,
-                          cost,
-                          max,
-                          blurb,
-                          files[0],
-                          user.uid,
-                          userDoc.data().name,
-                          imgDim,
-                          plusCode,
-                          // ihash
-                        );
+                        db.collection(`users/${user.uid}/stripeConnect`)
+                          .doc("accountCreation")
+                          .get()
+                          .then((adminDoc) => {
+                            document.getElementById("progress").value = 10;
+                            if (adminDoc.data().charges_enabled && adminDoc.exists) {
+                              addEvent(
+                              title,
+                              loc,
+                              dt,
+                              cost,
+                              max,
+                              blurb,
+                              files[0],
+                              user.uid,
+                              userDoc.data().name,
+                              imgDim,
+                              plusCode,
+                              adminDoc.data().id
+                              // ihash
+                            );
+                            }
+                            else {
+                              alert("Cannot save event. You must link your bank account. To link your account, go to the Account section and click 'Link with Stripe'");
+                            }
+                          });
                       } else {
                         alert(
                           "Please wait for the image to finish loading, then try again."
                         );
                         document.getElementById("send").disabled = false;
-      document.getElementById("progress").value = 0;
+                        document.getElementById("progress").value = 0;
                       }
                     } else {
                       alert("No file chosen");
                       document.getElementById("send").disabled = false;
-      document.getElementById("progress").value = 0;
+                      document.getElementById("progress").value = 0;
                     }
                   });
               }
@@ -153,6 +168,7 @@ function addEvent(
   charityName,
   dim,
   plus,
+  stripeOrgID
   // hash
 ) {
   // console.log(hash);
@@ -172,8 +188,8 @@ function addEvent(
       ImageDim: parseFloat(dim),
       visits: 0,
       plusCode: plus,
-      adScale: 0
-      // MainHash: hash.toString(),
+      adScale: 0,
+      stripeOrgID: stripeOrgID,
     })
     .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
@@ -250,7 +266,9 @@ function getDownloadURLOfImg(docID) {
     })
     .catch((error) => {
       // Handle any errors
-      alert("Whoops, something came up. Relaod the page and try again in a few minutes.");
+      alert(
+        "Whoops, something came up. Relaod the page and try again in a few minutes."
+      );
       document.getElementById("send").disabled = false;
       document.getElementById("progress").value = 0;
     });
