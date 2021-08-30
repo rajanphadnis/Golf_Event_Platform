@@ -1161,6 +1161,7 @@ exports.stripeRegistrationCheck = functions.https.onCall(async(data, context) =>
         return {
             charges_enabled: true,
             dbUpdate: updateTrue,
+            act: account,
         };
     }
     else {
@@ -1168,6 +1169,7 @@ exports.stripeRegistrationCheck = functions.https.onCall(async(data, context) =>
         return {
             charges_enabled: false,
             dbUpdate: updateFalse,
+            act: account,
         };
     }
 });
