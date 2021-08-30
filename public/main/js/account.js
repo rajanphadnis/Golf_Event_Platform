@@ -54,6 +54,11 @@ initApp = function () {
                     }
                   });
               }
+              else {
+                document.getElementById(
+                  "charityStripeData"
+                ).innerHTML = "";
+              }
             } else {
               db.collection("archivedUsers")
                 .doc(user.uid.toString())
