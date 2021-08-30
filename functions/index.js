@@ -1154,7 +1154,7 @@ exports.resumeConnectPortalCreation = functions.https.onCall(async(data, context
 exports.stripeRegistrationCheck = functions.https.onCall(async(data, context) => {
     const acct = data.acct.toString();
     const uid = data.uid.toString();
-    const stripe = require('stripe')('sk_test_51IJ0lRAlR6sAigQz8hisPQphxdh0gMC33WsuZMbtxrCRRzNJf9XldjYFjNbiaFKtieJbm9ehyKjs0z1C6KrNGQPW00FLFC5bi8');
+    const stripe = require('stripe')('sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn');
     const account = await stripe.accounts.retrieve(acct);
     if (account.charges_enabled) {
         const updateTrue = await admin.firestore().collection(`users/${uid}/stripeConnect`).doc("accountCreation").update({charges_enabled: true});
