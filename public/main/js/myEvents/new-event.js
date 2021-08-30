@@ -217,7 +217,7 @@ function uploadFile(file, name) {
     "state_changed",
     function progress(snapshot) {
       var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 50;
-      document.getElementById("progress").value = percentage;
+      document.getElementById("progress").value += percentage;
     },
 
     function error() {
