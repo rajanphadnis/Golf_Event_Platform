@@ -36,6 +36,7 @@ initApp = function () {
                           acct: docExists.data().id,
                           uid: user.uid,
                         }).then((res) => {
+                          console.log(res);
                           if (res.charges_enabled) {
                             var connectButton = `<a href="https://dashboard.stripe.com/${
                               docExists.data().id
