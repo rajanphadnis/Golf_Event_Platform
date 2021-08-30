@@ -218,7 +218,7 @@ function agree(
           .functions()
           .httpsCallable("createTransaction");
         console.log(
-          `Transmitting: ${dID}, ${uID}, ${cost}, ${name}, ${stripeID}`
+          `Transmitting: ${dID}, ${uID}, ${cost}, ${name}, ${stripeID}, ${stripeOrgID}`
         );
         newTransaction({
           eventDoc: dID,

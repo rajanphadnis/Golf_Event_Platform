@@ -1029,6 +1029,8 @@ exports.refundSingleTransaction = functions.https.onCall(
                     return stripe.refunds
                         .create({
                             payment_intent: pID,
+                            refund_application_fee: true,
+                            reverse_transfer: true,
                         })
                         .then((f) => {
                             return db
