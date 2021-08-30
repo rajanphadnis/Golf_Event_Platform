@@ -37,7 +37,7 @@ initApp = function () {
                           uid: user.uid,
                         }).then((res) => {
                           console.log(res);
-                          if (res.charges_enabled) {
+                          if (res.data.charges_enabled) {
                             var connectButton = `<a href="https://dashboard.stripe.com/${
                               docExists.data().id
                             }/dashboard" class="stripe-connect slate"><span>Open</span></a>`;
