@@ -503,6 +503,8 @@ exports.createTransaction = functions.https.onCall(async(data, context) => {
     const checkoutImage = data.checkoutImage;
     const customerID = data.customerID.toString();
     const userEmail = data.userEmail;
+    const connectAccountID = data.stripeUID.toString();
+    const perPaymentFee = data.perPaymentFee;
     if (!context.auth) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError(
@@ -542,9 +544,9 @@ exports.createTransaction = functions.https.onCall(async(data, context) => {
             }, ],
             metadata: { eventID: eventDoc.toString(), uID: userUID.toString() },
             payment_intent_data: {
-                application_fee_amount: 12,
+                application_fee_amount: perPaymentFee,
                 transfer_data: {
-                    destination: "acct_1JEiwOPfBihHlzmx",
+                    destination: connectAccountID,
                 },
                 setup_future_usage: "on_session",
             },
@@ -578,9 +580,9 @@ exports.createTransaction = functions.https.onCall(async(data, context) => {
             }, ],
             metadata: { eventID: eventDoc.toString(), uID: userUID.toString() },
             payment_intent_data: {
-                application_fee_amount: 12,
+                application_fee_amount: perPaymentFee,
                 transfer_data: {
-                    destination: "acct_1JEiwOPfBihHlzmx",
+                    destination: connectAccountID,
                 },
                 setup_future_usage: "on_session",
             },
@@ -1137,27 +1139,6 @@ exports.resumeConnectPortalCreation = functions.https.onCall(async(data, context
       refresh_url: 'https://golf-event-platform--dev-u2suwtdi.web.app/account/',
       return_url: 'https://golf-event-platform--dev-u2suwtdi.web.app/account/',
       type: 'account_onboarding',
-  });
-  const dbUpdate = await admin.firestore().collection(`users/${userID}/stripeConnect`).add(accountLink);
-  return {
-      URLCreated: accountLink.created,
-      URLExpiration: accountLink.expires_at,
-      returnURL: accountLink.url,
-      dbReturn: dbUpdate,
-  };
-});
-
-exports.connectPortalUpdateLink = functions.https.onCall(async(data, context) => {
-    const uid = data.uid.toString();
-    const userID = data.userID.toString();
-    const stripe = require("stripe")(
-        "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
-    );
-    const accountLink = await stripe.accountLinks.create({
-      account: uid,
-      refresh_url: 'https://golf-event-platform--dev-u2suwtdi.web.app/account/',
-      return_url: 'https://golf-event-platform--dev-u2suwtdi.web.app/account/',
-      type: 'account_update',
   });
   const dbUpdate = await admin.firestore().collection(`users/${userID}/stripeConnect`).add(accountLink);
   return {

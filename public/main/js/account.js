@@ -10,19 +10,21 @@ initApp = function() {
                 db.collection("users")
                     .doc(user.uid)
                     .get()
-                    .then(async (userDoc) => {
+                    .then(async(userDoc) => {
                         if (userDoc.exists) {
                             var par = `<p id="message">Hello, ${user.displayName}</p>`;
                             document.getElementById("firebaseui-auth-container").innerHTML =
                                 par;
                             if (userDoc.data().accountType == "charity") {
-                                const docExists = await db.collection(`users/${user.uid}/stripeConnect`).doc("accountCreation");
-                                if (!docExists.exists) {
-                                    registerCharityWithStripe(user.uid);
-                                }
-                                else {
-                                    openStripePortal(docExists.data().id);
-                                }
+                                db.collection(`users/${user.uid}/stripeConnect`).doc("accountCreation").get().then((docExists) => {
+                                    console.log(docExists);
+                                    if (docExists.exists) {
+                                        var connectButton = `<a href="https://dashboard.stripe.com/${docExists.data().id}/dashboard" class="stripe-connect slate"><span>Open</span></a>`;
+                                        document.getElementById("charityStripeData").innerHTML = connectButton;
+                                    } else {
+                                        registerCharityWithStripe(user.uid);
+                                    }
+                                });
                             }
                         } else {
                             db.collection("archivedUsers")
@@ -68,13 +70,4 @@ function registerCharityWithStripe(userID) {
                 document.getElementById("charityStripeData").innerHTML = connectButton;
             });
         });
-}
-
-function openStripePortal(uid) {
-    var createLink = firebase.functions().httpsCallable('resumeConnectPortalCreation');
-    createLink({ uid: uid, userID: userID }).then((res) => {
-        var returnURL = res.data.returnURL;
-        var connectButton = `<a href="${returnURL}" class="stripe-connect slate"><span>Open</span></a>`;
-        document.getElementById("charityStripeData").innerHTML = connectButton;
-    });
 }
