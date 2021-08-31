@@ -19,6 +19,29 @@
 </head>
 
 <body>
+    <template id="eventTemplate">
+        <div class="eventA">
+            <div class="eventDiv">
+                <div class="eventDivImg">
+                </div>
+                <div class="eventDivInfo">
+                    <a class="eventClickA">
+                        <h3 class="titleElement"></h3>
+                        <h4 class="dateElement"></h4>
+                        <h4 class="timeElement"></h4>
+                        <h4 class="locElement"></h4>
+                        <h4 class="costElement"></h4>
+                    </a>
+                    <div style="display: flex;flex-direction: row;justify-content: space-evenly;">
+                        <a class="editEvent"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        <a class="deleteEvent" href="#" style="color:red;"><i class="fa fa-trash"
+                                aria-hidden="true"></i></a>
+                    </div>
+
+                </div>
+            </div>
+            </a>
+    </template>
     <div id="navbar">
         <div id="leftNav">
             <a id="navBarLogoA" href="/">Golf4Bob</a>
@@ -67,7 +90,9 @@
                     <p>Past Events</p>
                 </div>
                 <div id="charityMainContent"></div>
-                <div id="charityRightLinksBar"><a href="/my-events/new-event">Create New Event</a></div>
+                <div id="charityRightLinksBar"><button id="manageBilling"
+                        onclick="window.location='/my-events/new-event';"><a href="/my-events/new-event"><strong>New
+                                Event </strong><i class="fa fa-arrow-right" aria-hidden="true"></i></a></button></div>
             </div>
         </div>
         <div id="standardPage">
