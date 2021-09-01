@@ -1,0 +1,47 @@
+#eventDetails {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  height: 100%;
+}
+#registerButton {
+  cursor: pointer;
+  outline: 0;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  color: #0d6efd;
+  border-color: #0d6efd;
+  width: fit-content;
+}
+#registerButton:disabled {
+    cursor: auto;
+    border-color: #cecece;
+    color: #000000;
+}
+#registerButton:disabled:hover {
+    cursor: auto;
+    border-color: #cecece;
+    color: #000000;
+}
+#registerButton:hover {
+  color: #fff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+#eventContentMainFlex {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
