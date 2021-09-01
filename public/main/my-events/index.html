@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="/css/my-events/charity.css" />
     <link rel="stylesheet" href="/css/my-events/standard.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preload" href="/js/myEvents/standard.js?v=1" as="script">
+    <link rel="preload" href="/js/myEvents/charity.js" as="script">
 </head>
 
 <body>
@@ -30,9 +32,10 @@
                         <h4 class="dateElement"></h4>
                         <h4 class="timeElement"></h4>
                         <h4 class="locElement"></h4>
+                        <h4 class="orgElement"></h4>
                         <h4 class="costElement"></h4>
                     </a>
-                    <div style="display: flex;flex-direction: row;justify-content: space-evenly;">
+                    <div class="eventActionLinksDiv" style="display: flex;flex-direction: row;justify-content: space-evenly;">
                         <a class="editEvent"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                         <a class="deleteEvent" href="#" style="color:red;"><i class="fa fa-trash"
                                 aria-hidden="true"></i></a>
@@ -82,12 +85,12 @@
         </div>
         <div id="charityPage">
             <div id="charityHeaderContent">
-                <h2>Manage my Events</h2>
+                <h2>Manage Events</h2>
             </div>
             <div id="charityMainFlex">
                 <div id="charityVerticalNav">
-                    <p>Upcoming Events</p>
-                    <p>Past Events</p>
+                    <button id="upcomingCharity" class="generalEventsNavButton">Upcoming Events</button>
+                    <button id="pastCharity" class="generalEventsNavButton">Past Events</button>
                 </div>
                 <div id="charityMainContent"></div>
                 <div id="charityRightLinksBar"><button id="manageBilling"
@@ -101,11 +104,11 @@
             </div>
             <div id="standardMainFlex">
                 <div id="standardVerticalNav">
-                    <p>Upcoming Events</p>
-                    <p>Past Events</p>
+                    <button id="upcomingStandard" class="generalEventsNavButton">Upcoming Events</button>
+                    <button id="pastStandard" class="generalEventsNavButton">Past Events</button>
                 </div>
                 <div id="standardMainContent"></div>
-                <div id="standardRightLinksBar"></div>
+                <!-- <div id="standardRightLinksBar"></div> -->
             </div>
         </div>
     </div>

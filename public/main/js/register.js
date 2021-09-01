@@ -205,7 +205,7 @@ function agree(
   stripeOrgID
 ) {
   document.getElementById("registerButton").disabled = true;
-  document.getElementById("registerButton").innerText = "Processing...";
+  document.getElementById("registerButton").innerText = "Processing...Do not leave this page";
   console.log("agreed");
   // console.log(`ID: ${dID}`);
   var db = firebase.firestore();
