@@ -36,6 +36,18 @@
         <p id="saveStatus"></p>
         <textarea style="height: 100%;" id="legalAgreement"></textarea>
     </template>
+    <template id="TandCTemplate">
+        <h1>Terms and Conditions</h1>
+        <button style="width: fit-content;margin-left: auto;margin-right: auto;" id="legalSave">Save Changes</button>
+        <p id="saveStatus"></p>
+        <textarea style="height: 100%;" id="legalAgreement"></textarea>
+    </template>
+    <template id="ethicsTemplate">
+        <h1>Ethics Statement</h1>
+        <button style="width: fit-content;margin-left: auto;margin-right: auto;" id="legalSave">Save Changes</button>
+        <p id="saveStatus"></p>
+        <textarea style="height: 100%;" id="legalAgreement"></textarea>
+    </template>
     <template id="eventHeader">
         <h1 id="eventListHeaderH1"></h1>
         <a href="/newEvent.html">Create New Event</a>
@@ -188,6 +200,8 @@
             <button class="tabButton" onclick="navigate('events');">Events</button>
             <button class="tabButton" onclick="navigate('pay');">Payment Management</button>
             <button class="tabButton" onclick="navigate('legal');">Legal</button>
+            <button class="tabButton" onclick="navigate('TandC');">Terms & Conditions</button>
+            <button class="tabButton" onclick="navigate('ethics');">Ethics Statement</button>
             <!-- <button class="tabButton" onclick="navigate('cost');">Total Cost</button> -->
             <button class="tabButton" onclick="navigate('stats');">Statistics</button>
             <button class="tabButton" onclick="navigate('openSite')">Open Site</button>
