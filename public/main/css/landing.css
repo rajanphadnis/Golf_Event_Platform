@@ -108,3 +108,57 @@ footer p {
   opacity: 1;
   border-radius: 5px;
 }
+
+#homeDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+#homeDiv p {
+  width: 75%;
+}
+
+#homeDiv hr {
+  width: 35%;
+}
+
+#aboutDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+#aboutDiv p {
+  width: 75%;
+}
+
+#aboutDiv hr {
+  width: 35%;
+}
+
+#aboutDiv div {
+  display: flex;
+  flex-direction: row;
+  width: 75%;
+  justify-content: space-around;
+}
+#faqDiv {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#faqDiv hr {
+  width: 35%;
+}
+
+#faqDiv h1 {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
