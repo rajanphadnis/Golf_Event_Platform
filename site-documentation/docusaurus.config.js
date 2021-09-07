@@ -4,15 +4,15 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 // With JSDoc @type annotations, IDEs can provide config autocompletion
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 (module.exports = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Golf4Bob Documentation Site',
+  tagline: 'OK, but how much of this will you actually read?',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'rajanphadnis', // Usually your GitHub org/user name.
+  projectName: 'Golf_Event_Platform', // Usually your repo name.
 
   presets: [
     [
@@ -22,13 +22,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/facebook/docusaurus/edit/main/website/',
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/main/website/blog/',
+          editUrl: 'https://github.com/rajanphadnis/Golf_Event_Platform/edit/main/site-documentation/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -41,9 +35,9 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
+        title: 'Reference',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Golf4Bob Reference',
           src: 'img/logo.svg',
         },
         items: [
@@ -59,11 +53,23 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'Documentation',
             items: [
               {
-                label: 'Tutorial',
+                label: 'Intro',
                 to: '/docs/intro',
+              },
+              {
+                label: 'Main Site',
+                to: '/docs/main-site/overview',
+              },
+              {
+                label: 'Admin Site',
+                to: '/docs/admin-site/overview',
+              },
+              {
+                label: 'Backend',
+                to: '/docs/backend/services-overview',
               },
             ],
           },
@@ -71,16 +77,16 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             title: 'Community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
                 label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                href: 'https://twitter.com',
+              },
+              {
+                label: 'Instagram',
+                href: 'https://instagram.com',
+              },
+              {
+                label: 'Facebook',
+                href: 'https://facebook.com',
               },
             ],
           },
@@ -89,12 +95,20 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/rajanphadnis/Golf_Event_Platform',
+              },
+              {
+                label: 'Admin Site',
+                href: 'https://admin-golf-event-site--dev-v1w2rkn2.web.app/',
+              },
+              {
+                label: 'Main Site',
+                href: 'https://golf-event-platform--dev-u2suwtdi.web.app/',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Golf4Bob. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,

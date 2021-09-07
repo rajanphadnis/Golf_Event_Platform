@@ -8,8 +8,7 @@ const FeatureList = [
     Svg: require('../../static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Designed from the ground up to be easy to read, navigate, and understand, this is your one-stop shop for everything Golf4Bob.
       </>
     ),
   },
@@ -18,18 +17,16 @@ const FeatureList = [
     Svg: require('../../static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        With easy theme switching and a simple, fluid design language, dive right into content without ever having to go hunting for your issue.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Written by the Developer',
     Svg: require('../../static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Whenever any changes are made to the platform, the documentation is always updated - meaning there are fewer outdated references on this site.
       </>
     ),
   },

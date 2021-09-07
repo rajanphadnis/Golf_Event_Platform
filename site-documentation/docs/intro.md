@@ -2,34 +2,45 @@
 sidebar_position: 1
 ---
 
-# Intro
+# Getting Started
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Hi! Welcome to the Golf4Bob Official Documentation!
 
-## Getting Started
+Go ahead and explore the site - it's a lot to take in, but it's mostly here just to explain how exactly the site functions.
 
-Get started by **creating a new site**.
+As reference literature, this is the place to come when you have an issue with any of the sites. If you can't find your answer here - or you do find an answer, and need to fix something - contact the owner of the [GitHub repository](https://github.com/rajanphadnis/Golf_Event_Platform) and explain your situation!
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
 
-## Generate a new site
+## Some Important Notes
 
-Generate a new Docusaurus site using the **classic template**:
+The following boxes highlight critical information - please pay very close attention to their contents whenever you see them:
 
-```shell
-npx @docusaurus/init@latest init my-website classic
-```
+:::note Clarifications
 
-## Start your site
+Often includes information redirecting to 3rd party websites for clarification purposes.
 
-Run the development server:
+:::
 
-```shell
-cd my-website
+:::tip Helpful Hints
 
-npx docusaurus start
-```
+Provides helpful hints and possible answers to commonly asked questions.
 
-Your site starts at `http://localhost:3000`.
+:::
 
-Open `docs/intro.md` and edit some lines: the site **reloads automatically** and display your changes.
+:::info Information Notes
+
+Contents of this box can easily disable small features of the sites. This can often be undone - but is costly and time-consuming.
+
+:::
+
+:::caution Caution Warnings
+
+Be careful with information noted in this box - it can easily take down critical features of the sites.
+
+:::
+
+:::danger Danger Warnings
+
+This box highlights information that can completely kill one - if not all - aspects of the sites
+
+:::
