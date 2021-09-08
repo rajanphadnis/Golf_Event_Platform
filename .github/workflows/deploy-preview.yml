@@ -3,8 +3,6 @@ name: Dev Hosting
 on:
   push:
     branches: [dev]
-    paths:
-      - '!site-documentation/docs/**/*.md'
   workflow_dispatch:
 jobs:
   hosting_deploy:
