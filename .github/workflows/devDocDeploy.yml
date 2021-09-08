@@ -27,12 +27,14 @@ jobs:
     needs: npm_compile
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Copy Directory
-        uses: MadaraUchiha/copy-action@0.0.1
+      - name: Copy
+        uses: andstor/copycat-action@v3
         with:
-          source: "site-documentation/build"
-          target: "public/docs"
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+          src_path: site-documentation/build/.
+          dst_path: /public/docs/
+          dst_owner: rajanphadnis
+          dst_repo_name: Golf_Event_Platform
   hosting_deploy:
     needs: [npm_compile, file_transfer]
     runs-on: ubuntu-latest
