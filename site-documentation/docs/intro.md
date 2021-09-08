@@ -2,6 +2,22 @@
 sidebar_position: 1
 ---
 
+# Code Status
+
+## Main Platform:
+
+[![Deploy Hosting](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/main.yml)
+
+
+## Dev Platform:
+
+[![Dev Hosting](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/deploy-preview.yml/badge.svg?branch=dev)](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/deploy-preview.yml)
+
+[![Dev Documentation](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/devDocDeploy.yml/badge.svg?branch=dev)](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/devDocDeploy.yml)
+
+[![Dev Backend](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/fxnDeploy.yml/badge.svg?branch=dev)](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/fxnDeploy.yml)
+
+
 # Getting Started
 
 Hi! Welcome to the Golf4Bob Official Documentation!
@@ -9,7 +25,6 @@ Hi! Welcome to the Golf4Bob Official Documentation!
 Go ahead and explore the site - it's a lot to take in, but it's mostly here just to explain how exactly the site functions.
 
 As reference literature, this is the place to come when you have an issue with any of the sites. If you can't find your answer here - or you do find an answer, and need to fix something - contact the owner of the [GitHub repository](https://github.com/rajanphadnis/Golf_Event_Platform) and explain your situation!
-
 
 ## Some Important Notes
 
