@@ -27,14 +27,9 @@ jobs:
     needs: npm_compile
     runs-on: ubuntu-latest
     steps:
-      - name: Copy
-        uses: andstor/copycat-action@v3
-        with:
-          personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          src_path: site-documentation/build/.
-          dst_path: /public/docs/
-          dst_owner: rajanphadnis
-          dst_repo_name: Golf_Event_Platform
+      - uses: actions/checkout@master
+      - name: Copy Compiled Documentation
+        run: cp -a /site-documentation/build /public/docs
   hosting_deploy:
     needs: [npm_compile, file_transfer]
     runs-on: ubuntu-latest
