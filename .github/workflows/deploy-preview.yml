@@ -1,4 +1,4 @@
-name: Beta Hosting Deploy
+name: Dev Hosting
 
 on:
   push:

@@ -17,6 +17,7 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_GOLF_EVENT_PLATFORM }}"
           projectId: golf-event-platform
           channelId: live
+          target: main
   function_deploy:
     runs-on: ubuntu-latest
     steps:
@@ -26,5 +27,39 @@ jobs:
         uses: BIGG-Kaymo/deploy-firebase-functions@v1.0.1
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-
+  npm_compile:
+    defaults:
+      run:
+        working-directory: site-documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+          cache-dependency-path: site-documentation/package-lock.json
+      - run: npm install
+      - run: npm run build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: compiledDocumentation
+          path: site-documentation/build/
+          if-no-files-found: error
+  hosting_deploy:
+    needs: npm_compile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: compiledDocumentation
+          path: public/docs/
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_GOLF_EVENT_PLATFORM }}"
+          projectId: golf-event-platform
+          channelId: live
+          target: docs
   
