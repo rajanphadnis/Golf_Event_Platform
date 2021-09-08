@@ -1,11 +1,11 @@
-name: Prod Fxn Deploy
+name: Dev Doc Deploy
 
 on:
   push:
     branches:
       - 'dev'
     paths:
-      - 'site-documentation/**'
+      - 'site-documentation/docs/**/*.md'
   workflow_dispatch:
 
 jobs:
