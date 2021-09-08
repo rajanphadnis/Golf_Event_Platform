@@ -31,8 +31,8 @@ jobs:
       - name: Copy Directory
         uses: MadaraUchiha/copy-action@0.0.1
         with:
-          source: "site-documentation/**"
-          target: "public/docs/**"
+          source: "site-documentation/build"
+          target: "public/docs"
   hosting_deploy:
     needs: [npm_compile, file_transfer]
     runs-on: ubuntu-latest
