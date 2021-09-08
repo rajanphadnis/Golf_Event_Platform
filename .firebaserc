@@ -10,6 +10,9 @@
         ],
         "main": [
           "golf-event-platform"
+        ],
+        "docs": [
+          "docs-golf-event-site"
         ]
       }
     }
