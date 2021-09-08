@@ -28,7 +28,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: compiledDocumentation
-          path: build/
+          path: ./build/
           if-no-files-found: error
   hosting_deploy:
     needs: npm_compile
@@ -38,7 +38,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: compiledDocumentation
-          path: public/docs/
+          path: ./public/docs/
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
