@@ -1,6 +1,7 @@
 # Golf4Bob (Golf_Event_Platform)
-[![Deploy to Preview Channel](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/deploy-preview.yml/badge.svg?branch=dev)](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/deploy-preview.yml)
-
+[![Hosting](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/deploy-preview.yml/badge.svg?branch=dev)](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/deploy-preview.yml)
+[![Documentation](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/devDocDeploy.yml/badge.svg?branch=dev)](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/devDocDeploy.yml)
+[![Backend](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/fxnDeploy.yml/badge.svg?branch=dev)](https://github.com/rajanphadnis/Golf_Event_Platform/actions/workflows/fxnDeploy.yml)
 Site to help organize and advertise for golf charity tournaments. Starting off in Southern California with plans to expland nationwide later.
 
 ## Services
