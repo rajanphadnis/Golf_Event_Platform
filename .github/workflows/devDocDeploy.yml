@@ -26,23 +26,16 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: compiledDocumentation
-          path: docCompiled/
-  file_transfer:
-    needs: npm_compile
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
-      with:
-        name: compiledDocumentation
-        path: docCompiled/
-    - name: Display structure of downloaded files
-      run: ls -R
+          path: build/
   hosting_deploy:
     needs: [npm_compile, file_transfer]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: compiledDocumentation
+          path: public/docs/
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
