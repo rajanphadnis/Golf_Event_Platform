@@ -378,7 +378,7 @@ exports.autoGenerateHashFromImage = functions.storage
                 return blurhash.encodePromise(decodedDataV, imgWidth, imgHeight, 4, 3);
             })
             .then((hash) => {
-                console.log(hash);
+                // console.log(hash);
                 return dbRef
                     .set({
                         MainHash: hash.toString(),
@@ -523,7 +523,7 @@ exports.createTransaction = functions.https.onCall(async(data, context) => {
     const stripe = require("stripe")(
         "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
     );
-    console.log(customerID);
+    // console.log(customerID);
     if (customerID == "null") {
         console.log("customer ID was blank");
         const session = await stripe.checkout.sessions.create({
@@ -1109,7 +1109,7 @@ exports.monthlyDelete = functions.pubsub.schedule("0 3 * * *").timeZone('America
         if (date < currentDate) {
             deleteOps.push(admin.firestore().collection("pastEvents").doc(doc.id).set(doc.data()));
             deleteOps.push(doc.ref.delete());
-            console.log(`Tee: ${doc.id} - ${date}`);
+            // console.log(`Tee: ${doc.id} - ${date}`);
         }
     });
     return Promise.all(deleteOps);
