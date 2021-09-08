@@ -27,6 +27,15 @@
         "**/.*",
         "**/node_modules/**"
       ]
+    },
+    {
+      "target": "docs",
+      "public": "public/docs",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
   ],
   "storage": {

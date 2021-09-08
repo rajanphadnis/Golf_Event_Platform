@@ -23,8 +23,6 @@ jobs:
           cache-dependency-path: site-documentation/package-lock.json
       - run: npm install
       - run: npm run build
-      - name: Display structure of downloaded files
-        run: ls -R
       - uses: actions/upload-artifact@v2
         with:
           name: compiledDocumentation
