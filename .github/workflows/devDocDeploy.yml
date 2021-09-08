@@ -28,7 +28,7 @@ jobs:
           name: compiledDocumentation
           path: build/
   hosting_deploy:
-    needs: [npm_compile, file_transfer]
+    needs: npm_compile
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
