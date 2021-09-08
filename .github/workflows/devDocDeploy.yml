@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Copy Compiled Documentation
-        run: ls | cp -a site-documentation/build public/docs
+        run: ls
   hosting_deploy:
     needs: [npm_compile, file_transfer]
     runs-on: ubuntu-latest
