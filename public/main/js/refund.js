@@ -108,7 +108,6 @@ function agree(dID, uDocRef) {
                         alert(message.toString());
                     });
             } else {
-                // FIXME: transition to DEL cloud fxn
                 var dbUpdate = firebase.functions().httpsCallable('deleteDBDoc');
                 dbUpdate({ path: `upcomingEvents/${dID}/registeredUsers`, doc: uDocRef.toString() })
                     .then((result) => {
@@ -119,12 +118,6 @@ function agree(dID, uDocRef) {
                             alert("Oh no! Something went wrong, please try again in a few minutes");
                         }
                     });
-                // db.collection(`upcomingEvents/${dID}/registeredUsers`)
-                //     .doc(uDocRef)
-                //     .delete()
-                //     .then(() => {
-                //         window.location = "/";
-                //     });
             }
         })
         .catch((er) => {

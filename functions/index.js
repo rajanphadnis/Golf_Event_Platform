@@ -1268,3 +1268,27 @@ exports.deleteDBDoc = functions.https.onCall(async(data, context) => {
           return {done: true};
       });
 });
+
+exports.registerForEvent = functions.https.onCall(async(data, context) => {
+    const dID = data.did.toString();
+    const uid = context.auth.uid;
+    var db = admin.firestore();
+    if (!(typeof dID === 'string') || dID.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "did" containing the properly-formatted account creation type.');
+      }
+      // Checking that the user is authenticated.
+      if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+      }
+      return db.collection(`upcomingEvents/${dID}/registeredUsers`).add({
+        uid: uid.toString(),
+        dt: new Date(Date.now()),
+        paidRegistration: false,
+      }).then((f) => {
+          return {done: true};
+      });
+});

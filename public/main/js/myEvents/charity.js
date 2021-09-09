@@ -73,7 +73,6 @@ function displayPastCharityEvents(uid) {
 function deleteEvent(eventID) {
     var canDelete = confirm("Are you sure you want to delete this event?");
     if (canDelete) {
-        // FIXME: transition to DEL cloud fxn
         var dbUpdate = firebase.functions().httpsCallable('deleteDBDoc');
         dbUpdate({ path: "upcomingEvents", doc: eventID.toString() })
             .then((result) => {
@@ -86,14 +85,6 @@ function deleteEvent(eventID) {
                     alert("Oh no! Something went wrong, please try again in a few minutes");
                 }
             });
-        // db.collection("upcomingEvents").doc(eventID).delete().then(() => {
-        //     console.log("Document successfully deleted!");
-        //     alert("Deleted Event! It may take a few minutes for the event to be fully deleted");
-        //     window.location = "/my-events";
-        // }).catch((error) => {
-        //     console.error("Error removing document: ", error);
-        //     alert("Oh no! Something went wrong, please try again in a few minutes");
-        // });
     }
 }
 
