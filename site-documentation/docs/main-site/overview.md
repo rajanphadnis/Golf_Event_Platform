@@ -44,11 +44,11 @@ This is the site's hierarchy:
 
 ## Site Security
 
-As a general rule, this site does not directly write to (or update) the database. However, there are three exceptions:
+As a general rule, this site does not directly write to (or update) the database. However, there are currently three exceptions (hoping to make just one exception in the next few days):
 
-- Page view counter (site will increment event's [sharded counter](https://firebase.google.com/docs/firestore/solutions/counters))
-- A charity's "Create New Event" page
-- A charity's "Edit Event" page 
+- Page view counter (site will increment event's [sharded counter](https://firebase.google.com/docs/firestore/solutions/counters) - this writing capability will be extremely locked down in the next few days)
+- A charity's "Create New Event" page - due to be removed in the next few days
+- A charity's "Edit Event" page - due to be removed in the next few days
 
-The rest of the database entries and creation takes place on the backend ([see backend documentation](/docs/backend/services-overview#firebase-cloud-functions))
+The rest of the database entries and creation takes place on the backend via Firebase Cloud Functions ([see backend documentation](/docs/backend/services-overview#firebase-cloud-functions)).
 
