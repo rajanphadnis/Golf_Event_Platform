@@ -1245,18 +1245,18 @@ if (!(typeof typeSrc === 'string') || typeSrc.length === 0 || !(typeSrc === "non
 });
 
 exports.deleteDBDoc = functions.https.onCall(async(data, context) => {
-    const pth = data.path;
-    const docc = data.doc;
+    const pth = data.path.toString();
+    const docc = data.doc.toString();
     var db = admin.firestore();
     if (!(typeof pth === 'string') || pth.length === 0) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-            'one arguments "createSrc" containing the properly-formatted account creation type.');
+            'one arguments "path" containing the properly-formatted account creation type.');
       }
       if (!(typeof docc === 'string') || docc.length === 0) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-            'one arguments "createSrc" containing the properly-formatted account creation type.');
+            'one arguments "doc" containing the properly-formatted account creation type.');
       }
       // Checking that the user is authenticated.
       if (!context.auth) {

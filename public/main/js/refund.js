@@ -110,7 +110,7 @@ function agree(dID, uDocRef) {
             } else {
                 // FIXME: transition to DEL cloud fxn
                 var dbUpdate = firebase.functions().httpsCallable('deleteDBDoc');
-                dbUpdate({ path: `upcomingEvents/${dID}/registeredUsers`, path: uDocRef.toString() })
+                dbUpdate({ path: `upcomingEvents/${dID}/registeredUsers`, doc: uDocRef.toString() })
                     .then((result) => {
                         // Read result of the Cloud Function.
                         if (result.data.done) {

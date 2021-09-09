@@ -75,7 +75,7 @@ function deleteEvent(eventID) {
     if (canDelete) {
         // FIXME: transition to DEL cloud fxn
         var dbUpdate = firebase.functions().httpsCallable('deleteDBDoc');
-        dbUpdate({ path: "upcomingEvents", path: eventID })
+        dbUpdate({ path: "upcomingEvents", doc: eventID.toString() })
             .then((result) => {
                 // Read result of the Cloud Function.
                 if (result.data.done) {
