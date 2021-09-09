@@ -73,14 +73,27 @@ function displayPastCharityEvents(uid) {
 function deleteEvent(eventID) {
     var canDelete = confirm("Are you sure you want to delete this event?");
     if (canDelete) {
-        db.collection("upcomingEvents").doc(eventID).delete().then(() => {
-            console.log("Document successfully deleted!");
-            alert("Deleted Event! It may take a few minutes for the event to be fully deleted");
-            window.location = "/my-events";
-        }).catch((error) => {
-            console.error("Error removing document: ", error);
-            alert("Oh no! Something went wrong, please try again in a few minutes");
-        });
+        // FIXME: transition to DEL cloud fxn
+        var dbUpdate = firebase.functions().httpsCallable('deleteDBDoc');
+        dbUpdate({ path: "upcomingEvents", path: eventID })
+            .then((result) => {
+                // Read result of the Cloud Function.
+                if (result.data.done) {
+                    console.log("Document successfully deleted!");
+                    alert("Deleted Event! It may take a few minutes for the event to be fully deleted");
+                    window.location = "/my-events";
+                } else {
+                    alert("Oh no! Something went wrong, please try again in a few minutes");
+                }
+            });
+        // db.collection("upcomingEvents").doc(eventID).delete().then(() => {
+        //     console.log("Document successfully deleted!");
+        //     alert("Deleted Event! It may take a few minutes for the event to be fully deleted");
+        //     window.location = "/my-events";
+        // }).catch((error) => {
+        //     console.error("Error removing document: ", error);
+        //     alert("Oh no! Something went wrong, please try again in a few minutes");
+        // });
     }
 }
 
@@ -114,7 +127,7 @@ function addEventCard(doc, parent) {
     eventTemplate.querySelector(".costElement").innerHTML = `$${cost}/person`;
     eventTemplate.querySelector(".editEvent").href = `/my-events/edit?d=${doc.id}`;
     eventTemplate.querySelector(".deleteEvent").addEventListener("click", () => {
-      deleteEvent(id);
+        deleteEvent(id);
     });
     parentList.appendChild(eventTemplate);
 }
@@ -137,9 +150,9 @@ function addPastEventCard(doc, parent) {
         document.getElementById("eventTemplate").content,
         true
     );
-//     eventTemplate.querySelector(".eventClickA").href = `/event/?e=${id}&i=${blurHash}&d=${
-//   doc.data().ImageDim
-// }`;
+    //     eventTemplate.querySelector(".eventClickA").href = `/event/?e=${id}&i=${blurHash}&d=${
+    //   doc.data().ImageDim
+    // }`;
     eventTemplate.querySelector(".eventDivImg").innerHTML = imgElement;
     eventTemplate.querySelector(".titleElement").innerHTML = title;
     eventTemplate.querySelector(".dateElement").innerHTML = dateString;

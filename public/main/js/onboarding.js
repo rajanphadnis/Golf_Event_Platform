@@ -117,25 +117,6 @@ function addUser(displayName, email, uid, type) {
                 alert("Something went wrong - try again in a few minutes, or contact support if the issue persists.");
             }
         });
-    // FIXME: test cloud function
-    // firebase
-    //     .firestore()
-    //     .collection("users")
-    //     .doc(uid)
-    //     .set({
-
-    //         name: displayName,
-    //         email: email,
-    //         accountCreated: new Date(Date.now()),
-    //         accountType: type,
-    //     })
-    //     .then((docRef) => {
-    //         // console.log("Document written with ID: ", docRef.id);
-    //         window.location = returnTo;
-    //     })
-    //     .catch((error) => {
-    //         console.error("Error adding document: ", error);
-    //     });
 }
 
 function createUserTransactionPage(user, returnTo) {
@@ -306,18 +287,6 @@ function createUserTransactionPage(user, returnTo) {
                                                     alert("Something went wrong - try again in a few minutes, or contact support if the issue persists.");
                                                 }
                                             });
-                                        // FIXME: test cloud function
-                                        // db.collection("users")
-                                        //     .doc(user.uid.toString())
-                                        //     .set({
-                                        //         accountCreated: new Date(Date.now()),
-                                        //         accountType: "standard",
-                                        //         email: user.email.toString(),
-                                        //         name: user.displayName.toString(),
-                                        //     })
-                                        //     .then((g) => {
-                                        //         window.location = returnTo;
-                                        //     });
                                     }
                                 });
                         }

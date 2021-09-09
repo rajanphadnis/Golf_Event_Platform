@@ -438,6 +438,7 @@ exports.deleteEvent = functions.firestore
 exports.userCleanup = functions.auth.user().onDelete(async(user) => {
     console.log(user.uid);
     var stripeID;
+    // TODO: add logic to also delete from archivedUsers and deletedUsers on delete
     const sPromise = admin
         .firestore()
         .collection("users")
@@ -1241,4 +1242,29 @@ if (!(typeof typeSrc === 'string') || typeSrc.length === 0 || !(typeSrc === "non
             return { done: false };
             break;
   }
+});
+
+exports.deleteDBDoc = functions.https.onCall(async(data, context) => {
+    const pth = data.path;
+    const docc = data.doc;
+    var db = admin.firestore();
+    if (!(typeof pth === 'string') || pth.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "createSrc" containing the properly-formatted account creation type.');
+      }
+      if (!(typeof docc === 'string') || docc.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "createSrc" containing the properly-formatted account creation type.');
+      }
+      // Checking that the user is authenticated.
+      if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+      }
+      return db.collection(pth).doc(docc).delete().then((f) => {
+          return {done: true};
+      });
 });

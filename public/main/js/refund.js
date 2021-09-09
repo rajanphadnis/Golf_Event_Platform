@@ -108,12 +108,23 @@ function agree(dID, uDocRef) {
                         alert(message.toString());
                     });
             } else {
-                db.collection(`upcomingEvents/${dID}/registeredUsers`)
-                    .doc(uDocRef)
-                    .delete()
-                    .then(() => {
-                        window.location = "/";
+                // FIXME: transition to DEL cloud fxn
+                var dbUpdate = firebase.functions().httpsCallable('deleteDBDoc');
+                dbUpdate({ path: `upcomingEvents/${dID}/registeredUsers`, path: uDocRef.toString() })
+                    .then((result) => {
+                        // Read result of the Cloud Function.
+                        if (result.data.done) {
+                            window.location = "/";
+                        } else {
+                            alert("Oh no! Something went wrong, please try again in a few minutes");
+                        }
                     });
+                // db.collection(`upcomingEvents/${dID}/registeredUsers`)
+                //     .doc(uDocRef)
+                //     .delete()
+                //     .then(() => {
+                //         window.location = "/";
+                //     });
             }
         })
         .catch((er) => {

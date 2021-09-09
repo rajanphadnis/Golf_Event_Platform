@@ -172,6 +172,7 @@ function addEvent(
   // hash
 ) {
   // console.log(hash);
+  // TODO: transition to NEW1 cloud fxn
   firebase
     .firestore()
     .collection("upcomingEvents")
@@ -243,7 +244,7 @@ function getDownloadURLOfImg(docID) {
     .getDownloadURL()
     .then((url) => {
       document.getElementById("progress").value += 25;
-      // TODO: transition to cloud function
+      // TODO: transition to NEW2 cloud function
       firebase
         .firestore()
         .collection("upcomingEvents")

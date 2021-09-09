@@ -245,6 +245,7 @@ function agree(
               "Error. Please Refresh the Page.";
           });
       } else {
+        // TODO: transition to REG cloud function
         db.collection(`upcomingEvents/${dID}/registeredUsers`).add({
           uid: uID.toString(),
           dt: new Date(Date.now()),
