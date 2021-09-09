@@ -9,7 +9,7 @@ firebase.auth().onAuthStateChanged(
             document.getElementById("pastCharity").style.backgroundColor = "transparent";
             document.getElementById("pastCharity").style.border = "1px solid transparent";
             document.getElementById("charityMainContent").innerHTML = "<p id='noReg'>You have not created any events yet</p>";
-            displayCharityEvents(user.uid);
+            // displayCharityEvents(user.uid);
             document.getElementById("upcomingCharity").addEventListener("click", () => {
                 document.getElementById("upcomingCharity").style.backgroundColor = "#cecece";
                 document.getElementById("upcomingCharity").style.border = "1px solid rgb(136, 136, 136)";
