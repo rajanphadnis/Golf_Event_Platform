@@ -1,286 +1,326 @@
 const uri = window.location.search;
 var queryString;
 try {
-  queryString = decodeURI(uri);
+    queryString = decodeURI(uri);
 } catch (e) {
-  // catches a malformed URI
-  console.error(e);
-  queryString = uri;
+    // catches a malformed URI
+    console.error(e);
+    queryString = uri;
 }
 var searchParams = new URLSearchParams(queryString);
 var returnTo;
 if (searchParams.has("l")) {
-  console.log(searchParams.get("l").toString());
-  returnTo = "/" + searchParams.get("l").toString();
+    console.log(searchParams.get("l").toString());
+    returnTo = "/" + searchParams.get("l").toString();
 } else {
-  returnTo = "/";
+    returnTo = "/";
 }
-initApp = function () {
-  var db = firebase.firestore();
-  firebase.auth().onAuthStateChanged(
-    function (user) {
-      if (user) {
-        db.collection("users")
-          .doc(user.uid)
-          .get()
-          .then((userDoc) => {
-            if (userDoc.exists) {
-              window.location = returnTo;
-            } else {
-              db.collection("archivedUsers")
-                .doc(user.uid)
-                .get()
-                .then((archUserDoc) => {
-                  if (archUserDoc.exists) {
-                    window.location = "/account-management";
-                  } else {
-                    db.collection("deletedUsers")
-                      .doc(user.uid)
-                      .get()
-                      .then((delUser) => {
-                        if (delUser.exists) {
-                          document.getElementById("mainParent").style.display =
-                            "block";
-                          // document.getElementById("options").style.display =
-                          //   "none";
-                          document.getElementById("hint").innerText =
-                            "Press the above button to contnue to the payment screen to subscribe and view events. You've already used your free trial.";
-                          document.getElementById(
-                            "mainQuestion"
-                          ).style.display = "none";
-                          document.getElementById("charity").style.display =
-                            "none";
-                          document.getElementById("standard").innerHTML =
-                            "Confirm";
-                          document
-                            .getElementById("standard")
-                            .addEventListener("click", function () {
-                              createUserTransactionPage(user, returnTo);
-                            });
-                          // createUserTransactionPage(user, returnTo);
+initApp = function() {
+    var db = firebase.firestore();
+    firebase.auth().onAuthStateChanged(
+        function(user) {
+            if (user) {
+                db.collection("users")
+                    .doc(user.uid)
+                    .get()
+                    .then((userDoc) => {
+                        if (userDoc.exists) {
+                            window.location = returnTo;
                         } else {
-                          document.getElementById("mainParent").style.display =
-                            "block";
-                          document
-                            .getElementById("standard")
-                            .addEventListener("click", function () {
-                              createUserTransactionPage(user, returnTo);
-                            });
-                          document
-                            .getElementById("charity")
-                            .addEventListener("click", function () {
-                              document.getElementById("options").style.display =
-                                "none";
-                              document.getElementById(
-                                "charityName"
-                              ).style.display = "block";
-                            });
-                          document
-                            .getElementById("submitCharityName")
-                            .addEventListener("click", function () {
-                              addUser(
-                                document.getElementById("charityNameInput")
-                                  .value,
-                                user.email,
-                                user.uid,
-                                "charity"
-                              );
-                            });
+                            db.collection("archivedUsers")
+                                .doc(user.uid)
+                                .get()
+                                .then((archUserDoc) => {
+                                    if (archUserDoc.exists) {
+                                        window.location = "/account-management";
+                                    } else {
+                                        db.collection("deletedUsers")
+                                            .doc(user.uid)
+                                            .get()
+                                            .then((delUser) => {
+                                                if (delUser.exists) {
+                                                    document.getElementById("mainParent").style.display =
+                                                        "block";
+                                                    // document.getElementById("options").style.display =
+                                                    //   "none";
+                                                    document.getElementById("hint").innerText =
+                                                        "Press the above button to contnue to the payment screen to subscribe and view events. You've already used your free trial.";
+                                                    document.getElementById(
+                                                        "mainQuestion"
+                                                    ).style.display = "none";
+                                                    document.getElementById("charity").style.display =
+                                                        "none";
+                                                    document.getElementById("standard").innerHTML =
+                                                        "Confirm";
+                                                    document
+                                                        .getElementById("standard")
+                                                        .addEventListener("click", function() {
+                                                            createUserTransactionPage(user, returnTo);
+                                                        });
+                                                    // createUserTransactionPage(user, returnTo);
+                                                } else {
+                                                    document.getElementById("mainParent").style.display =
+                                                        "block";
+                                                    document
+                                                        .getElementById("standard")
+                                                        .addEventListener("click", function() {
+                                                            createUserTransactionPage(user, returnTo);
+                                                        });
+                                                    document
+                                                        .getElementById("charity")
+                                                        .addEventListener("click", function() {
+                                                            document.getElementById("options").style.display =
+                                                                "none";
+                                                            document.getElementById(
+                                                                "charityName"
+                                                            ).style.display = "block";
+                                                        });
+                                                    document
+                                                        .getElementById("submitCharityName")
+                                                        .addEventListener("click", function() {
+                                                            addUser(
+                                                                document.getElementById("charityNameInput")
+                                                                .value,
+                                                                user.email,
+                                                                user.uid,
+                                                                "charity"
+                                                            );
+                                                        });
+                                                }
+                                            });
+                                    }
+                                });
                         }
-                      });
-                  }
-                });
+                    });
+            } else {
+                window.location = "/sign-in";
             }
-          });
-      } else {
-        window.location = "/sign-in";
-      }
-    },
-    function (error) {
-      console.log(error);
-    }
-  );
+        },
+        function(error) {
+            console.log(error);
+        }
+    );
 };
-window.addEventListener("load", function () {
-  initApp();
+window.addEventListener("load", function() {
+    initApp();
 });
 
 function addUser(displayName, email, uid, type) {
-  // TODO: transition to cloud function
-  firebase
-    .firestore()
-    .collection("users")
-    .doc(uid)
-    .set({
-      
-      name: displayName,
-      email: email,
-      accountCreated: new Date(Date.now()),
-      accountType: type,
-    })
-    .then((docRef) => {
-      // console.log("Document written with ID: ", docRef.id);
-      window.location = returnTo;
-    })
-    .catch((error) => {
-      console.error("Error adding document: ", error);
-    });
+    var dbUpdate = firebase.functions().httpsCallable('onboardUsersDBCall');
+    dbUpdate({ createType: type.toString(), createSrc: "none", transDoc: null, name: displayName, email: email })
+        .then((result) => {
+            // Read result of the Cloud Function.
+            if (result.data.done) {
+                window.location = returnTo;
+            } else {
+                alert("Something went wrong - try again in a few minutes, or contact support if the issue persists.");
+            }
+        });
+    // FIXME: test cloud function
+    // firebase
+    //     .firestore()
+    //     .collection("users")
+    //     .doc(uid)
+    //     .set({
+
+    //         name: displayName,
+    //         email: email,
+    //         accountCreated: new Date(Date.now()),
+    //         accountType: type,
+    //     })
+    //     .then((docRef) => {
+    //         // console.log("Document written with ID: ", docRef.id);
+    //         window.location = returnTo;
+    //     })
+    //     .catch((error) => {
+    //         console.error("Error adding document: ", error);
+    //     });
 }
 
 function createUserTransactionPage(user, returnTo) {
-  var db = firebase.firestore();
-  document.getElementById("hint").innerText =
-    "Loading...Please do not refresh the page.";
-  document.getElementById("options").style.display = "none";
-  db.collection("admin")
-    .doc("general")
-    .get()
-    .then((adminDoc) => {
-      if (adminDoc.data().enableSubscription) {
-        var newTransaction = firebase
-          .functions()
-          .httpsCallable("createSubscription");
-        db.collection("archivedUsers")
-          .doc(user.uid.toString())
-          .get()
-          .then((aUsers) => {
-            if (aUsers.exists) {
-              console.log(
-                `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
+    var db = firebase.firestore();
+    document.getElementById("hint").innerText =
+        "Loading...Please do not refresh the page.";
+    document.getElementById("options").style.display = "none";
+    db.collection("admin")
+        .doc("general")
+        .get()
+        .then((adminDoc) => {
+            if (adminDoc.data().enableSubscription) {
+                var newTransaction = firebase
+                    .functions()
+                    .httpsCallable("createSubscription");
+                db.collection("archivedUsers")
+                    .doc(user.uid.toString())
+                    .get()
+                    .then((aUsers) => {
+                        if (aUsers.exists) {
+                            console.log(
+                                `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
                   user.email
                 }, ${window.location.href.toString()}`
-              );
-              newTransaction({
-                userName: user.displayName.toString(),
-                uid: user.uid.toString(),
-                backURL: window.location.href.toString(),
-                customerID: aUsers.data().stripeCustomerID.toString(),
-                userEmail: user.email,
-                trial: false,
-              })
-                .then((result) => {
-                  // Read result of the Cloud Function.
-                  var checkoutURL = result.data.returnURL;
-                  console.log(checkoutURL);
-                  window.location = checkoutURL;
-                })
-                .catch((er) => {
-                  console.log(er);
-                  document.getElementById("hint").innerText =
-                    "Error. Please Refresh the Page.";
-                });
-            } else {
-              db.collection("deletedUsers")
-                .doc(user.uid.toString())
-                .get()
-                .then((deleteDoc) => {
-                  if (deleteDoc.exists) {
-                    console.log(
-                      `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
+                            );
+                            newTransaction({
+                                    userName: user.displayName.toString(),
+                                    uid: user.uid.toString(),
+                                    backURL: window.location.href.toString(),
+                                    customerID: aUsers.data().stripeCustomerID.toString(),
+                                    userEmail: user.email,
+                                    trial: false,
+                                })
+                                .then((result) => {
+                                    // Read result of the Cloud Function.
+                                    var checkoutURL = result.data.returnURL;
+                                    console.log(checkoutURL);
+                                    window.location = checkoutURL;
+                                })
+                                .catch((er) => {
+                                    console.log(er);
+                                    document.getElementById("hint").innerText =
+                                        "Error. Please Refresh the Page.";
+                                });
+                        } else {
+                            db.collection("deletedUsers")
+                                .doc(user.uid.toString())
+                                .get()
+                                .then((deleteDoc) => {
+                                    if (deleteDoc.exists) {
+                                        console.log(
+                                            `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
                         user.email
                       }, ${window.location.href.toString()}`
-                    );
-                    newTransaction({
-                      userName: user.displayName.toString(),
-                      uid: user.uid.toString(),
-                      backURL: window.location.href.toString(),
-                      customerID: deleteDoc.data().stripeCustomerID.toString(),
-                      userEmail: user.email,
-                      trial: false,
-                    })
-                      .then((result) => {
-                        // Read result of the Cloud Function.
-                        var checkoutURL = result.data.returnURL;
-                        console.log(checkoutURL);
-                        window.location = checkoutURL;
-                      })
-                      .catch((er) => {
-                        console.log(er);
-                        document.getElementById("hint").innerText =
-                          "Error. Please Refresh the Page.";
-                      });
-                  } else {
-                    console.log(
-                      `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
+                                        );
+                                        newTransaction({
+                                                userName: user.displayName.toString(),
+                                                uid: user.uid.toString(),
+                                                backURL: window.location.href.toString(),
+                                                customerID: deleteDoc.data().stripeCustomerID.toString(),
+                                                userEmail: user.email,
+                                                trial: false,
+                                            })
+                                            .then((result) => {
+                                                // Read result of the Cloud Function.
+                                                var checkoutURL = result.data.returnURL;
+                                                console.log(checkoutURL);
+                                                window.location = checkoutURL;
+                                            })
+                                            .catch((er) => {
+                                                console.log(er);
+                                                document.getElementById("hint").innerText =
+                                                    "Error. Please Refresh the Page.";
+                                            });
+                                    } else {
+                                        console.log(
+                                            `Transmitting: ${user.displayName.toString()}, ${user.uid.toString()}, ${
                         user.email
                       }, ${window.location.href.toString()}`
-                    );
-                    newTransaction({
-                      userName: user.displayName.toString(),
-                      uid: user.uid.toString(),
-                      backURL: window.location.href.toString(),
-                      customerID: "null",
-                      userEmail: user.email,
-                      trial: true,
-                    })
-                      .then((result) => {
-                        // Read result of the Cloud Function.
-                        var checkoutURL = result.data.returnURL;
-                        console.log(checkoutURL);
-                        window.location = checkoutURL;
-                      })
-                      .catch((er) => {
-                        console.log(er);
-                        document.getElementById("hint").innerText =
-                          "Error. Please Refresh the Page.";
-                      });
-                  }
-                });
-            }
-          });
-      } else {
-        db.collection("archivedUsers")
-          .doc(user.uid.toString())
-          .get()
-          .then((aUsers) => {
-            if (aUsers.exists) {
-              // TODO: transition to cloud function
-              db.collection("users")
-                .doc(user.uid.toString())
-                .set(aUsers.data())
-                .then((t) => {
-                  db.collection("archivedUsers")
-                    .doc(user.uid.toString())
-                    .delete()
-                    .then((g) => {
-                      window.location = returnTo;
+                                        );
+                                        newTransaction({
+                                                userName: user.displayName.toString(),
+                                                uid: user.uid.toString(),
+                                                backURL: window.location.href.toString(),
+                                                customerID: "null",
+                                                userEmail: user.email,
+                                                trial: true,
+                                            })
+                                            .then((result) => {
+                                                // Read result of the Cloud Function.
+                                                var checkoutURL = result.data.returnURL;
+                                                console.log(checkoutURL);
+                                                window.location = checkoutURL;
+                                            })
+                                            .catch((er) => {
+                                                console.log(er);
+                                                document.getElementById("hint").innerText =
+                                                    "Error. Please Refresh the Page.";
+                                            });
+                                    }
+                                });
+                        }
                     });
-                });
             } else {
-              db.collection("deletedUsers")
-                .doc(user.uid.toString())
-                .get()
-                .then((deletedDoc) => {
-                  if (deletedDoc.exists) {
-                    // TODO: transition to cloud function
-                    db.collection("users")
-                      .doc(user.uid.toString())
-                      .set(deletedDoc.data())
-                      .then((t) => {
-                        db.collection("deletedUsers")
-                          .doc(user.uid.toString())
-                          .delete()
-                          .then((g) => {
-                            window.location = returnTo;
-                          });
-                      });
-                  } else {
-                    // TODO: transition to cloud function
-                    db.collection("users")
-                      .doc(user.uid.toString())
-                      .set({
-                        accountCreated: new Date(Date.now()),
-                        accountType: "standard",
-                        email: user.email.toString(),
-                        name: user.displayName.toString(),
-                      })
-                      .then((g) => {
-                        window.location = returnTo;
-                      });
-                  }
-                });
+                db.collection("archivedUsers")
+                    .doc(user.uid.toString())
+                    .get()
+                    .then((aUsers) => {
+                        if (aUsers.exists) {
+                            var dbUpdate = firebase.functions().httpsCallable('onboardUsersDBCall');
+                            dbUpdate({ createType: aUsers.data().accountType.toString(), createSrc: "arc", transDoc: aUsers.data(), name: user.displayName.toString(), email: user.email.toString() })
+                                .then((result) => {
+                                    // Read result of the Cloud Function.
+                                    if (result.data.done) {
+                                        window.location = returnTo;
+                                    } else {
+                                        alert("Something went wrong - try again in a few minutes, or contact support if the issue persists.");
+                                    }
+                                });
+                            // FIXME: test cloud function
+                            // db.collection("users")
+                            //     .doc(user.uid.toString())
+                            //     .set(aUsers.data())
+                            //     .then((t) => {
+                            //         db.collection("archivedUsers")
+                            //             .doc(user.uid.toString())
+                            //             .delete()
+                            //             .then((g) => {
+                            //                 window.location = returnTo;
+                            //             });
+                            //     });
+                        } else {
+                            db.collection("deletedUsers")
+                                .doc(user.uid.toString())
+                                .get()
+                                .then((deletedDoc) => {
+                                    if (deletedDoc.exists) {
+                                        var dbUpdate = firebase.functions().httpsCallable('onboardUsersDBCall');
+                                        dbUpdate({ createType: deletedDoc.data().accountType.toString(), createSrc: "del", transDoc: deletedDoc.data(), name: user.displayName.toString(), email: user.email.toString() })
+                                            .then((result) => {
+                                                // Read result of the Cloud Function.
+                                                if (result.data.done) {
+                                                    window.location = returnTo;
+                                                } else {
+                                                    alert("Something went wrong - try again in a few minutes, or contact support if the issue persists.");
+                                                }
+                                            });
+                                        // FIXME: test cloud function
+                                        // db.collection("users")
+                                        //     .doc(user.uid.toString())
+                                        //     .set(deletedDoc.data())
+                                        //     .then((t) => {
+                                        //         db.collection("deletedUsers")
+                                        //             .doc(user.uid.toString())
+                                        //             .delete()
+                                        //             .then((g) => {
+                                        //                 window.location = returnTo;
+                                        //             });
+                                        //     });
+                                    } else {
+                                        var dbUpdate = firebase.functions().httpsCallable('onboardUsersDBCall');
+                                        dbUpdate({ createType: "standard", createSrc: "none", transDoc: null, name: user.displayName.toString(), email: user.email.toString() })
+                                            .then((result) => {
+                                                // Read result of the Cloud Function.
+                                                if (result.data.done) {
+                                                    window.location = returnTo;
+                                                } else {
+                                                    alert("Something went wrong - try again in a few minutes, or contact support if the issue persists.");
+                                                }
+                                            });
+                                        // FIXME: test cloud function
+                                        // db.collection("users")
+                                        //     .doc(user.uid.toString())
+                                        //     .set({
+                                        //         accountCreated: new Date(Date.now()),
+                                        //         accountType: "standard",
+                                        //         email: user.email.toString(),
+                                        //         name: user.displayName.toString(),
+                                        //     })
+                                        //     .then((g) => {
+                                        //         window.location = returnTo;
+                                        //     });
+                                    }
+                                });
+                        }
+                    });
             }
-          });
-      }
-    });
+        });
 }

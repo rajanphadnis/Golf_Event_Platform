@@ -1173,3 +1173,76 @@ exports.stripeRegistrationCheck = functions.https.onCall(async(data, context) =>
         };
     }
 });
+
+exports.onboardUsersDBCall = functions.https.onCall(async(data, context) => {
+    // Message text passed from the client.
+const typeCreate = data.createType;
+const typeSrc = data.createSrc;
+const tranDoc = data.transDoc || null;
+// Authentication / user information is automatically added to the request.
+const uid = context.auth.uid;
+const name = context.auth.token.name || data.name;
+const email = context.auth.token.email || data.email;
+var db = admin.firestore();
+    // Checking attribute.
+if (!(typeof typeSrc === 'string') || typeSrc.length === 0 || !(typeSrc === "none" || typeSrc === "del" || typeSrc === "arc")) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+        'one arguments "createSrc" containing the properly-formatted account creation type.');
+  }
+  if (!(typeof typeCreate === 'string') || typeCreate.length === 0 || !(typeCreate === "standard" || typeCreate === "charity")) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+        'one arguments "createSrc" containing the properly-formatted account creation type.');
+  }
+  // Checking that the user is authenticated.
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+        'while authenticated.');
+  }
+  switch (typeSrc) {
+        case "none":
+            return db.collection("users")
+            .doc(uid.toString())
+            .set({
+              accountCreated: new Date(Date.now()),
+              accountType: typeCreate,
+              email: email.toString(),
+              name: name.toString(),
+            })
+            .then((g) => {
+                return { done: true };
+            });
+            break;
+        case "del":
+            return db.collection("users")
+            .doc(uid.toString())
+            .set(tranDoc)
+            .then((t) => {
+              return db.collection("deletedUsers")
+                .doc(uid.toString())
+                .delete();
+                
+            }).then((g) => {
+                    return { done: true };
+                });
+            break;
+        case "arc":
+            return db.collection("users")
+            .doc(uid.toString())
+            .set(tranDoc)
+            .then((t) => {
+              return db.collection("archivedUsers")
+                .doc(uid.toString())
+                .delete();
+                
+            }).then((g) => {
+                    return { done: true };
+                });
+            break;
+        default:
+            return { done: false };
+            break;
+  }
+});
