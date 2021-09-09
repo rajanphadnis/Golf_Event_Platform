@@ -245,7 +245,6 @@ function agree(
                             "Error. Please Refresh the Page.";
                     });
             } else {
-                // FIXME: transition to REG cloud function
                 var registerForEvent = firebase.functions().httpsCallable('registerForEvent');
                 registerForEvent({ did: dID }).then((result) => {
                     if (result.data.done) {
@@ -254,13 +253,6 @@ function agree(
                         alert("Whoops, something went wrong. Try again in a few moment - or contact support if the issue persists.");
                     }
                 });
-                // db.collection(`upcomingEvents/${dID}/registeredUsers`).add({
-                //   uid: uID.toString(),
-                //   dt: new Date(Date.now()),
-                //   paidRegistration: false,
-                // }).then((f) => {
-                //   window.location = `/event/?e=${encodeURIComponent(dID)}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(hDim)}`;
-                // });
             }
         });
 }
