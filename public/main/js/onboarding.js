@@ -32,7 +32,8 @@ initApp = function() {
                                 .get()
                                 .then((archUserDoc) => {
                                     if (archUserDoc.exists) {
-                                        window.location = "/account-management";
+                                      createUserTransactionPage(user, returnTo);
+                                        // window.location = "/account-management";
                                     } else {
                                         db.collection("deletedUsers")
                                             .doc(user.uid)

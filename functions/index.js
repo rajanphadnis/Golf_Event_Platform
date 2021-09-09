@@ -448,11 +448,6 @@ exports.userCleanup = functions.auth.user().onDelete(async(user) => {
             await stripe.customers.del(stripeID);
         });
     const uPromise = admin.firestore().collection("users").doc(user.uid).delete();
-    const cPromise = admin
-        .firestore()
-        .collection("charities")
-        .doc(user.uid)
-        .delete();
     const ePromise = admin
         .firestore()
         .collectionGroup("registeredUsers")
@@ -464,7 +459,7 @@ exports.userCleanup = functions.auth.user().onDelete(async(user) => {
             });
         });
 
-    return Promise.all([uPromise, cPromise, ePromise, sPromise]);
+    return Promise.all([uPromise, ePromise, sPromise]);
 });
 
 async function deleteQueryBatch(db, query, resolve) {
@@ -966,6 +961,7 @@ app3.post(
             }
             // return response.status(200).send({ done: false });
         } else if (event.type === "customer.subscription.deleted") {
+            // TODO: add logic to also delete from archivedUsers on delete
             var stripeCustomerID = event.data.object.customer.toString();
             db.collection("users")
                 .where("stripeCustomerID", "==", stripeCustomerID)

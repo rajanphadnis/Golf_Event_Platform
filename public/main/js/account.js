@@ -14,6 +14,7 @@ initApp = function() {
                         if (userDoc.exists) {
                             document.getElementById("accountInfo").innerHTML = `<h3>Here's everything we know about you:</h3><p>Account Created: ${convertFBDateToJS(userDoc.data().accountCreated)}</p><p>Email: ${userDoc.data().email}</p><p>Account Owner Name: ${user.displayName}</p>`;
                             if (userDoc.data().accountType == "charity") {
+                                document.getElementById("manageBilling").style.display = "none";
                                 var par = `<h1 id="message">${userDoc.data().name}</h1><hr style="width:20%;"/><h4>Charity Portal</h4>`;
                                 document.getElementById("firebaseui-auth-container").innerHTML =
                                     par;
