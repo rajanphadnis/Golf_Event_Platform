@@ -106,11 +106,13 @@ window.addEventListener("load", function () {
 });
 
 function addUser(displayName, email, uid, type) {
+  // TODO: transition to cloud function
   firebase
     .firestore()
     .collection("users")
     .doc(uid)
     .set({
+      
       name: displayName,
       email: email,
       accountCreated: new Date(Date.now()),
@@ -232,6 +234,7 @@ function createUserTransactionPage(user, returnTo) {
           .get()
           .then((aUsers) => {
             if (aUsers.exists) {
+              // TODO: transition to cloud function
               db.collection("users")
                 .doc(user.uid.toString())
                 .set(aUsers.data())
@@ -249,6 +252,7 @@ function createUserTransactionPage(user, returnTo) {
                 .get()
                 .then((deletedDoc) => {
                   if (deletedDoc.exists) {
+                    // TODO: transition to cloud function
                     db.collection("users")
                       .doc(user.uid.toString())
                       .set(deletedDoc.data())
@@ -261,6 +265,7 @@ function createUserTransactionPage(user, returnTo) {
                           });
                       });
                   } else {
+                    // TODO: transition to cloud function
                     db.collection("users")
                       .doc(user.uid.toString())
                       .set({

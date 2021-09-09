@@ -243,6 +243,7 @@ function getDownloadURLOfImg(docID) {
     .getDownloadURL()
     .then((url) => {
       document.getElementById("progress").value += 25;
+      // TODO: transition to cloud function
       firebase
         .firestore()
         .collection("upcomingEvents")
