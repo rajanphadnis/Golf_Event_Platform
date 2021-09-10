@@ -1399,7 +1399,7 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
                 plusCode: plusCode.toString(),
             }, { merge: true })
             .then((docRef) => {
-                return { done: true, did: docRef.id };
+                return { done: true, did: did };
             });
     }
 

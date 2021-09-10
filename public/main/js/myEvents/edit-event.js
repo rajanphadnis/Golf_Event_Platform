@@ -130,6 +130,7 @@ var initApp = function() {
                                                 console.log(eDoc.id);
                                                 if (files.length != 0) {
                                                     if (loading == false) {
+                                                        document.getElementById("progress").value = 10;
                                                         addEvent(
                                                             eDoc.id,
                                                             title,
