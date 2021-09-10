@@ -127,7 +127,7 @@ var initApp = function() {
                                                 //   console.log(loc);
                                                 //   console.log(Date(dt));
                                                 //   console.log(cost);
-                                                // console.log(ihash);
+                                                console.log(eDoc.id);
                                                 if (files.length != 0) {
                                                     if (loading == false) {
                                                         addEvent(
@@ -206,6 +206,7 @@ function addEvent(
         stripeOrgID: null,
     }).then((result) => {
         if (result.data.done) {
+            console.log(result.data.did);
             console.log("Document written with ID: ", result.data.did);
             uploadFile(poster, result.data.did);
             // window.location = `/event/?e=${encodeURIComponent(dID)}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(hDim)}`;
@@ -272,6 +273,7 @@ function uploadFile(file, name) {
 }
 
 function getDownloadURLOfImg(docID) {
+    console.log(docID);
     firebase
         .app()
         .storage("gs://golf-event-platform")
