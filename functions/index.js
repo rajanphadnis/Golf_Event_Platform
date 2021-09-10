@@ -1128,24 +1128,24 @@ exports.createConnectPortalLink = functions.https.onCall(async(data, context) =>
 });
 
 exports.resumeConnectPortalCreation = functions.https.onCall(async(data, context) => {
-  const uid = data.uid.toString();
-  const userID = data.userID.toString();
-  const stripe = require("stripe")(
-      "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
-  );
-  const accountLink = await stripe.accountLinks.create({
-      account: uid,
-      refresh_url: 'https://golf-event-platform--dev-u2suwtdi.web.app/account/',
-      return_url: 'https://golf-event-platform--dev-u2suwtdi.web.app/account/',
-      type: 'account_onboarding',
-  });
-  const dbUpdate = await admin.firestore().collection(`users/${userID}/stripeConnect`).add(accountLink);
-  return {
-      URLCreated: accountLink.created,
-      URLExpiration: accountLink.expires_at,
-      returnURL: accountLink.url,
-      dbReturn: dbUpdate,
-  };
+    const uid = data.uid.toString();
+    const userID = data.userID.toString();
+    const stripe = require("stripe")(
+        "sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn"
+    );
+    const accountLink = await stripe.accountLinks.create({
+        account: uid,
+        refresh_url: 'https://golf-event-platform--dev-u2suwtdi.web.app/account/',
+        return_url: 'https://golf-event-platform--dev-u2suwtdi.web.app/account/',
+        type: 'account_onboarding',
+    });
+    const dbUpdate = await admin.firestore().collection(`users/${userID}/stripeConnect`).add(accountLink);
+    return {
+        URLCreated: accountLink.created,
+        URLExpiration: accountLink.expires_at,
+        returnURL: accountLink.url,
+        dbReturn: dbUpdate,
+    };
 });
 
 exports.stripeRegistrationCheck = functions.https.onCall(async(data, context) => {
@@ -1154,15 +1154,14 @@ exports.stripeRegistrationCheck = functions.https.onCall(async(data, context) =>
     const stripe = require('stripe')('sk_test_51J4urTB26mRwp60O5BbHIgEDfkczfRIK4xIrXYkwvVxTzheYbS02lEps3Y1sTlABA6q66i7WvwW3wFjeglJ7iXgq00ucGEKJPn');
     const account = await stripe.accounts.retrieve(acct);
     if (account.charges_enabled) {
-        const updateTrue = await admin.firestore().collection(`users/${uid}/stripeConnect`).doc("accountCreation").update({charges_enabled: true});
+        const updateTrue = await admin.firestore().collection(`users/${uid}/stripeConnect`).doc("accountCreation").update({ charges_enabled: true });
         return {
             charges_enabled: true,
             dbUpdate: updateTrue,
             act: account,
         };
-    }
-    else {
-        const updateFalse = await admin.firestore().collection(`users/${uid}/stripeConnect`).doc("accountCreation").update({charges_enabled: false});
+    } else {
+        const updateFalse = await admin.firestore().collection(`users/${uid}/stripeConnect`).doc("accountCreation").update({ charges_enabled: false });
         return {
             charges_enabled: false,
             dbUpdate: updateFalse,
@@ -1173,75 +1172,75 @@ exports.stripeRegistrationCheck = functions.https.onCall(async(data, context) =>
 
 exports.onboardUsersDBCall = functions.https.onCall(async(data, context) => {
     // Message text passed from the client.
-const typeCreate = data.createType;
-const typeSrc = data.createSrc;
-const tranDoc = data.transDoc || null;
-// Authentication / user information is automatically added to the request.
-const uid = context.auth.uid;
-const name = context.auth.token.name || data.name;
-const email = context.auth.token.email || data.email;
-var db = admin.firestore();
+    const typeCreate = data.createType;
+    const typeSrc = data.createSrc;
+    const tranDoc = data.transDoc || null;
+    // Authentication / user information is automatically added to the request.
+    const uid = context.auth.uid;
+    const name = context.auth.token.name || data.name;
+    const email = context.auth.token.email || data.email;
+    var db = admin.firestore();
     // Checking attribute.
-if (!(typeof typeSrc === 'string') || typeSrc.length === 0 || !(typeSrc === "none" || typeSrc === "del" || typeSrc === "arc")) {
-    // Throwing an HttpsError so that the client gets the error details.
-    throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'one arguments "createSrc" containing the properly-formatted account creation type.');
-  }
-  if (!(typeof typeCreate === 'string') || typeCreate.length === 0 || !(typeCreate === "standard" || typeCreate === "charity")) {
-    // Throwing an HttpsError so that the client gets the error details.
-    throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-        'one arguments "createSrc" containing the properly-formatted account creation type.');
-  }
-  // Checking that the user is authenticated.
-  if (!context.auth) {
-    // Throwing an HttpsError so that the client gets the error details.
-    throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
-        'while authenticated.');
-  }
-  switch (typeSrc) {
+    if (!(typeof typeSrc === 'string') || typeSrc.length === 0 || !(typeSrc === "none" || typeSrc === "del" || typeSrc === "arc")) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "createSrc" containing the properly-formatted account creation type.');
+    }
+    if (!(typeof typeCreate === 'string') || typeCreate.length === 0 || !(typeCreate === "standard" || typeCreate === "charity")) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one arguments "createSrc" containing the properly-formatted account creation type.');
+    }
+    // Checking that the user is authenticated.
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+    }
+    switch (typeSrc) {
         case "none":
             return db.collection("users")
-            .doc(uid.toString())
-            .set({
-              accountCreated: new Date(Date.now()),
-              accountType: typeCreate,
-              email: email.toString(),
-              name: name.toString(),
-            })
-            .then((g) => {
-                return { done: true };
-            });
+                .doc(uid.toString())
+                .set({
+                    accountCreated: new Date(Date.now()),
+                    accountType: typeCreate,
+                    email: email.toString(),
+                    name: name.toString(),
+                })
+                .then((g) => {
+                    return { done: true };
+                });
             break;
         case "del":
             return db.collection("users")
-            .doc(uid.toString())
-            .set(tranDoc)
-            .then((t) => {
-              return db.collection("deletedUsers")
                 .doc(uid.toString())
-                .delete();
-                
-            }).then((g) => {
+                .set(tranDoc)
+                .then((t) => {
+                    return db.collection("deletedUsers")
+                        .doc(uid.toString())
+                        .delete();
+
+                }).then((g) => {
                     return { done: true };
                 });
             break;
         case "arc":
             return db.collection("users")
-            .doc(uid.toString())
-            .set(tranDoc)
-            .then((t) => {
-              return db.collection("archivedUsers")
                 .doc(uid.toString())
-                .delete();
-                
-            }).then((g) => {
+                .set(tranDoc)
+                .then((t) => {
+                    return db.collection("archivedUsers")
+                        .doc(uid.toString())
+                        .delete();
+
+                }).then((g) => {
                     return { done: true };
                 });
             break;
         default:
             return { done: false };
             break;
-  }
+    }
 });
 
 exports.deleteDBDoc = functions.https.onCall(async(data, context) => {
@@ -1252,21 +1251,21 @@ exports.deleteDBDoc = functions.https.onCall(async(data, context) => {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
             'one arguments "path" containing the properly-formatted account creation type.');
-      }
-      if (!(typeof docc === 'string') || docc.length === 0) {
+    }
+    if (!(typeof docc === 'string') || docc.length === 0) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
             'one arguments "doc" containing the properly-formatted account creation type.');
-      }
-      // Checking that the user is authenticated.
-      if (!context.auth) {
+    }
+    // Checking that the user is authenticated.
+    if (!context.auth) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
-      }
-      return db.collection(pth).doc(docc).delete().then((f) => {
-          return {done: true};
-      });
+    }
+    return db.collection(pth).doc(docc).delete().then((f) => {
+        return { done: true };
+    });
 });
 
 exports.registerForEvent = functions.https.onCall(async(data, context) => {
@@ -1277,18 +1276,136 @@ exports.registerForEvent = functions.https.onCall(async(data, context) => {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
             'one arguments "did" containing the properly-formatted account creation type.');
-      }
-      // Checking that the user is authenticated.
-      if (!context.auth) {
+    }
+    // Checking that the user is authenticated.
+    if (!context.auth) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
-      }
-      return db.collection(`upcomingEvents/${dID}/registeredUsers`).add({
+    }
+    return db.collection(`upcomingEvents/${dID}/registeredUsers`).add({
         uid: uid.toString(),
         dt: new Date(Date.now()),
         paidRegistration: false,
-      }).then((f) => {
-          return {done: true};
-      });
+    }).then((f) => {
+        return { done: true };
+    });
+});
+
+exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
+    const Name = data.Name.toString();
+    const MaxParticipants = data.MaxParticipants;
+    const Blurb = data.Blurb;
+    const Cost = data.Cost;
+    const DateTime = new Date(Date.parse(data.DateTime.toString()));
+    const Location = data.Location;
+    const OrganizerID = data.OrganizerID;
+    const OrganizerName = data.OrganizerName;
+    const ImageDim = data.ImageDim;
+    const LastUpdated = new Date(Date.now());
+    const did = data.dID.toString();
+    var db = admin.firestore();
+    if (!(typeof did === 'string') || did.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "dID" containing the properly-formatted input.');
+    }
+    if (!(typeof Name === 'string') || Name.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "Name" containing the properly-formatted input.');
+    }
+    if (!(typeof MaxParticipants === 'number') || MaxParticipants.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "MaxParticipants" containing the properly-formatted input.');
+    }
+    if (!(typeof Blurb === 'string') || Blurb.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "Blurb" containing the properly-formatted input.');
+    }
+    if (!(typeof Cost === 'number') || Cost.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "Cost" containing the properly-formatted input.');
+    }
+    if (!(typeof data.DateTime === 'string') || data.DateTime.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "DateTime" containing the properly-formatted input.');
+    }
+    if (!(typeof Location === 'string') || Location.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "Location" containing the properly-formatted input.');
+    }
+    if (!(typeof OrganizerID === 'string') || OrganizerID.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "OrganizerID" containing the properly-formatted input.');
+    }
+    if (!(typeof OrganizerName === 'string') || OrganizerName.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "OrganizerName" containing the properly-formatted input.');
+    }
+    if (!(typeof ImageDim === 'number') || ImageDim.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "ImageDim" containing the properly-formatted input.');
+    }
+    // Checking that the user is authenticated.
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+    }
+    return db.collection("upcomingEvents")
+        .doc(did)
+        .set({
+            Name: Name,
+            MaxParticipants: parseInt(MaxParticipants),
+            Blurb: Blurb.toString(),
+            Cost: parseInt(Cost),
+            DateTime: DateTime,
+            Location: Location.toString(),
+            LastUpdated: LastUpdated,
+            OrganizerID: OrganizerID.toString(),
+            OrganizerName: OrganizerName.toString(),
+            ImageDim: parseFloat(ImageDim),
+        }, { merge: true })
+        .then((docRef) => {
+            return { done: true };
+        });
+});
+
+exports.uploadEventData2 = functions.https.onCall(async(data, context) => {
+    const ImageURL = data.ImageURL.toString();
+    const did = data.dID.toString();
+    var db = admin.firestore();
+    if (!(typeof did === 'string') || did.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "dID" containing the properly-formatted input.');
+    }
+    if (!(typeof ImageURL === 'string') || ImageURL.length === 0) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+            'one argument "ImageURL" containing the properly-formatted input.');
+    }
+    // Checking that the user is authenticated.
+    if (!context.auth) {
+        // Throwing an HttpsError so that the client gets the error details.
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+            'while authenticated.');
+    }
+    return db.collection("upcomingEvents")
+    .doc(did)
+    .set({
+        ImageURL: ImageURL,
+    }, { merge: true })
+    .then((f) => {
+        return { done: true };
+    });
 });
