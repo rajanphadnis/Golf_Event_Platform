@@ -1376,7 +1376,7 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
             ImageDim: parseFloat(ImageDim),
         }, { merge: true })
         .then((docRef) => {
-            return { done: true };
+            return { done: true, did: docRef.id };
         });
     }
     else {
@@ -1395,7 +1395,7 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
             ImageDim: parseFloat(ImageDim),
         }, { merge: true })
         .then((docRef) => {
-            return { done: true };
+            return { done: true, did: docRef.id };
         });
     }
     

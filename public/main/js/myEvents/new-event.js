@@ -51,7 +51,7 @@ var initApp = function() {
                                                 img.width,
                                                 img.height
                                             ).data;
-                                            console.log("image data:", imageData);
+                                            // console.log("image data:", imageData);
                                             imgDim = img.height / img.width;
                                             // ihash = blurhash.encode(
                                             //   imageData,
@@ -184,7 +184,7 @@ function addEvent(
         ImageDim: parseFloat(dim),
     }).then((result) => {
         if (result.data.done) {
-            console.log("Document written with ID: ", did);
+            console.log("Document written with ID: ", result.data.did);
             uploadFile(poster, did);
             // window.location = `/event/?e=${encodeURIComponent(dID)}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(hDim)}`;
         } else {
