@@ -70,7 +70,7 @@ var initApp = function() {
                                         document.getElementById("maxParticipants").value = parseInt(
                                             eDoc.data().MaxParticipants
                                         );
-                                        document.getElementById("plusCode").value = decodeURIComponent(doc.data().plusCode);
+                                        document.getElementById("plusCode").value = decodeURIComponent(eDoc.data().plusCode);
                                         var files = [];
                                         document
                                             .getElementById("files")
