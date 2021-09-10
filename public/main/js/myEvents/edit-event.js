@@ -120,6 +120,8 @@ var initApp = function() {
                                                 var cost = document.getElementById("cost").value;
                                                 var max =
                                                     document.getElementById("maxParticipants").value;
+                                                    var plusCode = encodeURIComponent(
+                                                        document.getElementById("plusCode").value.toString()
                                                 //   console.log(blurb);
                                                 //   console.log(title);
                                                 //   console.log(loc);
@@ -139,7 +141,8 @@ var initApp = function() {
                                                             files[0],
                                                             user.uid,
                                                             doc.data().name,
-                                                            imgDim
+                                                            imgDim,
+                                                            plusCode
                                                             // ihash
                                                         );
                                                     } else {
@@ -184,7 +187,8 @@ function addEvent(
     poster,
     uid,
     charityName,
-    dim
+    dim,
+    plusCode
 ) {
     var uploadEventData1 = firebase.functions().httpsCallable('uploadEventData1');
     uploadEventData1({
@@ -198,6 +202,8 @@ function addEvent(
         OrganizerID: uid.toString(),
         OrganizerName: charityName.toString(),
         ImageDim: parseFloat(dim),
+        plusCode: plusCode,
+        stripeOrgID: null,
     }).then((result) => {
         if (result.data.done) {
             console.log("Document written with ID: ", result.data.did);

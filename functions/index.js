@@ -1304,6 +1304,8 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
     const ImageDim = data.ImageDim;
     const LastUpdated = new Date(Date.now());
     const did = data.dID.toString();
+    const plusCode = data.plusCode;
+    const stripeOrgID = data.stripeOrgID;
     var db = admin.firestore();
     if (!(typeof did === 'string') || did.length === 0) {
         // Throwing an HttpsError so that the client gets the error details.
@@ -1361,7 +1363,7 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
     }
-    if (did === "NONE") {
+    if (did === "NONE" || !(stripeOrgID == null)) {
         return db.collection("upcomingEvents")
         .add({
             Name: Name,
@@ -1374,6 +1376,8 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
             OrganizerID: OrganizerID.toString(),
             OrganizerName: OrganizerName.toString(),
             ImageDim: parseFloat(ImageDim),
+            plusCode: plusCode.toString(),
+            stripeOrgID: stripeOrgID.toString(),
         }, { merge: true })
         .then((docRef) => {
             return { done: true, did: docRef.id };
@@ -1393,6 +1397,7 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
             OrganizerID: OrganizerID.toString(),
             OrganizerName: OrganizerName.toString(),
             ImageDim: parseFloat(ImageDim),
+            plusCode: plusCode.toString(),
         }, { merge: true })
         .then((docRef) => {
             return { done: true, did: docRef.id };

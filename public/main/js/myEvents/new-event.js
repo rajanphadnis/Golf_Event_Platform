@@ -182,6 +182,8 @@ function addEvent(
         OrganizerID: uid.toString(),
         OrganizerName: charityName.toString(),
         ImageDim: parseFloat(dim),
+        plusCode: plus,
+        stripeOrgID: stripeOrgID,
     }).then((result) => {
         if (result.data.done) {
             console.log("Document written with ID: ", result.data.did);
