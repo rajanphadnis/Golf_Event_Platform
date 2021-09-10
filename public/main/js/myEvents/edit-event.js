@@ -121,7 +121,7 @@ var initApp = function() {
                                                 var max =
                                                     document.getElementById("maxParticipants").value;
                                                     var plusCode = encodeURIComponent(
-                                                        document.getElementById("plusCode").value.toString();
+                                                        document.getElementById("plusCode").value.toString());
                                                 //   console.log(blurb);
                                                 //   console.log(title);
                                                 //   console.log(loc);
