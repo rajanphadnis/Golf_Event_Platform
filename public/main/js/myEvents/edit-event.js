@@ -215,31 +215,6 @@ function addEvent(
             alert("Whoops, something went wrong. Try again in a few moment - or contact support if the issue persists.");
         }
     });
-    // TODO: transition to NEW1 cloud function
-    // firebase
-    //     .firestore()
-    //     .collection("upcomingEvents")
-    //     .doc(did)
-    //     .set({
-    //         Name: title,
-    //         MaxParticipants: parseInt(max),
-    //         Blurb: blurb.toString(),
-    //         Cost: parseInt(cost),
-    //         DateTime: new Date(Date.parse(dt)),
-    //         Location: loc.toString(),
-    //         LastUpdated: new Date(Date.now()),
-    //         OrganizerID: uid.toString(),
-    //         OrganizerName: charityName.toString(),
-    //         ImageDim: parseFloat(dim),
-    //         // MainHash: hash.toString(),
-    //     }, { merge: true })
-    //     .then((docRef) => {
-    //         console.log("Document written with ID: ", did);
-    //         uploadFile(poster, did);
-    //     })
-    //     .catch((error) => {
-    //         console.error("Error adding document: ", error);
-    //     });
 }
 
 function uploadFile(file, name) {
@@ -295,24 +270,6 @@ function getDownloadURLOfImg(docID) {
                     alert("Whoops, something went wrong. Try again in a few moment - or contact support if the issue persists.");
                 }
             });
-            // TODO: transition to NEW2 cloud function
-            // firebase
-            //     .firestore()
-            //     .collection("upcomingEvents")
-            //     .doc(docID)
-            //     .set({
-            //         ImageURL: url,
-            //     }, { merge: true })
-            //     .then((t) => {
-            //         return new Promise(async(resolve, reject) => {
-            //             document.getElementById("progress").value = 100;
-            //             resolve(true);
-            //         });
-            //     })
-            //     .then((t) => {
-            //         alert("event added");
-            //         window.location = "/my-events";
-            //     });
         })
         .catch((error) => {
             // Handle any errors
