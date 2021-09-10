@@ -33,11 +33,11 @@ var initApp = function() {
         function(user) {
             if (user) {
                 var email = user.email;
-                db.collection("charities")
+                db.collection("users")
                     .doc(user.uid)
                     .get()
                     .then((doc) => {
-                        if (doc.exists) {
+                        if (doc.exists && doc.data().accountType == "charity") {
                             db.collection("upcomingEvents")
                                 .doc(eventID)
                                 .get()
@@ -313,5 +313,6 @@ function getDownloadURLOfImg(docID) {
         })
         .catch((error) => {
             // Handle any errors
+            console.log(error);
         });
 }
