@@ -172,7 +172,7 @@ function addEvent(
 ) {
     var uploadEventData1 = firebase.functions().httpsCallable('uploadEventData1');
     uploadEventData1({
-        dID: did,
+        dID: "NONE",
         Name: title,
         MaxParticipants: parseInt(max),
         Blurb: blurb.toString(),

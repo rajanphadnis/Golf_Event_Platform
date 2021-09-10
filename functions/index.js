@@ -1361,7 +1361,26 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
         throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
     }
-    return db.collection("upcomingEvents")
+    if (did === "NONE") {
+        return db.collection("upcomingEvents")
+        .add({
+            Name: Name,
+            MaxParticipants: parseInt(MaxParticipants),
+            Blurb: Blurb.toString(),
+            Cost: parseInt(Cost),
+            DateTime: DateTime,
+            Location: Location.toString(),
+            LastUpdated: LastUpdated,
+            OrganizerID: OrganizerID.toString(),
+            OrganizerName: OrganizerName.toString(),
+            ImageDim: parseFloat(ImageDim),
+        }, { merge: true })
+        .then((docRef) => {
+            return { done: true };
+        });
+    }
+    else {
+        return db.collection("upcomingEvents")
         .doc(did)
         .set({
             Name: Name,
@@ -1378,6 +1397,8 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
         .then((docRef) => {
             return { done: true };
         });
+    }
+    
 });
 
 exports.uploadEventData2 = functions.https.onCall(async(data, context) => {
