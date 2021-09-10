@@ -185,7 +185,7 @@ function addEvent(
     }).then((result) => {
         if (result.data.done) {
             console.log("Document written with ID: ", result.data.did);
-            uploadFile(poster, did);
+            uploadFile(poster, result.data.did);
             // window.location = `/event/?e=${encodeURIComponent(dID)}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(hDim)}`;
         } else {
             alert("Whoops, something went wrong. Try again in a few moment - or contact support if the issue persists.");
