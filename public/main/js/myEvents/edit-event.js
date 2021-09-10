@@ -121,7 +121,7 @@ var initApp = function() {
                                                 var max =
                                                     document.getElementById("maxParticipants").value;
                                                     var plusCode = encodeURIComponent(
-                                                        document.getElementById("plusCode").value.toString()
+                                                        document.getElementById("plusCode").value.toString();
                                                 //   console.log(blurb);
                                                 //   console.log(title);
                                                 //   console.log(loc);
@@ -281,7 +281,7 @@ function getDownloadURLOfImg(docID) {
             document.getElementById("progress").value += 25;
             var uploadEventData2 = firebase.functions().httpsCallable('uploadEventData2');
             uploadEventData2({
-                dID: did,
+                dID: docID,
                 ImageURL: url,
             }).then((result) => {
                 if (result.data.done) {

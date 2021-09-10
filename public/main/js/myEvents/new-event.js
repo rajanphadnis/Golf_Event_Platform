@@ -269,7 +269,7 @@ function getDownloadURLOfImg(docID) {
             document.getElementById("progress").value += 25;
             var uploadEventData2 = firebase.functions().httpsCallable('uploadEventData2');
             uploadEventData2({
-                dID: did,
+                dID: docID,
                 ImageURL: url,
             }).then((result) => {
                 if (result.data.done) {
