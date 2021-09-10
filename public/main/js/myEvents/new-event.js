@@ -301,6 +301,7 @@ function getDownloadURLOfImg(docID) {
         })
         .catch((error) => {
             // Handle any errors
+            console.log(error);
             alert(
                 "Whoops, something came up. Relaod the page and try again in a few minutes."
             );

@@ -1365,49 +1365,48 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
     }
     if (did === "NONE" || !(stripeOrgID == null)) {
         return db.collection("upcomingEvents")
-        .add({
-            Name: Name,
-            MaxParticipants: parseInt(MaxParticipants),
-            Blurb: Blurb.toString(),
-            Cost: parseInt(Cost),
-            DateTime: DateTime,
-            Location: Location.toString(),
-            LastUpdated: LastUpdated,
-            OrganizerID: OrganizerID.toString(),
-            OrganizerName: OrganizerName.toString(),
-            ImageDim: parseFloat(ImageDim),
-            plusCode: plusCode.toString(),
-            stripeOrgID: stripeOrgID.toString(),
-        }, { merge: true })
-        .then((docRef) => {
-            return { done: true, did: docRef.id };
-        });
-    }
-    else {
+            .add({
+                Name: Name,
+                MaxParticipants: parseInt(MaxParticipants),
+                Blurb: Blurb.toString(),
+                Cost: parseInt(Cost),
+                DateTime: DateTime,
+                Location: Location.toString(),
+                LastUpdated: LastUpdated,
+                OrganizerID: OrganizerID.toString(),
+                OrganizerName: OrganizerName.toString(),
+                ImageDim: parseFloat(ImageDim),
+                plusCode: plusCode.toString(),
+                stripeOrgID: stripeOrgID.toString(),
+            }, { merge: true })
+            .then((docRef) => {
+                return { done: true, did: docRef.id };
+            });
+    } else {
         return db.collection("upcomingEvents")
-        .doc(did)
-        .set({
-            Name: Name,
-            MaxParticipants: parseInt(MaxParticipants),
-            Blurb: Blurb.toString(),
-            Cost: parseInt(Cost),
-            DateTime: DateTime,
-            Location: Location.toString(),
-            LastUpdated: LastUpdated,
-            OrganizerID: OrganizerID.toString(),
-            OrganizerName: OrganizerName.toString(),
-            ImageDim: parseFloat(ImageDim),
-            plusCode: plusCode.toString(),
-        }, { merge: true })
-        .then((docRef) => {
-            return { done: true, did: docRef.id };
-        });
+            .doc(did)
+            .set({
+                Name: Name,
+                MaxParticipants: parseInt(MaxParticipants),
+                Blurb: Blurb.toString(),
+                Cost: parseInt(Cost),
+                DateTime: DateTime,
+                Location: Location.toString(),
+                LastUpdated: LastUpdated,
+                OrganizerID: OrganizerID.toString(),
+                OrganizerName: OrganizerName.toString(),
+                ImageDim: parseFloat(ImageDim),
+                plusCode: plusCode.toString(),
+            }, { merge: true })
+            .then((docRef) => {
+                return { done: true, did: docRef.id };
+            });
     }
-    
+
 });
 
 exports.uploadEventData2 = functions.https.onCall(async(data, context) => {
-    const ImageURL = data.ImageURL.toString();
+    const url = data.ImageURL.toString();
     const did = data.dID.toString();
     var db = admin.firestore();
     if (!(typeof did === 'string') || did.length === 0) {
@@ -1415,10 +1414,10 @@ exports.uploadEventData2 = functions.https.onCall(async(data, context) => {
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
             'one argument "dID" containing the properly-formatted input.');
     }
-    if (!(typeof ImageURL === 'string') || ImageURL.length === 0) {
+    if (!(typeof url === 'string') || url.length === 0) {
         // Throwing an HttpsError so that the client gets the error details.
         throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
-            'one argument "ImageURL" containing the properly-formatted input.');
+            'one argument "url" containing the properly-formatted input.');
     }
     // Checking that the user is authenticated.
     if (!context.auth) {
@@ -1427,11 +1426,11 @@ exports.uploadEventData2 = functions.https.onCall(async(data, context) => {
             'while authenticated.');
     }
     return db.collection("upcomingEvents")
-    .doc(did)
-    .set({
-        ImageURL: ImageURL,
-    }, { merge: true })
-    .then((f) => {
-        return { done: true };
-    });
+        .doc(did)
+        .set({
+            ImageURL: url,
+        }, { merge: true })
+        .then((f) => {
+            return { done: true };
+        });
 });
