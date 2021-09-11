@@ -187,9 +187,9 @@ body {
     #mobileSearchButton {
         display: block;
     }
-    #search-container {
+    /* #search-container {
         display: none;
-    }
+    } */
     #navBarSearchBox {
         width: 100%;
     }
@@ -244,3 +244,21 @@ body {
 #signedInDropdown {
     display: none;
 }
+
+.searchSuggestions {
+    display: none;
+    position: absolute;
+    /* left: 100; */
+    top: calc((var(--navBarLinkPaddingTopBottom) * 2) + 15.5px);
+    background-color: #f1f1f1;
+    min-width: 750px;
+    max-width: 750px;
+    min-height: 500px;
+    max-height: 500px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* #navBarSearchBox:focus + .searchSuggestions {
+    display: block;
+} */

@@ -2,26 +2,51 @@ var signInButton = document.getElementById("signInButton");
 var signedInDropdown = document.getElementById("signedInDropdown");
 
 var popularEventsList = document.getElementById("upcomingEvents");
-// var signedInDropdown = document.getElementById("signedInDropdown");
 initApp = function() {
     var db = firebase.firestore();
-    // const searchClient = algoliasearch('WPWFG61OL2', 'b91d438c108bc8fbab3cc293f699855b');
+    // const searchClient = algoliasearch(
+    //     "ZBTFVIYUBH",
+    //     "c4853c67553536ef7c07da1e58cb9f04"
+    // );
     // const search = instantsearch({
-    //   indexName: "events_golf-event-platform",
-    //   searchClient,
+    //     indexName: "dev_eventsGolf4Bob",
+    //     searchClient,
     // });
-
     // search.addWidgets([
-    //   instantsearch.widgets.searchBox({
-    //     container: "#search-container",
-    //   }),
-
-    //   instantsearch.widgets.hits({
-    //     container: "#upcomingEvents",
-    //   }),
+    //     instantsearch.widgets.configure({
+    //         hitsPerPage: 3,
+    //         distinct: true,
+    //         clickAnalytics: true,
+    //         enablePersonalization: true,
+    //       }),
+    //     instantsearch.widgets.searchBox({
+    //         container: "#algoliaSearch",
+    //         searchAsYouType: true,
+    //         cssClasses: {
+    //             input: "navBarSearchBox"
+    //         },
+    //     }),
+    //     instantsearch.widgets.hits({
+    //         container: ".searchSuggestions",
+    //         templates: {
+    //             empty: 'No results for <q>{{ query }}</q>',
+    //             item: `
+    //   <p>
+    //     {{ __hitIndex }}:
+    //     {{#helpers.highlight}}{ "attribute": "name" }{{/helpers.highlight}}
+    //   </p>
+    // `,
+    //         },
+    //     }),
     // ]);
 
     // search.start();
+    document.getElementById("algoliaSearch").addEventListener("focusin", function() {
+        document.querySelector(".searchSuggestions").style.display = "block";
+    });
+    document.getElementById("algoliaSearch").addEventListener("focusout", function() {
+        document.querySelector(".searchSuggestions").style.display = "none";
+    });
     firebase.auth().onAuthStateChanged(
         function(user) {
             if (user) {
