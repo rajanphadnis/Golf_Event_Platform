@@ -1364,6 +1364,7 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
             'while authenticated.');
     }
     if (did === "NONE" || !(stripeOrgID == null)) {
+        // Create new event
         return db.collection("upcomingEvents")
             .add({
                 Name: Name,
@@ -1378,11 +1379,14 @@ exports.uploadEventData1 = functions.https.onCall(async(data, context) => {
                 ImageDim: parseFloat(ImageDim),
                 plusCode: plusCode.toString(),
                 stripeOrgID: stripeOrgID.toString(),
+                adScale: 0,
+                visits: 0,
             }, { merge: true })
             .then((docRef) => {
                 return { done: true, did: docRef.id };
             });
     } else {
+        // Edit existing event
         return db.collection("upcomingEvents")
             .doc(did)
             .set({
