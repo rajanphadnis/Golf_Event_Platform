@@ -71,6 +71,7 @@ var initApp = function() {
                                             eDoc.data().MaxParticipants
                                         );
                                         document.getElementById("plusCode").value = decodeURIComponent(eDoc.data().plusCode);
+                                        document.getElementById("currentPosterA").href = eDoc.data().ImageURL;
                                         var files = [];
                                         document
                                             .getElementById("files")
@@ -113,24 +114,50 @@ var initApp = function() {
                                         document
                                             .getElementById("send")
                                             .addEventListener("click", function() {
-                                                var blurb = tinymce.get("htmeditor").getContent();
-                                                var title = document.getElementById("title").value;
-                                                var loc = document.getElementById("location").value;
-                                                var dt = document.getElementById("dt").value;
-                                                var cost = document.getElementById("cost").value;
-                                                var max =
-                                                    document.getElementById("maxParticipants").value;
+                                                if (!checkRequiredFields()) {
+                                                    console.log("Input Field verification failed");
+                                                } else {
+                                                    var blurb = tinymce.get("htmeditor").getContent();
+                                                    var title = document.getElementById("title").value;
+                                                    var loc = document.getElementById("location").value;
+                                                    var dt = document.getElementById("dt").value;
+                                                    var cost = document.getElementById("cost").value;
+                                                    var max =
+                                                        document.getElementById("maxParticipants").value;
                                                     var plusCode = encodeURIComponent(
                                                         document.getElementById("plusCode").value.toString());
-                                                //   console.log(blurb);
-                                                //   console.log(title);
-                                                //   console.log(loc);
-                                                //   console.log(Date(dt));
-                                                //   console.log(cost);
-                                                console.log(eDoc.id);
-                                                if (files.length != 0) {
-                                                    if (loading == false) {
-                                                        document.getElementById("progress").value = 10;
+                                                    //   console.log(blurb);
+                                                    //   console.log(title);
+                                                    //   console.log(loc);
+                                                    //   console.log(Date(dt));
+                                                    //   console.log(cost);
+                                                    console.log(eDoc.id);
+                                                    if (files.length != 0) {
+                                                        if (loading == false) {
+                                                            document.getElementById("progress").value = 10;
+                                                            addEvent(
+                                                                eDoc.id,
+                                                                title,
+                                                                loc,
+                                                                dt,
+                                                                cost,
+                                                                max,
+                                                                blurb,
+                                                                files[0],
+                                                                user.uid,
+                                                                doc.data().name,
+                                                                imgDim,
+                                                                plusCode
+                                                                // ihash
+                                                            );
+                                                        } else {
+                                                            alert(
+                                                                "Please wait for the image to finish loading, then try again."
+                                                            );
+                                                        }
+                                                    } else {
+                                                        console.log(files.length);
+                                                        document.getElementById("progress").value = 50;
                                                         addEvent(
                                                             eDoc.id,
                                                             title,
@@ -139,20 +166,13 @@ var initApp = function() {
                                                             cost,
                                                             max,
                                                             blurb,
-                                                            files[0],
+                                                            "nullVOID",
                                                             user.uid,
                                                             doc.data().name,
-                                                            imgDim,
+                                                            eDoc.data().ImageDim,
                                                             plusCode
-                                                            // ihash
-                                                        );
-                                                    } else {
-                                                        alert(
-                                                            "Please wait for the image to finish loading, then try again."
                                                         );
                                                     }
-                                                } else {
-                                                    alert("No file chosen");
                                                 }
                                             });
                                     } else {
@@ -193,8 +213,8 @@ function addEvent(
 ) {
     var uploadEventData1 = firebase.functions().httpsCallable('uploadEventData1');
     uploadEventData1({
-        dID: did,
-        Name: title,
+        dID: did.toString(),
+        Name: title.toString(),
         MaxParticipants: parseInt(max),
         Blurb: blurb.toString(),
         Cost: parseInt(cost),
@@ -203,13 +223,19 @@ function addEvent(
         OrganizerID: uid.toString(),
         OrganizerName: charityName.toString(),
         ImageDim: parseFloat(dim),
-        plusCode: plusCode,
+        plusCode: plusCode.toString(),
         stripeOrgID: null,
     }).then((result) => {
+        console.log(result);
         if (result.data.done) {
-            console.log(result.data.did);
             console.log("Document written with ID: ", result.data.did);
-            uploadFile(poster, result.data.did);
+            if (poster === "nullVOID") {
+                document.getElementById("progress").value = 100;
+                alert("event updated");
+                window.location = "/my-events";
+            } else {
+                uploadFile(poster, result.data.did);
+            }
             // window.location = `/event/?e=${encodeURIComponent(dID)}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(hDim)}`;
         } else {
             alert("Whoops, something went wrong. Try again in a few moment - or contact support if the issue persists.");
@@ -264,7 +290,7 @@ function getDownloadURLOfImg(docID) {
             }).then((result) => {
                 if (result.data.done) {
                     document.getElementById("progress").value = 100;
-                    alert("event added");
+                    alert("event updated");
                     window.location = "/my-events";
                 } else {
                     alert("Whoops, something went wrong. Try again in a few moment - or contact support if the issue persists.");
@@ -275,4 +301,52 @@ function getDownloadURLOfImg(docID) {
             // Handle any errors
             console.log(error);
         });
+}
+
+function checkRequiredFields() {
+    let clr = document.querySelectorAll('.omrs-input-danger');
+    for (let i = 0; i < clr.length; i++) {
+        const clrElement = clr[i];
+        clrElement.classList.remove("omrs-input-danger");
+    }
+    const plusCode = document.getElementById("plusCode").value.toString();
+    if (
+        formVerificationLength("title", "Title") &&
+        formVerificationLength("location", "Location Name") &&
+        formVerificationLength("plusCode", "Plus Code") &&
+        formVerificationLength("cost", "Price per person") &&
+        formVerificationLength("dt", "Event Date and Time") &&
+        formVerificationLength("maxParticipants", "Maximum Participants")
+    ) {
+        if (/(^|\s)([23456789C][23456789CFGHJMPQRV][23456789CFGHJMPQRVWX]{6}\+[23456789CFGHJMPQRVWX]{2,3})(\s|$)/.test(plusCode)) {
+            if (tinymce.get("htmeditor").getContent().toString().length != 0) {
+                if (new Date(Date.parse(document.getElementById("dt").value.toString())) <= new Date()) {
+                    alert("Date must be in the future.");
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                alert(`'Blurb' cannot be blank`);
+                return false;
+            }
+        } else {
+            document.getElementById(`plusCodeLABEL`).classList.add("omrs-input-danger");
+            alert("Plus Code must be a global plus code of eight characters before the plus symbol");
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+function formVerificationLength(el, desc) {
+    const elemen = document.getElementById(el).value.toString();
+    if (elemen.length != 0) {
+        return true;
+    } else {
+        document.getElementById(`${el}LABEL`).classList.add("omrs-input-danger");
+        alert(`'${desc}' cannot be blank`);
+        return false;
+    }
 }

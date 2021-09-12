@@ -22,6 +22,7 @@ initApp = function () {
     if (hash == "") {
       window.location = "/";
     }
+    console.log(hash);
     hDim = searchParams.get("d").toString();
     if (hDim == "") {
       window.location = "/";

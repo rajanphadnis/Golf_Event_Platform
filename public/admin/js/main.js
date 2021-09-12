@@ -488,6 +488,7 @@ function showEditRowUsers(data, id) {
     );
     instance.getElementById("name").value = data.name;
     instance.getElementById("dt").value = convertFBDateToJS(data.accountCreated);
+    instance.getElementById("dt").disabled = true;
     instance.getElementById("email").value = data.email;
     instance.getElementById("acctType").value = data.accountType;
     instance.getElementById(

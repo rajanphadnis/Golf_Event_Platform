@@ -70,3 +70,13 @@
   /* text-decoration: none; */
   color: #000000;
 }
+.subtitleText h3 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+#eventOrganizer {
+  margin-top: 0px;
+}
+#eventTitle {
+  margin-bottom: 0px;
+}
