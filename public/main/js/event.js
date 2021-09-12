@@ -72,36 +72,41 @@ initApp = function () {
           .get()
           .then((userDoc) => {
             if (userDoc.exists) {
-              db.collection(`upcomingEvents/${eventID}/registeredUsers`)
-                .where("uid", "==", user.uid.toString())
-                .get()
-                .then((sn) => {
-                  if (sn.docs.length != 0) {
-                    document.getElementById("register").innerText =
-                      "Unregister From Event";
-                    document
-                      .getElementById("register")
-                      .addEventListener("click", function () {
-                        window.location = `/event/refund?e=${encodeURIComponent(
-                          eventID
-                        )}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(
-                          hDim
-                        )}`;
-                      });
-                  } else {
-                    document.getElementById("register").innerText =
-                      "Register For Event";
-                    document
-                      .getElementById("register")
-                      .addEventListener("click", function () {
-                        window.location = `/event/register?e=${encodeURIComponent(
-                          eventID
-                        )}&i=${encodeURIComponent(hash)}&d=${encodeURIComponent(
-                          hDim
-                        )}`;
-                      });
-                  }
-                });
+              if (userDoc.data().accountType == "charity") {
+                document.getElementById("register").disabled = true;
+                document.getElementById("register").innerText = "As the event creator, you cannot register for this event";
+              } else {
+                db.collection(`upcomingEvents/${eventID}/registeredUsers`)
+                  .where("uid", "==", user.uid.toString())
+                  .get()
+                  .then((sn) => {
+                    if (sn.docs.length != 0) {
+                      document.getElementById("register").innerText =
+                        "Unregister From Event";
+                      document
+                        .getElementById("register")
+                        .addEventListener("click", function () {
+                          window.location = `/event/refund?e=${encodeURIComponent(
+                            eventID
+                          )}&i=${encodeURIComponent(
+                            hash
+                          )}&d=${encodeURIComponent(hDim)}`;
+                        });
+                    } else {
+                      document.getElementById("register").innerText =
+                        "Register For Event";
+                      document
+                        .getElementById("register")
+                        .addEventListener("click", function () {
+                          window.location = `/event/register?e=${encodeURIComponent(
+                            eventID
+                          )}&i=${encodeURIComponent(
+                            hash
+                          )}&d=${encodeURIComponent(hDim)}`;
+                        });
+                    }
+                  });
+              }
             } else {
               var encodedURL = encodeURIComponent(
                 `event/?e=${eventID}&i=${hash}&d=${hDim}`
@@ -130,13 +135,16 @@ initApp = function () {
         document.getElementById("eventImageMain").src = doc.data().ImageURL;
         document.getElementById("eventTitle").innerText = doc.data().Name;
         document.title = doc.data().Name.toString() + " | Golf4Bob";
-        document.getElementById("eventLocation").innerHTML =
-          `<span class="material-icons">place</span><a target="_blank" href="https://www.google.com/maps/place/${doc.data().plusCode}"><h3>${doc.data().Location}</h3></a>`;
-        document.getElementById("eventDateTime").innerHTML = `<span class="material-icons">
+        document.getElementById(
+          "eventLocation"
+        ).innerHTML = `<span class="material-icons">place</span><a target="_blank" href="https://www.google.com/maps/place/${
+          doc.data().plusCode
+        }"><h3>${doc.data().Location}</h3></a>`;
+        document.getElementById(
+          "eventDateTime"
+        ).innerHTML = `<span class="material-icons">
         event
-        </span><h3>${dateToString(
-          doc.data().DateTime.seconds * 1000
-        )}</h3>`;
+        </span><h3>${dateToString(doc.data().DateTime.seconds * 1000)}</h3>`;
         document.getElementById("eventCost").innerText = `$${
           doc.data().Cost / 100
         }/Person`;

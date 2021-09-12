@@ -142,7 +142,7 @@ initApp = function() {
                                         // window.location = "/404.html";
                                     });
                             } else {
-                                window.location = "/404.html";
+                                window.location = `/event/register?e=${eventID}&i=${hash}&d=${hDim}`;
                             }
                         } else {
                             var encodedURL = encodeURIComponent(

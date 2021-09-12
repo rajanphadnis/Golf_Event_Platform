@@ -117,6 +117,7 @@ var initApp = function() {
                                                 if (!checkRequiredFields()) {
                                                     console.log("Input Field verification failed");
                                                 } else {
+                                                    document.getElementById("send").disabled = true;
                                                     var blurb = tinymce.get("htmeditor").getContent();
                                                     var title = document.getElementById("title").value;
                                                     var loc = document.getElementById("location").value;
@@ -322,20 +323,24 @@ function checkRequiredFields() {
             if (tinymce.get("htmeditor").getContent().toString().length != 0) {
                 if (new Date(Date.parse(document.getElementById("dt").value.toString())) <= new Date()) {
                     alert("Date must be in the future.");
+                    document.getElementById("send").disabled = false;
                     return false;
                 } else {
                     return true;
                 }
             } else {
                 alert(`'Blurb' cannot be blank`);
+                document.getElementById("send").disabled = false;
                 return false;
             }
         } else {
             document.getElementById(`plusCodeLABEL`).classList.add("omrs-input-danger");
             alert("Plus Code must be a global plus code of eight characters before the plus symbol");
+            document.getElementById("send").disabled = false;
             return false;
         }
     } else {
+        document.getElementById("send").disabled = false;
         return false;
     }
 }
@@ -347,6 +352,7 @@ function formVerificationLength(el, desc) {
     } else {
         document.getElementById(`${el}LABEL`).classList.add("omrs-input-danger");
         alert(`'${desc}' cannot be blank`);
+        document.getElementById("send").disabled = false;
         return false;
     }
 }
