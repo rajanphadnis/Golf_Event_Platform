@@ -20,6 +20,8 @@ var initApp = function() {
                             if (userDoc.data().accountType == "standard") {
                                 window.location = "/my-events";
                             } else {
+                                // document.getElementById("dt").min = `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, "0")}-${(new Date().getDate()).toString().padStart(2, "0")}`;
+                                var files = [];
                                 document
                                     .getElementById("files")
                                     .addEventListener("change", function(e) {
@@ -69,60 +71,64 @@ var initApp = function() {
                                 document
                                     .getElementById("send")
                                     .addEventListener("click", function() {
-                                        document.getElementById("send").disabled = true;
-                                        var blurb = tinymce.get("htmeditor").getContent();
-                                        var title = document.getElementById("title").value;
-                                        var loc = document.getElementById("location").value;
-                                        var dt = document.getElementById("dt").value;
-                                        var cost = document.getElementById("cost").value;
-                                        var max = document.getElementById("maxParticipants").value;
-                                        var plusCode = encodeURIComponent(
-                                            document.getElementById("plusCode").value.toString()
-                                        );
-                                        //   console.log(blurb);
-                                        //   console.log(title);
-                                        //   console.log(loc);
-                                        //   console.log(Date(dt));
-                                        //   console.log(cost);
-                                        // console.log(ihash);
-                                        if (files.length != 0) {
-                                            if (loading == false) {
-                                                db.collection(`users/${user.uid}/stripeConnect`)
-                                                    .doc("accountCreation")
-                                                    .get()
-                                                    .then((adminDoc) => {
-                                                        document.getElementById("progress").value = 10;
-                                                        if (adminDoc.data().charges_enabled && adminDoc.exists) {
-                                                            addEvent(
-                                                                title,
-                                                                loc,
-                                                                dt,
-                                                                cost,
-                                                                max,
-                                                                blurb,
-                                                                files[0],
-                                                                user.uid,
-                                                                userDoc.data().name,
-                                                                imgDim,
-                                                                plusCode,
-                                                                adminDoc.data().id
-                                                                // ihash
-                                                            );
-                                                        } else {
-                                                            alert("Cannot save event. You must link your bank account. To link your account, go to the Account section and click 'Link with Stripe'");
-                                                        }
-                                                    });
+                                        if (!checkRequiredFields()) {
+                                            console.log("Input Field verification failed");
+                                        } else {
+                                            document.getElementById("send").disabled = true;
+                                            var blurb = tinymce.get("htmeditor").getContent();
+                                            var title = document.getElementById("title").value;
+                                            var loc = document.getElementById("location").value;
+                                            var dt = document.getElementById("dt").value;
+                                            var cost = document.getElementById("cost").value;
+                                            var max = document.getElementById("maxParticipants").value;
+                                            var plusCode = encodeURIComponent(
+                                                document.getElementById("plusCode").value.toString()
+                                            );
+                                            //   console.log(blurb);
+                                            //   console.log(title);
+                                            //   console.log(loc);
+                                            //   console.log(Date(dt));
+                                            //   console.log(cost);
+                                            // console.log(ihash);
+                                            if (files.length != 0) {
+                                                if (loading == false) {
+                                                    db.collection(`users/${user.uid}/stripeConnect`)
+                                                        .doc("accountCreation")
+                                                        .get()
+                                                        .then((adminDoc) => {
+                                                            document.getElementById("progress").value = 10;
+                                                            if (adminDoc.data().charges_enabled && adminDoc.exists) {
+                                                                addEvent(
+                                                                    title,
+                                                                    loc,
+                                                                    dt,
+                                                                    cost,
+                                                                    max,
+                                                                    blurb,
+                                                                    files[0],
+                                                                    user.uid,
+                                                                    userDoc.data().name,
+                                                                    imgDim,
+                                                                    plusCode,
+                                                                    adminDoc.data().id
+                                                                    // ihash
+                                                                );
+                                                            } else {
+                                                                alert("Cannot save event. You must link your bank account. To link your account, go to the Account section and click 'Link with Stripe'");
+                                                            }
+                                                        });
+                                                } else {
+                                                    alert(
+                                                        "Please wait for the image to finish loading, then try again."
+                                                    );
+                                                    document.getElementById("send").disabled = false;
+                                                    document.getElementById("progress").value = 0;
+                                                }
                                             } else {
-                                                alert(
-                                                    "Please wait for the image to finish loading, then try again."
-                                                );
+                                                alert("No file chosen");
                                                 document.getElementById("send").disabled = false;
                                                 document.getElementById("progress").value = 0;
                                             }
-                                        } else {
-                                            alert("No file chosen");
-                                            document.getElementById("send").disabled = false;
-                                            document.getElementById("progress").value = 0;
                                         }
                                     });
                             }
@@ -261,4 +267,53 @@ function getDownloadURLOfImg(docID) {
             document.getElementById("send").disabled = false;
             document.getElementById("progress").value = 0;
         });
+}
+
+function checkRequiredFields() {
+    let clr = document.querySelectorAll('.omrs-input-danger');
+    for (let i = 0; i < clr.length; i++) {
+        const clrElement = clr[i];
+        clrElement.classList.remove("omrs-input-danger");
+    }
+    const plusCode = document.getElementById("plusCode").value.toString();
+    if (
+        formVerificationLength("title", "Title") &&
+        formVerificationLength("location", "Location Name") &&
+        formVerificationLength("plusCode", "Plus Code") &&
+        formVerificationLength("cost", "Price per person") &&
+        formVerificationLength("dt", "Event Date and Time") &&
+        formVerificationLength("maxParticipants", "Maximum Participants")
+    ) {
+        if (/(^|\s)([23456789C][23456789CFGHJMPQRV][23456789CFGHJMPQRVWX]{6}\+[23456789CFGHJMPQRVWX]{2,3})(\s|$)/.test(plusCode)) {
+            if (tinymce.get("htmeditor").getContent().toString().length != 0) {
+                if(new Date(Date.parse(document.getElementById("dt").value.toString())) <= new Date()) {
+                    alert("Date must be in the future.");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            } else {
+                alert(`'Blurb' cannot be blank`);
+                return false;
+            }
+        } else {
+            document.getElementById(`plusCodeLABEL`).classList.add("omrs-input-danger");
+            alert("Plus Code must be a global plus code of eight characters before the plus symbol");
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+function formVerificationLength(el, desc) {
+    const elemen = document.getElementById(el).value.toString();
+    if (elemen.length != 0) {
+        return true;
+    } else {
+        document.getElementById(`${el}LABEL`).classList.add("omrs-input-danger");
+        alert(`'${desc}' cannot be blank`);
+        return false;
+    }
 }

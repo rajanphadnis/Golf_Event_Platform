@@ -17,63 +17,116 @@
     <script defer src="/__/firebase/8.6.8/firebase-performance.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <script src="/js/tinymce/js/tinymce/tinymce.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/mat.min.css">
     <script type="text/javascript">
         tinymce.init({
             selector: '#htmeditor'
         });
     </script>
     <link rel="stylesheet" href="/css/my-events/new-event.css" />
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
     <script src="/js/blurhash_min.js"></script>
 </head>
 
 <body>
     <div id="mainContent">
-        <label for="title">Event Title:</label>
-        <input type="text" id="title" name="title">
-        <br />
-        <br />
-        <label for="location">Location Name:</label>
-        <input type="text" id="location" name="location">
-        <br />
-        <br />
-        <label for="plusCode">Location (Google Global <a href="https://maps.google.com/pluscodes/">Plus Code</a>):</label>
-        <input title="Must be a Plus Code" pattern="/(^|\s)([23456789C][23456789CFGHJMPQRV][23456789CFGHJMPQRVWX]{6}\+[23456789CFGHJMPQRVWX]{2,3})(\s|$)/?i" type="text" id="plusCode" name="plusCode">
-        <br />
-        <br />
-        <label for="dt">Event Date and Time:</label>
-        <input type="datetime-local" id="dt" name="dt">
-        <br />
-        <br />
-        <label for="cost">Cost in Cents per person:</label>
-        <input type="number" id="cost" name="cost" min="1">
-        <br />
-        <br />
-        <label for="maxParticipants">Maximum number of participants:</label>
-        <input type="number" id="maxParticipants" name="maxParticipants" min="1">
-        <br />
-        <br />
-        <label for="files">Upload Poster:</label>
-        <input type="file" id="files" accept=".jpg"/>
-        <div id="loadingFile">Loading...</div>
-        <br />
-        <br />
-        <label for="htmeditor">Event Blurb/Description:</label>
-        <textarea id="htmeditor"></textarea>
-        <!-- <script src="https://htmeditor.com/js/htmeditor.min.js" htmeditor_textarea="htmeditor" full_screen="no"
-            editor_height="400" run_local="no"> </script> -->
-        <br />
-        <br />
-        <br />
-        <br />
+        <h1>Create an Event</h1>
+        <hr>
+        <div id="content-wrapper-create-event">
+            <div id="formEntry">
+                <div class="omrs-input-group">
+                    <label id="titleLABEL" class="omrs-input-underlined">
+                        <input type="text" id="title" name="title" required>
+                        <span class="omrs-input-label"><label for="title">Event Title</label></span>
+                    </label>
+                </div>
+                <div class="omrs-input-group">
+                    <label id="locationLABEL" class="omrs-input-underlined">
+                        <input type="text" id="location" name="location" required>
+                        <span class="omrs-input-label"><label for="location">Location Name</label></span>
+                    </label>
+                </div>
+                <div class="omrs-input-group">
+                    <label id="plusCodeLABEL" class="omrs-input-underlined">
+                        <input type="text" id="plusCode" name="plusCode" required>
+                        <span class="omrs-input-label"><label for="plusCode">Plus Code</label></span>
+                        <span class="omrs-input-helper"><a target="_blank" href="https://plus.codes/">Learn
+                                More</a></span>
+                    </label>
+                </div>
+                <div class="omrs-input-group">
+                    <label id="costLABEL" class="omrs-input-underlined">
+                        <input type="number" id="cost" name="cost" min="1" required>
+                        <span class="omrs-input-label"><label for="cost">Cost in Cents per person</label></span>
+                    </label>
+                </div>
+                <div class="omrs-input-group">
+                    <label id="dtLABEL" class="omrs-input-underlined">
+                        <input type="datetime-local" id="dt" name="dt" required>
+                        <span class="omrs-input-label active"><label for="dt">Event Date and Time:</label></span>
+                    </label>
+                </div>
+                <div class="omrs-input-group">
+                    <label id="maxParticipantsLABEL" class="omrs-input-underlined">
+                        <input type="number" id="maxParticipants" name="maxParticipants" min="1" required>
+                        <span class="omrs-input-label"><label for="maxParticipants">Maximum number of
+                                participants</label></span>
+                    </label>
+                </div>
+                <!-- <label class="omrs-fileUpload" for="files"> -->
+                <!-- <input type="file" id="files" accept=".jpg" required/> -->
+                <!-- <span>Upload Poster</span> -->
+                <!-- </label> -->
+                <!-- <label class="label">
+            <input type="file" required/>
+            <span>Select a file</span>
+          </label> -->
+                <label for="files">Upload Poster:</label>
+                <br />
+                <input type="file" id="files" accept=".jpg" required />
+                <!-- <div class="omrs-fileUpload">
+            <span>Upload Poster</span>
+            <input type="file" id="files" accept=".jpg" class="upload" required/>
+        </div> -->
+                <div id="loadingFile">Loading...</div>
+                <br />
+                <br />
+                <label for="htmeditor">Event Blurb/Description:</label>
+                <textarea id="htmeditor"></textarea>
+                <br />
+                <br />
+                <br />
+                <br />
+                <button id="send">Add Event</button>
+                <p id="uploading"></p>
+                <progress value="0" max="100" id="progress"></progress>
+            </div>
+            <div id="plusCodesInstructions">
 
-
-        <button id="send">Add Event</button>
-        <p id="uploading"></p>
-        <progress value="0" max="100" id="progress"></progress>
-        <br/>
-        <br/>
-        <img id="preIMG"/>
+                <h3>Find your Plus Code</h3>
+                <br />
+                <iframe src="https://plus.codes/map" allow="geolocation"></iframe>
+                <ol style="text-align: start;">
+                    <li>
+                        <p>Using the map above, find the location of your event</p>
+                    </li>
+                    <li>
+                        <p>Once you've found your location (indicated by the pink rectangle), click the "<strong><i
+                                    class="fa fa-angle-up"></i></strong>" icon on the bottom to expand the location
+                            Information Panel.</p>
+                    </li>
+                    <li>
+                        <p>Your Plus Code is the first set of numbers and letters below the "Email" button. You might
+                            have to scroll to see it.Make sure to copy the entire code (including the <strong><i
+                                    class="fa fa-plus"></i></strong> sign)!</p>
+                    </li>
+                </ol>
+                <br />
+            </div>
+        </div>
+        <br />
+        <br />
+        <img id="preIMG" />
     </div>
 </body>
 <script src="/js/myEvents/new-event.js"></script>
