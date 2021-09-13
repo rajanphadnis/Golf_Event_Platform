@@ -4,6 +4,21 @@
 <head>
     <link rel="preconnect" href="https://www.googleapis.com">
     <link rel="preconnect" href="https://firestore.googleapis.com">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <script>
+        // Register the service worker
+        if ('serviceWorker' in navigator) {
+          // Wait for the 'load' event to not block other work
+          window.addEventListener('load', async () => {
+            // Try to register the service worker.
+            try {
+              const reg = await navigator.serviceWorker.register("/sw.js");
+              console.log('Service worker registered! 😎', reg);
+            } catch (err) {
+              console.log('😥 Service worker registration failed: ', err);
+            }
+          });
+        }</script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Golf4Bob</title>
@@ -20,13 +35,6 @@
     <link rel="stylesheet" href="/css/mainPage.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="/js/blurhash_min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.5.1/dist/algoliasearch-lite.umd.js"
-        integrity="sha256-EXPXz4W6pQgfYY3yTpnDa3OH8/EPn16ciVsPQ/ypsjk=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.8.3/dist/instantsearch.production.min.js"
-        integrity="sha256-LAGhRRdtVoD6RLo2qDQsU2mp+XVSciKRC8XPOBWmofM=" crossorigin="anonymous"></script>
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/reset-min.css" integrity="sha256-t2ATOGCtAIZNnzER679jwcFcKYfLlw01gli6F6oszk8=" crossorigin="anonymous"> -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.4.5/themes/satellite-min.css"
-        integrity="sha256-TehzF/2QvNKhGQrrNpoOb2Ck4iGZ1J/DI4pkd2oUsBc=" crossorigin="anonymous">
 </head>
 
 <body>

@@ -4,6 +4,21 @@
 <head id="mainHead">
     <link rel="preconnect" href="https://www.googleapis.com">
     <link rel="preconnect" href="https://firestore.googleapis.com">
+    <!-- <link rel="manifest" href="/manifest.webmanifest">
+    <script>
+        // Register the service worker
+        if ('serviceWorker' in navigator) {
+          // Wait for the 'load' event to not block other work
+          window.addEventListener('load', async () => {
+            // Try to register the service worker.
+            try {
+              const reg = await navigator.serviceWorker.register("/sw.js");
+              console.log('Service worker registered! 😎', reg);
+            } catch (err) {
+              console.log('😥 Service worker registration failed: ', err);
+            }
+          });
+        }</script> -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>My Events | Golf4Bob</title>
