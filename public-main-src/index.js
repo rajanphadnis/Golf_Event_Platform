@@ -26,9 +26,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const db = getFirestore();
 var signInButton = document.getElementById("signInButton");
 var signedInDropdown = document.getElementById("signedInDropdown");
-const db = getFirestore();
 document
   .getElementById("algoliaSearch")
   .addEventListener("focusin", function () {
